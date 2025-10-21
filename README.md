@@ -335,7 +335,7 @@ const testAmounts = [500, 1000, 2000, 5000];
 **Solution:**
 ```bash
 # Check balance
-npm run verify
+yarn verify
 
 # Send MATIC to your wallet address
 # Recommended: 10 MATIC for sustained operations
@@ -485,7 +485,7 @@ console.log('Current gas:', gasPrice, 'Gwei');
 
 ```bash
 # Real-time dashboard
-npm start
+yarn start
 
 # Query database
 node -e "
