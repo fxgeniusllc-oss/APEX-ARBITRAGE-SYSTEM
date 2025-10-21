@@ -9,6 +9,8 @@ import numpy as np
 from typing import List, Dict, Optional
 from dataclasses import dataclass
 from enum import Enum
+# Required ML libraries: install via pip and add to requirements.txt
+# pip install xgboost==1.7.6 onnxruntime==1.16.3
 import xgboost as xgb
 import onnxruntime as ort
 
