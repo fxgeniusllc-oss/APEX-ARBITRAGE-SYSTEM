@@ -61,9 +61,10 @@ try {
 
 try {
     // Test Rust unit tests
-    const testOutput = execSync('cd src/rust && cargo test 2>&1', {
+    const testOutput = execSync('cargo test 2>&1', {
         encoding: 'utf8',
-        timeout: 60000
+        timeout: 60000,
+        cwd: 'src/rust'
     });
     
     const testsPass = testOutput.includes('test result: ok');
