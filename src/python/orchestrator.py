@@ -39,21 +39,60 @@ class Opportunity:
 
 
 class MLEnsemble:
-    """Dual AI/ML Engine with XGBoost and ONNX models"""
+    """
+    Dual AI/ML Engine with XGBoost and ONNX models
+    Enhanced with GPU acceleration and multi-model ensemble voting
+    """
     
-    def __init__(self):
+    def __init__(self, use_gpu: bool = False, voting_strategy: str = "weighted"):
         self.xgb_model = None
         self.onnx_model = None
+        self.use_gpu = use_gpu
+        self.voting_strategy = voting_strategy  # 'weighted', 'majority', 'unanimous'
         self.ensemble_weights = (0.6, 0.4)  # XGBoost weight, ONNX weight
         
+        # GPU configuration
+        self.providers = self._get_providers()
+        
+    def _get_providers(self):
+        """
+        Get ONNX Runtime providers based on GPU availability
+        Prioritizes GPU (CUDA) if available and requested
+        """
+        if self.use_gpu:
+            # Try to use GPU providers
+            available_providers = ort.get_available_providers()
+            if 'CUDAExecutionProvider' in available_providers:
+                print("✅ GPU acceleration enabled (CUDA)")
+                return ['CUDAExecutionProvider', 'CPUExecutionProvider']
+            elif 'TensorrtExecutionProvider' in available_providers:
+                print("✅ GPU acceleration enabled (TensorRT)")
+                return ['TensorrtExecutionProvider', 'CUDAExecutionProvider', 'CPUExecutionProvider']
+            else:
+                print("⚠️  GPU requested but not available, falling back to CPU")
+                return ['CPUExecutionProvider']
+        else:
+            return ['CPUExecutionProvider']
+        
     def load_models(self, xgb_path: str = None, onnx_path: str = None):
-        """Load pre-trained models"""
+        """Load pre-trained models with GPU support"""
         if xgb_path:
             self.xgb_model = xgb.Booster()
             self.xgb_model.load_model(xgb_path)
+            print(f"✅ XGBoost model loaded from {xgb_path}")
         
         if onnx_path:
-            self.onnx_model = ort.InferenceSession(onnx_path)
+            # Load ONNX model with specified providers (GPU or CPU)
+            sess_options = ort.SessionOptions()
+            sess_options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+            
+            self.onnx_model = ort.InferenceSession(
+                onnx_path,
+                sess_options=sess_options,
+                providers=self.providers
+            )
+            print(f"✅ ONNX model loaded from {onnx_path}")
+            print(f"   Providers: {self.onnx_model.get_providers()}")
     
     def extract_features(self, opportunity: Opportunity) -> np.ndarray:
         """Extract 10-feature vector from opportunity"""
@@ -72,9 +111,13 @@ class MLEnsemble:
         return np.array(features, dtype=np.float32).reshape(1, -1)
     
     def predict(self, opportunity: Opportunity) -> float:
-        """Ensemble prediction combining XGBoost and ONNX"""
+        """
+        Multi-model ensemble prediction with voting strategies
+        Supports: weighted, majority, unanimous voting
+        """
         features = self.extract_features(opportunity)
         
+        predictions = []
         xgb_score = 0.5  # Default if model not loaded
         onnx_score = 0.5
         
@@ -82,20 +125,73 @@ class MLEnsemble:
         if self.xgb_model:
             dmatrix = xgb.DMatrix(features)
             xgb_score = float(self.xgb_model.predict(dmatrix)[0])
+            predictions.append(("xgboost", xgb_score))
         
-        # ONNX prediction (speed-focused)
+        # ONNX prediction (speed-focused, GPU-accelerated)
         if self.onnx_model:
             input_name = self.onnx_model.get_inputs()[0].name
             onnx_output = self.onnx_model.run(None, {input_name: features})
             onnx_score = float(onnx_output[0][0])
+            predictions.append(("onnx", onnx_score))
         
-        # Weighted ensemble
-        ensemble_score = (
-            self.ensemble_weights[0] * xgb_score +
-            self.ensemble_weights[1] * onnx_score
-        )
+        # Apply voting strategy
+        ensemble_score = self._apply_voting_strategy(predictions)
         
         return ensemble_score
+    
+    def _apply_voting_strategy(self, predictions: List[tuple]) -> float:
+        """
+        Apply ensemble voting strategy
+        
+        Args:
+            predictions: List of (model_name, score) tuples
+        
+        Returns:
+            Final ensemble score
+        """
+        if not predictions:
+            return 0.5
+        
+        if self.voting_strategy == "weighted":
+            # Weighted average based on ensemble_weights
+            if len(predictions) == 1:
+                return predictions[0][1]
+            elif len(predictions) == 2:
+                return (
+                    self.ensemble_weights[0] * predictions[0][1] +
+                    self.ensemble_weights[1] * predictions[1][1]
+                )
+        
+        elif self.voting_strategy == "majority":
+            # Majority voting: average of binary decisions
+            threshold = 0.5
+            votes = [1 if score > threshold else 0 for _, score in predictions]
+            majority_vote = sum(votes) / len(votes)
+            
+            # If majority agrees, return high confidence, else return average
+            if majority_vote >= 0.5:
+                return max(score for _, score in predictions)
+            else:
+                return min(score for _, score in predictions)
+        
+        elif self.voting_strategy == "unanimous":
+            # Unanimous voting: all models must agree (conservative)
+            threshold = 0.5
+            all_positive = all(score > threshold for _, score in predictions)
+            all_negative = all(score <= threshold for _, score in predictions)
+            
+            if all_positive:
+                # All agree positive: return average
+                return sum(score for _, score in predictions) / len(predictions)
+            elif all_negative:
+                # All agree negative: return average
+                return sum(score for _, score in predictions) / len(predictions)
+            else:
+                # Disagreement: return conservative score (0.5)
+                return 0.5
+        
+        # Default: simple average
+        return sum(score for _, score in predictions) / len(predictions)
     
     def should_execute(self, opportunity: Opportunity, threshold: float = 0.8) -> bool:
         """Determine if opportunity should be executed"""
