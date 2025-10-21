@@ -18,6 +18,8 @@
     "dryrun": "python scripts/test_dryrun.py",
     "health": "python src/health_monitor.py",
     "verify": "python scripts/system_integrity_audit.py",
+    "validate": "node scripts/comprehensive-validation.js",
+    "validate:full": "node scripts/comprehensive-validation.js",
     "logs": "tail -f logs/system.log",
     "clean": "rimraf node_modules && echo 🧹 Cleaned node_modules directory.",
     "rebuild": "yarn clean && yarn install",

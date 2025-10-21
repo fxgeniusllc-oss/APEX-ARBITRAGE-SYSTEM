@@ -6,6 +6,16 @@ A complete, battle-tested arbitrage system BUILT WITH DUAL RUST SUPER SONIC TURB
 
 ---
 
+> 💡 **NEW!** True one-click installation! Get started in 15 minutes:
+> ```bash
+> git clone https://github.com/fxgeniusllc-oss/APEX-ARBITRAGE-SYSTEM.git
+> cd APEX-ARBITRAGE-SYSTEM
+> ./install-and-run.sh
+> ```
+> See [Quick Start Guide](QUICKSTART.md) for details.
+
+---
+
 ## ✨ Key Features
 
 - ⚡ **Zero-Capital Trading** - Uses Balancer flash loans (no upfront capital needed)
@@ -46,35 +56,51 @@ A complete, battle-tested arbitrage system BUILT WITH DUAL RUST SUPER SONIC TURB
 
 ## 🚀 Quick Start
 
-### Two Setup Options
+### 🎯 ONE-CLICK INSTALL & RUN (Recommended!)
 
-#### Option 1: Complete APEX Build (Recommended for New Installations)
-
-For a full production setup with all APEX features including the Rust calculation engine, ML models, and monitoring tools:
+**The easiest way to get started** - install everything and start trading in one command:
 
 ```bash
 # Clone the repository
 git clone https://github.com/fxgeniusllc-oss/APEX-ARBITRAGE-SYSTEM.git
 cd APEX-ARBITRAGE-SYSTEM
 
-# Run complete APEX setup (auto-installs all prerequisites)
+# Run ONE-CLICK install and start
+chmod +x install-and-run.sh
+./install-and-run.sh
+```
+
+This automated script will:
+- ✅ **Auto-install** all prerequisites (Node.js 18+, Python 3, Rust)
+- ✅ **Install** all Node.js and Python dependencies
+- ✅ **Build** Rust calculation engine
+- ✅ **Setup** configuration files (.env)
+- ✅ **Validate** complete installation
+- ✅ **Test** system components (optional)
+- ✅ **Start** the arbitrage system
+
+**Time:** 5-15 minutes (depending on connection speed)  
+**User Interaction:** Minimal (only for optional tests and final start confirmation)
+
+---
+
+### Alternative Setup Options
+
+#### Option 1: Complete APEX Build (Advanced Users)
+
+For manual control over the installation process:
+
+```bash
+# Run complete APEX setup
 chmod +x setup-apex.sh
 ./setup-apex.sh
 ```
 
-This 10-step automated process will:
-- ✅ Check and install prerequisites (Node.js 18+, Python 3, Rust)
-- ✅ Create complete project structure
-- ✅ Install all Node.js and Python dependencies
-- ✅ Build Rust calculation engine with NAPI bindings
-- ✅ Create verification, monitoring, and benchmark scripts
-- ✅ Set up production runner and configuration
+**Time:** 5-15 minutes
 
-**Time:** 5-15 minutes (depending on connection speed)
+#### Option 2: Quick Setup (Existing Installations)
 
-#### Option 2: Quick Setup (For Existing Installations)
-
-For quick dependency installation and updates:
+For quick dependency updates on existing installations:
 
 ```bash
 # Run quick setup
@@ -86,6 +112,8 @@ chmod +x quickstart.sh
 
 ### Post-Installation Steps
 
+If you used the one-click installer (`install-and-run.sh`), you're already set up! Otherwise:
+
 1. **Configure your environment:**
    ```bash
    cp .env.example .env
@@ -94,6 +122,8 @@ chmod +x quickstart.sh
 
 2. **Verify setup:**
    ```bash
+   node scripts/comprehensive-validation.js
+   # Or use the npm script:
    npm run verify
    ```
 
@@ -105,21 +135,30 @@ chmod +x quickstart.sh
 ### Available Commands
 
 ```bash
-npm start           # Start production system
-npm run dev         # Development mode
-npm run verify      # Verify setup
-npm run monitor     # Live monitoring dashboard
-npm run benchmark   # Performance benchmarks
-npm run deploy      # Deploy smart contracts
-npm test            # Run tests
+npm start                             # Start production system
+npm run dev                           # Development mode
+npm run verify                        # Verify setup (quick check)
+node scripts/comprehensive-validation.js  # Complete validation
+npm run monitor                       # Live monitoring dashboard
+npm run benchmark                     # Performance benchmarks
+npm run deploy                        # Deploy smart contracts
+npm test                              # Run tests
+npm run ai:start                      # Start AI engine
+npm run start:all                     # Start everything (Node + Python)
 ```
 
 ### Documentation
 
-- 📖 [Complete Setup Guide](docs/APEX-SETUP.md) - Detailed installation and configuration
+#### Getting Started
+- ⚡ [Quick Start Guide](QUICKSTART.md) - Get running in 15 minutes
+- 📥 [Installation Guide](INSTALLATION-GUIDE.md) - Complete installation instructions
 - 📊 [Setup Comparison](docs/SETUP-COMPARISON.md) - Choose the right setup method
+
+#### Advanced
+- 📖 [Complete Setup Guide](docs/APEX-SETUP.md) - Detailed installation and configuration
 - 🏗️ [Architecture](docs/ARCHITECTURE.md) - System design and components
 - 🚀 [Deployment Guide](docs/DEPLOYMENT.md) - Production deployment steps
+- 🔧 [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issues and solutions
 
 ---
 
