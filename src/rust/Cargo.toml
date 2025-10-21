@@ -1,0 +1,26 @@
+[package]
+name = "apex-rust-engine"
+version = "1.0.0"
+edition = "2021"
+
+[lib]
+name = "apex_engine"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.35", features = ["full"] }
+ethers = "2.0"
+rayon = "1.8"
+dashmap = "5.5"
+parking_lot = "0.12"
+crossbeam = "0.8"
+num_cpus = "1.16"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

@@ -1,0 +1,42 @@
+{
+  "name": "apex-arbitrage-system",
+  "version": "1.0.0",
+  "description": "Production-Ready Multi-DEX Flash Loan Arbitrage Bot with Dual Rust Engines, AI/ML Models, and Multi-Chain Support",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "build:rust": "cd src/rust && cargo build --release",
+    "test": "node --test tests/*.test.js",
+    "deploy": "hardhat run scripts/deploy.js",
+    "verify": "node scripts/verify-setup.js"
+  },
+  "keywords": [
+    "arbitrage",
+    "defi",
+    "flash-loan",
+    "polygon",
+    "ethereum",
+    "rust",
+    "machine-learning"
+  ],
+  "author": "APEX Arbitrage System",
+  "license": "MIT",
+  "dependencies": {
+    "ethers": "^6.9.0",
+    "dotenv": "^16.3.1",
+    "better-sqlite3": "^9.2.2",
+    "node-telegram-bot-api": "^0.64.0",
+    "chalk": "^5.3.0",
+    "ws": "^8.16.0",
+    "axios": "^1.6.2"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
