@@ -99,7 +99,7 @@ cleanup() {
         echo "   AI Engine stopped"
     fi
     
-    if [ ! -z "$ORCHESTRATOR_PID" ]; then
+    if [ -n "$ORCHESTRATOR_PID" ]; then
         kill $ORCHESTRATOR_PID 2>/dev/null || true
         echo "   Orchestrator stopped"
     fi
