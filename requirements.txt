@@ -28,3 +28,7 @@ onnxruntime-gpu==1.16.3
 
 # Model Versioning & Storage
 mlflow==2.9.2
+
+# Additional ML Libraries for DeFi Analytics
+scikit-learn>=1.3.0
+scipy>=1.11.0

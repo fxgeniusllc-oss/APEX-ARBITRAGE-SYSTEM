@@ -615,6 +615,206 @@ For detailed information, see [Hybrid ML Controller Documentation](docs/HYBRID_M
 
 ---
 
+## 🚀 Advanced Features
+
+### Execution Modes (LIVE/DEV/SIM)
+
+The APEX system supports three execution modes for maximum safety and flexibility:
+
+#### 🔴 LIVE Mode
+- **Purpose**: Production trading with real funds
+- **Behavior**: Executes actual on-chain transactions
+- **Data**: Uses real-time DEX data
+- **Risk**: HIGH - Real money at stake
+- **Use When**: After thorough testing in DEV/SIM modes
+
+#### 🟡 DEV Mode (Default)
+- **Purpose**: Development and strategy testing
+- **Behavior**: Simulates all transactions (dry-run)
+- **Data**: Uses real-time DEX data
+- **Risk**: ZERO - No on-chain execution
+- **Use When**: Testing new strategies, validating changes
+
+#### 🔵 SIM Mode
+- **Purpose**: Backtesting and simulation
+- **Behavior**: Simulates transactions with historical/real data
+- **Data**: Can use real-time or historical data
+- **Risk**: ZERO - No on-chain execution
+- **Use When**: Strategy development, performance analysis
+
+**Configuration:**
+```bash
+# Set in .env file
+MODE=DEV  # Options: LIVE, DEV, SIM
+```
+
+### Flashloan Integration
+
+Comprehensive flashloan support across multiple protocols:
+
+- **Balancer**: 0% fee flashloans (preferred)
+- **Aave**: 0.09% fee, high liquidity
+- **dYdX**: 0% fee (Ethereum only)
+- **Uniswap V3**: Pool-based flash swaps
+
+**Features:**
+- Automatic provider selection based on amount and fees
+- Smart fallback between providers
+- Gas optimization for flashloan execution
+- Support for multi-hop arbitrage with flashloans
+
+**Example:**
+```javascript
+import { getFlashloanIntegrator } from './utils/flashloanIntegration.js';
+
+const integrator = getFlashloanIntegrator(provider, wallet);
+
+// Smart flashloan execution
+const result = await integrator.executeSmartFlashloan(
+    'polygon',
+    USDC_ADDRESS,
+    ethers.parseUnits('10000', 6),
+    arbitrageData
+);
+```
+
+### BloXroute Integration
+
+High-speed transaction propagation and MEV protection:
+
+- **Fast Propagation**: <50ms to validators
+- **MEV Protection**: Private transaction submission
+- **Bundle Support**: Multi-transaction atomic bundles
+- **Mempool Monitoring**: Real-time pending transaction stream
+- **Gas Optimization**: Intelligent gas pricing
+
+**Configuration:**
+```bash
+BLOXROUTE_AUTH_TOKEN=your_token_here
+ENABLE_BLOXROUTE=true
+```
+
+**Features:**
+```javascript
+import { getBloxrouteGateway } from './utils/bloxrouteIntegration.js';
+
+const gateway = getBloxrouteGateway(authToken);
+
+// Send with MEV protection
+await gateway.sendTransaction(signedTx, 'polygon', {
+    frontRunningProtection: true,
+    nextValidator: true
+});
+
+// Subscribe to mempool
+await gateway.subscribeToPendingTxs('polygon', filters, callback);
+```
+
+### Merkle Tree Batch Processing
+
+Efficient batch transaction submission using Merkle trees:
+
+- **Gas Savings**: ~70% reduction for batch transactions
+- **Atomic Execution**: All or nothing batch processing
+- **Proof Generation**: Cryptographic verification of inclusion
+- **Auto-Batching**: Automatic batch optimization
+
+**Example:**
+```javascript
+import { getMerkleTreeSender } from './utils/merkleTreeSender.js';
+
+const sender = getMerkleTreeSender(provider, wallet);
+
+// Add transactions to batch
+sender.addTransaction(tx1);
+sender.addTransaction(tx2);
+sender.addTransaction(tx3);
+
+// Send batch (saves ~16000 gas per tx after first)
+const result = await sender.sendBatch();
+```
+
+### TVL Hyperspeed Orchestrator
+
+Ultra-fast TVL monitoring across all chains and DEXes:
+
+- **Speed**: <10ms response time with caching
+- **Coverage**: All major DEXes and chains
+- **Parallel Fetching**: Concurrent pool data retrieval
+- **Smart Caching**: 60-second cache with automatic refresh
+
+**Features:**
+- Real-time TVL tracking
+- Pool discovery and monitoring
+- Significant TVL change alerts
+- Multi-chain aggregation
+
+### Pool Registry
+
+Comprehensive pool discovery and management:
+
+- **Universal Discovery**: All DEXes and chains
+- **Smart Indexing**: Fast token pair lookups
+- **Route Finding**: Automatic arbitrage route detection
+- **Historical Tracking**: Pool performance over time
+
+**Example:**
+```python
+from pool_registry import get_pool_registry
+
+registry = get_pool_registry()
+
+# Find pools for token pair
+pools = registry.find_pools_for_token_pair(
+    USDC_ADDRESS,
+    USDT_ADDRESS,
+    chain='polygon',
+    min_tvl=100000
+)
+
+# Find arbitrage routes
+routes = registry.find_arbitrage_routes(
+    USDC_ADDRESS,
+    'polygon',
+    max_hops=3
+)
+```
+
+### DeFi Analytics ML
+
+Advanced ML-powered opportunity analysis:
+
+- **Profit Prediction**: RandomForest regression
+- **Success Classification**: Gradient boosting
+- **Risk Assessment**: Multi-factor risk scoring
+- **Performance Tracking**: Real-time accuracy metrics
+
+**Features:**
+- 19-feature vector analysis
+- Risk-adjusted return calculation
+- Automated recommendations
+- Continuous learning from results
+
+**Example:**
+```python
+from defi_analytics import get_defi_analytics
+
+analytics = get_defi_analytics()
+
+# Score opportunity
+analysis = analytics.score_opportunity(opportunity)
+
+print(f"Overall Score: {analysis['overall_score']}")
+print(f"Success Probability: {analysis['success_probability']}")
+print(f"Risk Score: {analysis['risk_score']}")
+print(f"Recommendation: {analysis['recommendation']}")
+```
+
+### Documentation
+For detailed information, see [Hybrid ML Controller Documentation](docs/HYBRID_ML_CONTROLLER.md)
+
+---
+
 ## 📚 API Reference
 
 ### Main Functions
