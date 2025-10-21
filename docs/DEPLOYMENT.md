@@ -116,10 +116,10 @@ MIN_TIME_BETWEEN_TRADES=30000
 
 ```bash
 # Compile contracts
-npx hardhat compile
+yarn hardhat compile
 
 # Deploy to Polygon
-npx hardhat run scripts/deploy.js --network polygon
+yarn hardhat run scripts/deploy.js --network polygon
 
 # Save the contract address
 CONTRACT_ADDRESS=0x... # From deployment output
@@ -149,10 +149,10 @@ echo "CONTRACT_ADDRESS=0x..." >> .env
 
 ```bash
 # Start in foreground (for testing)
-npm start
+yarn start
 
 # Or start in background with logs
-nohup npm start > logs/apex.log 2>&1 &
+nohup yarn start > logs/apex.log 2>&1 &
 ```
 
 ## 🔧 Advanced Configuration
@@ -226,10 +226,10 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 WORKDIR /app
 
 # Copy package files
-COPY package*.json requirements.txt ./
+COPY package.json yarn.lock requirements.txt ./
 
 # Install dependencies
-RUN npm install
+RUN yarn install --frozen-lockfile
 RUN pip3 install -r requirements.txt
 
 # Copy application files
@@ -240,7 +240,7 @@ RUN cd src/rust && cargo build --release
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
 ```
 
 ### Build and Run
@@ -347,7 +347,7 @@ sudo sysctl -w net.ipv4.tcp_keepalive_time=1200
 git pull origin main
 
 # Reinstall dependencies
-npm install
+yarn install
 pip3 install -r requirements.txt
 
 # Rebuild Rust engine

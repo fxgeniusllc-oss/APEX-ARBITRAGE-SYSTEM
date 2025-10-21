@@ -52,7 +52,7 @@ echo ""
 
 # Install Node.js dependencies
 echo -e "${CYAN}Installing Node.js dependencies...${NC}"
-npm install
+yarn install
 if [ $? -ne 0 ]; then
     echo -e "${RED}❌ Failed to install Node.js dependencies${NC}"
     exit 1
@@ -128,10 +128,10 @@ echo "1️⃣  Configure your .env file:"
 echo "   nano .env"
 echo ""
 echo "2️⃣  Deploy the smart contract (optional for mainnet):"
-echo "   npm run deploy"
+echo "   yarn deploy"
 echo ""
 echo "3️⃣  Start the arbitrage system:"
-echo "   npm start"
+echo "   yarn start"
 echo ""
 echo "4️⃣  Monitor performance:"
 echo "   - Watch the live dashboard"
@@ -144,5 +144,5 @@ echo "   • Monitor the first 24 hours closely"
 echo "   • Keep your private keys secure"
 echo "   • Never commit .env to version control"
 echo ""
-echo -e "${GREEN}🚀 Ready to start? Run: npm start${NC}"
+echo -e "${GREEN}🚀 Ready to start? Run: yarn start${NC}"
 echo ""
