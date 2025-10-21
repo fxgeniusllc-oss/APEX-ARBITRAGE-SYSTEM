@@ -77,7 +77,8 @@ class ApexSystem {
     startPythonOrchestrator() {
         console.log(chalk.cyan('🐍 Starting Python Orchestrator...'));
         
-        this.pythonProcess = spawn('python3', ['src/python/orchestrator.py'], {
+        const pythonExecutable = process.env.PYTHON || 'python3';
+        this.pythonProcess = spawn(pythonExecutable, ['src/python/orchestrator.py'], {
             stdio: 'pipe',
             env: { ...process.env }
         });
