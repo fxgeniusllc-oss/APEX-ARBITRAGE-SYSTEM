@@ -195,7 +195,8 @@ export const SAFETY_CONFIG = {
     minProfitUSD: parseFloat(process.env.MIN_PROFIT_USD) || 5,
     maxGasPriceGwei: parseFloat(process.env.MAX_GAS_PRICE_GWEI) || 100,
     slippageBps: parseFloat(process.env.SLIPPAGE_BPS) || 50,
-    maxDailyLoss: parseFloat(process.env.MAX_DAILY_LOSS) || 50,
+    // Maximum daily loss allowed, in USD
+    maxDailyLossUSD: parseFloat(process.env.MAX_DAILY_LOSS_USD) || 50,
     maxConsecutiveFailures: parseInt(process.env.MAX_CONSECUTIVE_FAILURES) || 5,
     minTimeBetweenTrades: parseInt(process.env.MIN_TIME_BETWEEN_TRADES) || 30000
 };
