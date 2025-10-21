@@ -8,9 +8,40 @@ with the existing APEX orchestrator for enhanced arbitrage predictions.
 import asyncio
 import requests
 from typing import Dict, Optional
-from orchestrator import ApexOrchestrator, Opportunity, ChainType
 
+# --- STUBS for missing orchestrator module ---
+class ApexOrchestrator:
+    def __init__(self):
+        pass
+    def get_metrics(self):
+        return {}
 
+class Opportunity:
+    def __init__(
+        self,
+        profit_usd=0.0,
+        expected_output=0.0,
+        input_amount=1.0,
+        tokens=None,
+        gas_estimate=0.0,
+        confidence_score=0.0,
+        timestamp=0,
+        dexes=None
+    ):
+        self.profit_usd = profit_usd
+        self.expected_output = expected_output
+        self.input_amount = input_amount
+        self.tokens = tokens or []
+        self.gas_estimate = gas_estimate
+        self.confidence_score = confidence_score
+        self.timestamp = timestamp
+        self.dexes = dexes or []
+
+class ChainType:
+    ETHEREUM = "ethereum"
+    POLYGON = "polygon"
+    # Add other chain types as needed
+# --- END STUBS ---
 class EnhancedOrchestrator(ApexOrchestrator):
     """
     Enhanced orchestrator that uses both the local ensemble
