@@ -106,7 +106,7 @@ cat > package.json << 'EOF'
     "verify": "node scripts/verify-setup.js",
     "monitor": "node scripts/monitor.js",
     "benchmark": "node scripts/benchmark.js",
-    "build:rust": "cd rust-engine && cargo build --release && cd ..",
+    "build:rust": "(cd rust-engine && cargo build --release)",
     "build:all": "npm run build:rust",
     "lint": "eslint src/**/*.js",
     "format": "prettier --write \"src/**/*.js\""
