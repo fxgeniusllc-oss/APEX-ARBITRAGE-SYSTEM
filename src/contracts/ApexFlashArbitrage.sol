@@ -245,13 +245,14 @@ contract ApexFlashArbitrage is Ownable, ReentrancyGuard {
         address tokenOut,
         uint256 amountIn,
         uint256 amountOutMin,
-        address router
+        address router,
+        uint24 fee
     ) internal returns (uint256) {
         IUniswapV3Router.ExactInputSingleParams memory params = IUniswapV3Router
             .ExactInputSingleParams({
                 tokenIn: tokenIn,
                 tokenOut: tokenOut,
-                fee: 3000, // 0.3%
+                fee: fee,
                 recipient: address(this),
                 deadline: block.timestamp,
                 amountIn: amountIn,
