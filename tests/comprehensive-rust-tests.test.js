@@ -47,9 +47,9 @@ describe('Comprehensive Rust Engine Validation', () => {
             const { execSync } = await import('child_process');
             
             try {
-                const output = execSync('cd src/rust && cargo test 2>&1', {
+                const output = execSync('cargo test 2>&1', {
                     encoding: 'utf8',
-                    cwd: process.cwd()
+                    cwd: 'src/rust'
                 });
                 
                 assert.ok(output.includes('test result: ok'), 'All Rust tests should pass');
