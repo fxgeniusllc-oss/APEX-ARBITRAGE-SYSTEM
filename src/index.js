@@ -39,25 +39,27 @@ class ApexSystem {
     async initializeProviders() {
         console.log(chalk.cyan('🔗 Initializing multi-chain providers...'));
         
+        // Fail fast if any required RPC URL is missing
+        const requiredRpcVars = {
+            polygon: 'POLYGON_RPC_URL',
+            ethereum: 'ETHEREUM_RPC_URL',
+            arbitrum: 'ARBITRUM_RPC_URL',
+            optimism: 'OPTIMISM_RPC_URL',
+            base: 'BASE_RPC_URL',
+            bsc: 'BSC_RPC_URL'
+        };
+        for (const [chain, envVar] of Object.entries(requiredRpcVars)) {
+            if (!process.env[envVar]) {
+                throw new Error(`Missing required environment variable: ${envVar} for chain ${chain}. Refusing to use public fallback RPC. Please set this variable in your environment.`);
+            }
+        }
         this.providers = {
-            polygon: new ethers.JsonRpcProvider(
-                process.env.POLYGON_RPC_URL || 'https://polygon-rpc.com'
-            ),
-            ethereum: new ethers.JsonRpcProvider(
-                process.env.ETHEREUM_RPC_URL || 'https://eth.llamarpc.com'
-            ),
-            arbitrum: new ethers.JsonRpcProvider(
-                process.env.ARBITRUM_RPC_URL || 'https://arb1.arbitrum.io/rpc'
-            ),
-            optimism: new ethers.JsonRpcProvider(
-                process.env.OPTIMISM_RPC_URL || 'https://mainnet.optimism.io'
-            ),
-            base: new ethers.JsonRpcProvider(
-                process.env.BASE_RPC_URL || 'https://mainnet.base.org'
-            ),
-            bsc: new ethers.JsonRpcProvider(
-                process.env.BSC_RPC_URL || 'https://bsc-dataseed.binance.org'
-            )
+            polygon: new ethers.JsonRpcProvider(process.env.POLYGON_RPC_URL),
+            ethereum: new ethers.JsonRpcProvider(process.env.ETHEREUM_RPC_URL),
+            arbitrum: new ethers.JsonRpcProvider(process.env.ARBITRUM_RPC_URL),
+            optimism: new ethers.JsonRpcProvider(process.env.OPTIMISM_RPC_URL),
+            base: new ethers.JsonRpcProvider(process.env.BASE_RPC_URL),
+            bsc: new ethers.JsonRpcProvider(process.env.BSC_RPC_URL)
         };
         
         // Test connections
