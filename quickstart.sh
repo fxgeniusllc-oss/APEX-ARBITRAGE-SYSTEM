@@ -96,15 +96,21 @@ if [ "$RUST_INSTALLED" = true ]; then
     # Build APEX Rust engine if it exists
     if [ -d "rust-engine" ]; then
         echo -e "${CYAN}Building APEX Rust engine...${NC}"
-        cd rust-engine && cargo build --release
+        cd rust-engine
         if [ $? -ne 0 ]; then
-            echo -e "${YELLOW}⚠️  Failed to build APEX Rust engine${NC}"
+            echo -e "${RED}❌ Failed to enter rust-engine directory${NC}"
             echo "Run ./setup-apex.sh for proper APEX build"
         else
-            echo -e "${GREEN}✅ APEX Rust engine built successfully${NC}"
+            cargo build --release
+            if [ $? -ne 0 ]; then
+                echo -e "${YELLOW}⚠️  Failed to build APEX Rust engine${NC}"
+                echo "Run ./setup-apex.sh for proper APEX build"
+            else
+                echo -e "${GREEN}✅ APEX Rust engine built successfully${NC}"
+            fi
+            cd ..
+            echo ""
         fi
-        cd ..
-        echo ""
     fi
 fi
 
