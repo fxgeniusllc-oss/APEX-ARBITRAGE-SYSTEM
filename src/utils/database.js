@@ -331,6 +331,28 @@ export function cleanupOldData(daysToKeep = 90) {
     console.log(`Cleaned up ${result.changes} old records`);
 }
 
+/**
+ * Log execution with transaction transparency
+ */
+export function logExecutionWithTransparency(execution, txDetails = null) {
+    // Log to execution database
+    logExecution(execution);
+    
+    // If transaction details provided, log to transparency database
+    if (txDetails && txDetails.hash) {
+        try {
+            // Import transparencyLogger dynamically to avoid circular dependencies
+            import('./transparency-logger.js').then(({ transparencyLogger }) => {
+                transparencyLogger.logTransaction(txDetails, execution.chain, execution.routeId);
+            }).catch(err => {
+                console.error('Failed to log transaction transparency:', err.message);
+            });
+        } catch (error) {
+            console.error('Failed to import transparency logger:', error.message);
+        }
+    }
+}
+
 // Initialize database on module load
 initializeDatabase();
 
