@@ -10,7 +10,9 @@
     "build:rust": "cd src/rust && cargo build --release",
     "test": "node --test tests/*.test.js",
     "deploy": "hardhat run scripts/deploy.js",
-    "verify": "node scripts/verify-setup.js"
+    "verify": "node scripts/verify-setup.js",
+    "ai:start": "python3 src/python/omni_mev_ai_engine.py",
+    "ai:dev": "uvicorn src.python.omni_mev_ai_engine:app --reload --port 8001"
   },
   "keywords": [
     "arbitrage",
