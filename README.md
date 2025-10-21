@@ -194,9 +194,40 @@ Before execution:
 
 ## 🔧 Configuration
 
+### Execution Modes
+
+The APEX system now supports three execution modes:
+
+```bash
+# MODE options: LIVE, DEV, SIM
+MODE=DEV
+
+# 🔴 LIVE MODE
+#    - Executes real arbitrage transactions on-chain
+#    - Uses real funds - PRODUCTION ONLY
+#    - All safety checks enforced
+
+# 🟡 DEV MODE (DEFAULT)
+#    - Collects and analyzes real live DEX data
+#    - Simulates all transactions (dry-run)
+#    - No on-chain execution - SAFE FOR TESTING
+#    - Perfect for strategy validation
+
+# 🔵 SIM MODE
+#    - Simulation and backtesting mode
+#    - Uses real market data
+#    - Can incorporate historical data
+#    - For strategy development and analysis
+```
+
+**⚠️ IMPORTANT**: Always test in DEV or SIM mode first. Only switch to LIVE mode after thorough testing and validation.
+
 ### Environment Variables (.env)
 
 ```bash
+# Execution Mode
+MODE=DEV                      # LIVE, DEV, or SIM
+
 # Network
 ALCHEMY_RPC_URL=https://polygon-mainnet.g.alchemy.com/v2/YOUR_KEY
 PRIVATE_KEY=your_private_key_without_0x

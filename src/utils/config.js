@@ -3,6 +3,27 @@
  * Centralized configuration management
  */
 
+// Execution Mode Configuration
+export const MODE = {
+    LIVE: 'LIVE',
+    DEV: 'DEV',
+    SIM: 'SIM'
+};
+
+export const CURRENT_MODE = (process.env.MODE || 'DEV').toUpperCase();
+
+// Validate mode
+if (!Object.values(MODE).includes(CURRENT_MODE)) {
+    throw new Error(`Invalid MODE: ${CURRENT_MODE}. Must be one of: LIVE, DEV, SIM`);
+}
+
+// Mode descriptions for clarity
+export const MODE_DESCRIPTIONS = {
+    [MODE.LIVE]: 'LIVE MODE - Executes real arbitrage transactions on-chain (PRODUCTION)',
+    [MODE.DEV]: 'DEV MODE - Runs all logic with real data but simulates transactions (dry-run)',
+    [MODE.SIM]: 'SIM MODE - Simulation mode for backtesting and strategy testing with real market data'
+};
+
 export const CHAINS = {
     POLYGON: {
         name: 'Polygon',
@@ -209,3 +230,43 @@ export const SYSTEM_CONFIG = {
     raptorBotCount: parseInt(process.env.RAPTOR_BOT_COUNT) || 4,
     rustEngineEnabled: process.env.RUST_ENGINE_ENABLED !== 'false'
 };
+
+// Mode-aware execution configuration
+export const EXECUTION_CONFIG = {
+    mode: CURRENT_MODE,
+    // All modes collect and process real live DEX data
+    collectRealData: true,
+    // Only LIVE mode executes actual transactions
+    executeTransactions: CURRENT_MODE === MODE.LIVE,
+    // DEV and SIM modes simulate transactions
+    simulateTransactions: CURRENT_MODE === MODE.DEV || CURRENT_MODE === MODE.SIM,
+    // SIM mode can use historical data for backtesting
+    allowHistoricalData: CURRENT_MODE === MODE.SIM,
+    // Additional safety checks for LIVE mode
+    requireConfirmation: CURRENT_MODE === MODE.LIVE,
+    // Log all opportunities in DEV/SIM modes for analysis
+    logAllOpportunities: CURRENT_MODE !== MODE.LIVE,
+    // Dry-run indicator
+    dryRun: CURRENT_MODE !== MODE.LIVE
+};
+
+/**
+ * Check if system should execute real transactions
+ * @returns {boolean} True if in LIVE mode, false otherwise
+ */
+export function shouldExecuteRealTransactions() {
+    return EXECUTION_CONFIG.executeTransactions;
+}
+
+/**
+ * Get execution mode display string
+ * @returns {string} Mode display string with description
+ */
+export function getModeDisplay() {
+    const emoji = {
+        [MODE.LIVE]: '🔴',
+        [MODE.DEV]: '🟡',
+        [MODE.SIM]: '🔵'
+    };
+    return `${emoji[CURRENT_MODE]} ${CURRENT_MODE} MODE - ${MODE_DESCRIPTIONS[CURRENT_MODE]}`;
+}

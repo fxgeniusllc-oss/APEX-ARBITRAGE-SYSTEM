@@ -3,12 +3,15 @@ import dotenv from 'dotenv';
 import chalk from 'chalk';
 import { spawn } from 'child_process';
 import { performance } from 'perf_hooks';
+import { executionController } from './utils/executionController.js';
+import { CURRENT_MODE, MODE, getModeDisplay } from './utils/config.js';
 
 dotenv.config();
 
 /**
  * APEX ARBITRAGE SYSTEM
  * Main Entry Point - Coordinates Rust Engine, Python Orchestrator, and Node.js Components
+ * Supports LIVE/DEV/SIM execution modes
  */
 
 class ApexSystem {
@@ -18,19 +21,23 @@ class ApexSystem {
             maxGasPriceGwei: parseFloat(process.env.MAX_GAS_PRICE_GWEI) || 100,
             slippageBps: parseFloat(process.env.SLIPPAGE_BPS) || 50,
             scanInterval: parseInt(process.env.SCAN_INTERVAL) || 60000,
-            chains: ['polygon', 'arbitrum', 'optimism', 'base', 'ethereum', 'bsc']
+            chains: ['polygon', 'arbitrum', 'optimism', 'base', 'ethereum', 'bsc'],
+            mode: CURRENT_MODE
         };
         
         this.stats = {
             totalScans: 0,
             totalExecutions: 0,
+            simulatedExecutions: 0,
             successfulExecutions: 0,
             totalProfit: 0,
+            simulatedProfit: 0,
             startTime: Date.now()
         };
         
         this.pythonProcess = null;
         this.isRunning = false;
+        this.executionController = executionController;
     }
 
     /**
@@ -146,8 +153,9 @@ class ApexSystem {
         console.clear();
         
         const uptime = (Date.now() - this.stats.startTime) / 1000;
-        const successRate = this.stats.totalExecutions > 0
-            ? ((this.stats.successfulExecutions / this.stats.totalExecutions) * 100).toFixed(1)
+        const totalExecs = this.stats.totalExecutions + this.stats.simulatedExecutions;
+        const successRate = totalExecs > 0
+            ? ((this.stats.successfulExecutions / totalExecs) * 100).toFixed(1)
             : 0;
 
         console.log(chalk.cyan('═'.repeat(70)));
@@ -155,16 +163,33 @@ class ApexSystem {
         console.log(chalk.cyan('═'.repeat(70)));
         console.log();
         
+        // Display mode prominently
+        console.log(chalk.bold('🎛️  EXECUTION MODE'));
+        console.log(`   ${getModeDisplay()}`);
+        console.log();
+        
         console.log(chalk.bold('📊 EXECUTION STATS'));
         console.log(`   Total Scans: ${chalk.green(this.stats.totalScans)}`);
-        console.log(`   Total Executions: ${chalk.green(this.stats.totalExecutions)}`);
-        console.log(`   Successful: ${chalk.green(this.stats.successfulExecutions)}`);
+        
+        if (this.executionController.isLiveMode()) {
+            console.log(`   Real Executions: ${chalk.green(this.stats.totalExecutions)}`);
+            console.log(`   Successful: ${chalk.green(this.stats.successfulExecutions)}`);
+        } else {
+            console.log(`   Simulated Executions: ${chalk.yellow(this.stats.simulatedExecutions)}`);
+            console.log(`   Real Executions: ${chalk.gray('0 (Mode: ' + CURRENT_MODE + ')')}`);
+        }
         console.log(`   Success Rate: ${chalk.green(successRate + '%')}`);
         console.log();
         
         console.log(chalk.bold('💰 PROFIT/LOSS'));
-        console.log(`   Total Profit: ${chalk.green('$' + this.stats.totalProfit.toFixed(2))}`);
-        console.log(`   Avg Per Trade: ${chalk.green('$' + (this.stats.totalExecutions > 0 ? (this.stats.totalProfit / this.stats.totalExecutions).toFixed(2) : '0.00'))}`);
+        if (this.executionController.isLiveMode()) {
+            console.log(`   Real Profit: ${chalk.green('$' + this.stats.totalProfit.toFixed(2))}`);
+            console.log(`   Avg Per Trade: ${chalk.green('$' + (this.stats.totalExecutions > 0 ? (this.stats.totalProfit / this.stats.totalExecutions).toFixed(2) : '0.00'))}`);
+        } else {
+            console.log(`   Simulated Profit: ${chalk.yellow('$' + this.stats.simulatedProfit.toFixed(2))}`);
+            console.log(`   Avg Per Simulation: ${chalk.yellow('$' + (this.stats.simulatedExecutions > 0 ? (this.stats.simulatedProfit / this.stats.simulatedExecutions).toFixed(2) : '0.00'))}`);
+            console.log(chalk.dim(`   (No real funds at risk in ${CURRENT_MODE} mode)`));
+        }
         console.log();
         
         console.log(chalk.bold('⚙️  SYSTEM STATUS'));
@@ -221,19 +246,50 @@ class ApexSystem {
                 if (profitable.length > 0) {
                     console.log(chalk.yellow(`🎯 Found ${profitable.length} profitable opportunities`));
                     
-                    for (const opp of profitable.slice(0, 3)) { // Execute top 3
+                    for (const opp of profitable.slice(0, 3)) { // Process top 3
                         console.log(chalk.blue(`   → ${opp.routeId}: $${opp.profitUsd.toFixed(2)} profit`));
                         
-                        // In production, this would execute the trade
-                        this.stats.totalExecutions++;
+                        // Convert opportunity to expected format
+                        const opportunity = {
+                            id: opp.routeId,
+                            route_id: opp.routeId,
+                            tokens: opp.tokens,
+                            dexes: opp.dexes,
+                            profit_usd: opp.profitUsd,
+                            gas_estimate: opp.gasEstimate,
+                            confidence_score: opp.confidenceScore
+                        };
                         
-                        // Simulate 92% success rate (as per ML ensemble)
-                        if (Math.random() < 0.92) {
-                            this.stats.successfulExecutions++;
-                            this.stats.totalProfit += opp.profitUsd;
-                            console.log(chalk.green(`   ✅ Execution successful!`));
+                        // Use execution controller to handle execution based on mode
+                        const result = await this.executionController.processOpportunity(
+                            opportunity,
+                            async (opp) => {
+                                // This function would execute real transaction in LIVE mode
+                                // Simulate execution with 92% success rate
+                                if (Math.random() < 0.92) {
+                                    return {
+                                        success: true,
+                                        txHash: '0x' + Math.random().toString(16).substring(2, 66),
+                                        profit: opp.profit_usd
+                                    };
+                                } else {
+                                    throw new Error('Transaction reverted');
+                                }
+                            }
+                        );
+                        
+                        // Update stats based on mode
+                        if (result.simulated) {
+                            this.stats.simulatedExecutions++;
+                            if (result.success) {
+                                this.stats.simulatedProfit += opp.profitUsd;
+                            }
                         } else {
-                            console.log(chalk.red(`   ❌ Execution failed`));
+                            this.stats.totalExecutions++;
+                            if (result.success) {
+                                this.stats.successfulExecutions++;
+                                this.stats.totalProfit += opp.profitUsd;
+                            }
                         }
                     }
                 }

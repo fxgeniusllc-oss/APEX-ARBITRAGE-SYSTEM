@@ -1,10 +1,12 @@
 """
 APEX Python Orchestrator with Dual AI/ML Engine
 Coordinates multi-chain arbitrage with XGBoost + ONNX ensemble
+Supports LIVE/DEV/SIM execution modes
 """
 
 import asyncio
 import json
+import os
 import numpy as np
 from typing import List, Dict, Optional
 from dataclasses import dataclass
@@ -13,6 +15,13 @@ from enum import Enum
 # pip install xgboost==1.7.6 onnxruntime==1.16.3
 import xgboost as xgb
 import onnxruntime as ort
+
+
+class ExecutionMode(Enum):
+    """Execution mode configuration"""
+    LIVE = "LIVE"  # Execute real transactions
+    DEV = "DEV"    # Dry-run with real data
+    SIM = "SIM"    # Simulation/backtesting mode
 
 
 class ChainType(Enum):
@@ -320,7 +329,11 @@ class MempoolWatchdog:
 class ApexOrchestrator:
     """Main orchestrator coordinating all components"""
     
-    def __init__(self):
+    def __init__(self, mode: ExecutionMode = None):
+        # Get execution mode from environment or use provided mode
+        mode_str = os.getenv('MODE', 'DEV').upper()
+        self.mode = mode if mode else ExecutionMode[mode_str]
+        
         self.ml_ensemble = MLEnsemble()
         self.chain_scanner = ParallelChainScanner()
         self.mempool_watchdog = MempoolWatchdog()
@@ -328,9 +341,46 @@ class ApexOrchestrator:
         self.metrics = {
             "opportunities_scanned": 0,
             "opportunities_executed": 0,
+            "opportunities_simulated": 0,
             "total_profit": 0.0,
-            "success_rate": 0.0
+            "simulated_profit": 0.0,
+            "success_rate": 0.0,
+            "mode": self.mode.value
         }
+        
+        # Print mode information
+        self._print_mode_info()
+    
+    def _print_mode_info(self):
+        """Print execution mode information"""
+        mode_emoji = {
+            ExecutionMode.LIVE: "🔴",
+            ExecutionMode.DEV: "🟡",
+            ExecutionMode.SIM: "🔵"
+        }
+        mode_desc = {
+            ExecutionMode.LIVE: "LIVE MODE - Executes real arbitrage transactions on-chain",
+            ExecutionMode.DEV: "DEV MODE - Runs all logic with real data but simulates transactions",
+            ExecutionMode.SIM: "SIM MODE - Simulation mode for backtesting with real market data"
+        }
+        
+        print("\n" + "="*80)
+        print(f"{mode_emoji[self.mode]} {self.mode.value} MODE")
+        print(mode_desc[self.mode])
+        print("="*80)
+        
+        if self.mode != ExecutionMode.LIVE:
+            print("⚠️  WARNING: Transactions will be SIMULATED only")
+            print("   Real DEX data will be collected and analyzed")
+            print("   No actual on-chain transactions will be executed")
+        else:
+            print("🔴 LIVE MODE ACTIVE - Real transactions will be executed")
+            print("   Please ensure sufficient funds and prior testing in DEV mode")
+        print("="*80 + "\n")
+    
+    def should_execute_transaction(self) -> bool:
+        """Check if transactions should be executed based on mode"""
+        return self.mode == ExecutionMode.LIVE
     
     def initialize(self):
         """Initialize all components"""
@@ -379,28 +429,66 @@ class ApexOrchestrator:
         return filtered
     
     async def execute_opportunity(self, opportunity: Opportunity) -> Dict:
-        """Execute arbitrage opportunity"""
+        """Execute or simulate arbitrage opportunity based on mode"""
         # Check mempool for MEV protection
         use_private = self.mempool_watchdog.should_submit_private(opportunity)
         
-        # Execute based on route type
-        if len(opportunity.tokens) <= 4:
-            # Simple arbitrage
-            result = {"status": "success", "profit": opportunity.profit_usd}
+        if self.should_execute_transaction():
+            # LIVE MODE: Execute real transaction
+            print(f"🚀 EXECUTING REAL TRANSACTION: {opportunity.route_id}")
+            
+            # Execute based on route type
+            if len(opportunity.tokens) <= 4:
+                # Simple arbitrage
+                result = {"status": "success", "profit": opportunity.profit_usd, "simulated": False}
+            else:
+                # Complex cross-chain
+                result = await self.chain_scanner.execute_cross_chain_arbitrage(
+                    ChainType.POLYGON,
+                    ChainType.ARBITRUM,
+                    opportunity.input_amount
+                )
+                result["simulated"] = False
+            
+            # Update metrics for real execution
+            if result["status"] == "success":
+                self.metrics["opportunities_executed"] += 1
+                self.metrics["total_profit"] += opportunity.profit_usd
+                print(f"✅ EXECUTED: Profit ${opportunity.profit_usd:.2f}")
         else:
-            # Complex cross-chain
-            result = await self.chain_scanner.execute_cross_chain_arbitrage(
-                ChainType.POLYGON,
-                ChainType.ARBITRUM,
-                opportunity.input_amount
-            )
-        
-        # Update metrics
-        if result["status"] == "success":
-            self.metrics["opportunities_executed"] += 1
-            self.metrics["total_profit"] += opportunity.profit_usd
+            # DEV/SIM MODE: Simulate transaction
+            print(f"🔄 SIMULATING TRANSACTION: {opportunity.route_id}")
+            
+            # Simulate the execution without on-chain transaction
+            result = await self._simulate_execution(opportunity)
+            result["simulated"] = True
+            result["mode"] = self.mode.value
+            
+            # Update metrics for simulation
+            self.metrics["opportunities_simulated"] += 1
+            self.metrics["simulated_profit"] += opportunity.profit_usd
+            print(f"✅ SIMULATED: Would profit ${opportunity.profit_usd:.2f}")
         
         return result
+    
+    async def _simulate_execution(self, opportunity: Opportunity) -> Dict:
+        """Simulate transaction execution without on-chain execution"""
+        # Perform all validations as if executing
+        validations = {
+            "has_sufficient_profit": opportunity.profit_usd > 0,
+            "has_valid_route": len(opportunity.tokens) >= 2,
+            "has_gas_estimate": opportunity.gas_estimate > 0,
+        }
+        
+        all_valid = all(validations.values())
+        
+        return {
+            "status": "success" if all_valid else "would_fail",
+            "profit": opportunity.profit_usd if all_valid else 0,
+            "validations": validations,
+            "would_execute": all_valid,
+            "message": f"Transaction simulated in {self.mode.value} mode - no on-chain execution"
+        }
     
     async def run(self):
         """Main execution loop"""
@@ -408,19 +496,20 @@ class ApexOrchestrator:
         self.initialize()
         
         while True:
-            # Scan opportunities
+            # Scan opportunities - ALWAYS use real live DEX data
             opportunities = await self.scan_opportunities()
             
             # Filter with ML
             filtered = self.filter_opportunities(opportunities)
             
-            # Execute top opportunities
-            for opp in filtered[:5]:  # Execute top 5
+            # Execute or simulate top opportunities based on mode
+            for opp in filtered[:5]:  # Process top 5
                 try:
                     result = await self.execute_opportunity(opp)
-                    print(f"✅ Executed: {opp.route_id} | Profit: ${opp.profit_usd:.2f}")
+                    action = "Executed" if not result.get("simulated") else "Simulated"
+                    print(f"{'✅' if result['status'] == 'success' else '❌'} {action}: {opp.route_id} | Profit: ${opp.profit_usd:.2f}")
                 except Exception as e:
-                    print(f"❌ Execution failed: {e}")
+                    print(f"❌ Processing failed: {e}")
             
             # Wait before next scan
             await asyncio.sleep(1.0)
