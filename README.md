@@ -43,6 +43,85 @@ A complete, battle-tested arbitrage system BUILT WITH DUAL RUST SUPER SONIC TURB
 
 ---
 
+## 🚀 Quick Start
+
+### Two Setup Options
+
+#### Option 1: Complete APEX Build (Recommended for New Installations)
+
+For a full production setup with all APEX features including the Rust calculation engine, ML models, and monitoring tools:
+
+```bash
+# Clone the repository
+git clone https://github.com/fxgeniusllc-oss/APEX-ARBITRAGE-SYSTEM.git
+cd APEX-ARBITRAGE-SYSTEM
+
+# Run complete APEX setup (auto-installs all prerequisites)
+chmod +x setup-apex.sh
+./setup-apex.sh
+```
+
+This 10-step automated process will:
+- ✅ Check and install prerequisites (Node.js 18+, Python 3, Rust)
+- ✅ Create complete project structure
+- ✅ Install all Node.js and Python dependencies
+- ✅ Build Rust calculation engine with NAPI bindings
+- ✅ Create verification, monitoring, and benchmark scripts
+- ✅ Set up production runner and configuration
+
+**Time:** 5-15 minutes (depending on connection speed)
+
+#### Option 2: Quick Setup (For Existing Installations)
+
+For quick dependency installation and updates:
+
+```bash
+# Run quick setup
+chmod +x quickstart.sh
+./quickstart.sh
+```
+
+**Time:** 2-5 minutes
+
+### Post-Installation Steps
+
+1. **Configure your environment:**
+   ```bash
+   cp .env.example .env
+   nano .env  # Add your RPC URLs and private key
+   ```
+
+2. **Verify setup:**
+   ```bash
+   npm run verify
+   ```
+
+3. **Start the system:**
+   ```bash
+   npm start
+   ```
+
+### Available Commands
+
+```bash
+npm start           # Start production system
+npm run dev         # Development mode
+npm run verify      # Verify setup
+npm run monitor     # Live monitoring dashboard
+npm run benchmark   # Performance benchmarks
+npm run deploy      # Deploy smart contracts
+npm test            # Run tests
+```
+
+### Documentation
+
+- 📖 [Complete Setup Guide](docs/APEX-SETUP.md) - Detailed installation and configuration
+- 📊 [Setup Comparison](docs/SETUP-COMPARISON.md) - Choose the right setup method
+- 🏗️ [Architecture](docs/ARCHITECTURE.md) - System design and components
+- 🚀 [Deployment Guide](docs/DEPLOYMENT.md) - Production deployment steps
+
+---
+
 ## 💼 How It Works
 
 ### 1. **Continuous Scanning**
@@ -338,7 +417,7 @@ const testAmounts = [500, 1000, 2000, 5000];
 **Solution:**
 ```bash
 # Check balance
-npm run verify
+yarn verify
 
 # Send MATIC to your wallet address
 # Recommended: 10 MATIC for sustained operations
@@ -544,7 +623,7 @@ console.log('Current gas:', gasPrice, 'Gwei');
 
 ```bash
 # Real-time dashboard
-npm start
+yarn start
 
 # Query database
 node -e "
@@ -632,10 +711,21 @@ Built with:
 
 ---
 
-**Ready to start?** Run the quick setup and begin arbitraging!
+## 🎬 Ready to Start?
 
+### Complete APEX Build (Recommended)
+```bash
+chmod +x setup-apex.sh && ./setup-apex.sh
+```
+
+### Quick Setup (Existing Installation)
 ```bash
 chmod +x quickstart.sh && ./quickstart.sh
 ```
+
+### Learn More
+- 📖 [APEX Setup Guide](docs/APEX-SETUP.md)
+- 📊 [Setup Comparison](docs/SETUP-COMPARISON.md)
+- 🔧 [Troubleshooting](docs/TROUBLESHOOTING.md)
 
 Happy Trading! 🚀💰

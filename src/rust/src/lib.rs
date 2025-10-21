@@ -83,7 +83,7 @@ impl RustEngine {
 
     /// Scan all 2-hop arbitrage opportunities
     pub fn scan_2hop_routes(&self, test_amounts: &[f64]) -> Vec<ArbitrageOpportunity> {
-        let pools: Vec<_> = self.pools.iter().map(|p| p.clone()).collect();
+        let pools: Vec<_> = self.pools.iter().map(|p| p.value().clone()).collect();
         
         pools
             .par_iter()
@@ -91,7 +91,7 @@ impl RustEngine {
                 test_amounts
                     .par_iter()
                     .filter_map(|&amount| {
-                        self.find_2hop_opportunity(pool1.value(), amount)
+                        self.find_2hop_opportunity(pool1, amount)
                     })
                     .collect::<Vec<_>>()
             })
@@ -149,7 +149,7 @@ impl RustEngine {
 
     /// Scan all 3-hop arbitrage opportunities (triangle arbitrage)
     pub fn scan_3hop_routes(&self, test_amounts: &[f64]) -> Vec<ArbitrageOpportunity> {
-        let pools: Vec<_> = self.pools.iter().map(|p| p.clone()).collect();
+        let pools: Vec<_> = self.pools.iter().map(|p| p.value().clone()).collect();
         
         pools
             .par_iter()
@@ -160,7 +160,7 @@ impl RustEngine {
                         test_amounts
                             .par_iter()
                             .filter_map(|&amount| {
-                                self.find_3hop_opportunity(pool1.value(), pool2.value(), amount)
+                                self.find_3hop_opportunity(pool1, pool2, amount)
                             })
                             .collect::<Vec<_>>()
                     })

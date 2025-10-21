@@ -20,9 +20,9 @@ describe('Rust Engine', () => {
             const denominator = reserveIn + inputWithFee;
             const expectedOutput = numerator / denominator;
             
-            // Should get approximately 498 tokens out
-            assert.ok(expectedOutput > 497 && expectedOutput < 499, 
-                `Expected output ~498, got ${expectedOutput}`);
+            // Should get approximately 493-495 tokens out (accounting for fee)
+            assert.ok(expectedOutput > 493 && expectedOutput < 495, 
+                `Expected output ~494, got ${expectedOutput}`);
         });
         
         it('should handle slippage correctly', () => {

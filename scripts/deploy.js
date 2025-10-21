@@ -61,10 +61,10 @@ async function main() {
     console.log('2. Fund the contract with gas tokens (MATIC for Polygon)');
     console.log();
     console.log('3. Start the arbitrage system:');
-    console.log('   npm start');
+    console.log('   yarn start');
     console.log();
     console.log('4. Verify contract on block explorer (optional):');
-    console.log(`   npx hardhat verify --network polygon ${contractAddress}`);
+    console.log(`   yarn hardhat verify --network polygon ${contractAddress}`);
     console.log();
 }
 

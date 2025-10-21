@@ -66,33 +66,26 @@ source $HOME/.cargo/env
 cargo --version
 ```
 
-#### Issue: "npm install fails"
+#### Issue: "yarn install fails"
 **Symptoms:**
 ```
-npm ERR! code EACCES
-npm ERR! syscall access
+error An unexpected error occurred
+error EACCES: permission denied
 ```
 
 **Solution:**
-1. Fix npm permissions:
+1. Fix yarn permissions:
 ```bash
-# Create npm directory
-mkdir ~/.npm-global
-
-# Configure npm
-npm config set prefix '~/.npm-global'
-
-# Add to PATH
-echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
-source ~/.bashrc
+# Clear yarn cache
+yarn cache clean
 
 # Try again
-npm install
+yarn install
 ```
 
 2. Or use sudo (not recommended):
 ```bash
-sudo npm install --unsafe-perm=true
+sudo yarn install
 ```
 
 ---
@@ -239,7 +232,7 @@ Error: insufficient funds for intrinsic transaction cost
 1. Check wallet balance:
 ```bash
 # Run verification script
-npm run verify
+yarn verify
 ```
 
 2. Add more gas tokens:
@@ -322,7 +315,7 @@ const nonce = await provider.getTransactionCount(wallet.address, 'pending');
 1. **Limit historical data:**
    ```bash
    # Clean old database entries
-   npm run cleanup
+   yarn cleanup
    ```
 
 2. **Reduce pool cache:**
@@ -385,7 +378,7 @@ mv data/apex_recovered.db data/apex.db
 3. If recovery fails, reinitialize:
 ```bash
 rm data/apex.db
-npm start  # Will create new database
+yarn start  # Will create new database
 ```
 
 ---
@@ -404,14 +397,14 @@ Error: insufficient funds
 1. **Check network:**
 ```bash
 # Verify you're on correct network
-npx hardhat run scripts/deploy.js --network polygon
+yarn hardhat run scripts/deploy.js --network polygon
 ```
 
 2. **Ensure sufficient funds:**
    - Need ~0.5 MATIC for deployment
    - Check balance:
    ```bash
-   npx hardhat console --network polygon
+   yarn hardhat console --network polygon
    > (await ethers.provider.getBalance(deployer.address))
    ```
 
@@ -447,7 +440,7 @@ console.log('Min profit (bps):', minProfit.toString());
 
 3. **Test with hardhat:**
 ```bash
-npx hardhat test
+yarn hardhat test
 ```
 
 ---
@@ -597,7 +590,7 @@ pm2 stop apex-bot
 3. **Withdraw funds:**
 ```bash
 # Use contract function
-npx hardhat console --network polygon
+yarn hardhat console --network polygon
 > const contract = await ethers.getContractAt('ApexFlashArbitrage', 'ADDRESS')
 > await contract.emergencyWithdraw('TOKEN_ADDRESS')
 ```
