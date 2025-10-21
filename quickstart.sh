@@ -60,7 +60,7 @@ echo ""
 
 # Install Node.js dependencies
 echo -e "${CYAN}Installing Node.js dependencies...${NC}"
-npm install
+yarn install
 if [ $? -ne 0 ]; then
     echo -e "${RED}❌ Failed to install Node.js dependencies${NC}"
     exit 1
@@ -180,5 +180,5 @@ echo "   • Monitor the first 24 hours closely"
 echo "   • Keep your private keys secure"
 echo "   • Never commit .env to version control"
 echo ""
-echo -e "${GREEN}🚀 Ready to start? Run: npm start${NC}"
+echo -e "${GREEN}🚀 Ready to start? Run: yarn start${NC}"
 echo ""
