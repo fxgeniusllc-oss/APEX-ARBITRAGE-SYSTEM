@@ -513,22 +513,7 @@ db.all(`
 ```
 
 ---
-
-## 🤝 Contributing
-
-Contributions welcome! Please:
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open Pull Request
-
 ---
-
-## 📄 License
-
-This project is licensed under the MIT License - see LICENSE file for details.
 
 ---
 
@@ -554,18 +539,6 @@ This project is licensed under the MIT License - see LICENSE file for details.
 - 🔐 [Security Best Practices](./SECURITY.md)
 - 🐛 [Troubleshooting Guide](./TROUBLESHOOTING.md)
 
-### Community
-- 💬 Discord: [Join Server](https://discord.gg/your-server)
-- 📱 Telegram: [@ApexArbitrage](https://t.me/your-group)
-- 🐦 Twitter: [@ApexArb](https://twitter.com/your-account)
-
-### Professional Support
-- 📧 Email: support@apex-arbitrage.com
-- 📅 Consultation: [Book Call](https://calendly.com/your-link)
-- 🎓 Training: [Online Course](https://course.your-domain.com)
-
----
-
 ## 🎯 Roadmap
 
 ### Q1 2025
@@ -585,16 +558,6 @@ This project is licensed under the MIT License - see LICENSE file for details.
 - 📋 Options arbitrage
 - 📋 Lending protocol integration
 - 📋 DAO governance
-
----
-
-## 🏆 Success Stories
-
-> "Made $2,400 profit in first month with 15 MATIC investment. Amazing system!" - Anonymous User
-
-> "The safety features saved me multiple times from bad trades. Rock solid." - DeFi Trader
-
-> "Clear documentation and great support. Up and running in 30 minutes." - Crypto Enthusiast
 
 ---
 
