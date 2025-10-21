@@ -1,9 +1,9 @@
 {
   "name": "apex-arbitrage-system",
-  "version": "1.0.0",
-  "description": "Production-Ready Multi-DEX Flash Loan Arbitrage Bot with Dual Rust Engines, AI/ML Models, and Multi-Chain Support",
-  "main": "src/index.js",
-  "type": "module",
+  "version": "2.0.0",
+  "description": "Production-ready multi-DEX flash loan arbitrage system with Rust engine, AI/ML models, and multi-chain support",
+  "main": "src/apex-production-runner.js",
+  "type": "commonjs",
   "scripts": {
     "setup": "yarn install --network-timeout 600000 && echo ✅ Dependencies installed successfully.",
     "build": "yarn run format && yarn run lint",
@@ -39,10 +39,11 @@
     "flash-loan",
     "polygon",
     "ethereum",
+    "flashloan",
     "rust",
     "machine-learning"
   ],
-  "author": "APEX Arbitrage System",
+  "author": "Apex Trading System",
   "license": "MIT",
   "dependencies": {
     "axios": "^1.12.2",
@@ -62,7 +63,11 @@
     "eslint": "^9.8.0",
     "rimraf": "^6.0.1",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
-    "hardhat": "^2.19.2"
+    "@nomicfoundation/hardhat-ethers": "^3.0.5",
+    "eslint": "^8.55.0",
+    "prettier": "^3.1.1",
+    "mocha": "^10.2.0",
+    "chai": "^4.3.10"
   },
   "engines": {
     "node": ">=20.0.0",
