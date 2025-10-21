@@ -18,6 +18,7 @@ A complete, battle-tested arbitrage system BUILT WITH DUAL RUST SUPER SONIC TURB
 - 🤖 **Hybrid ML Controller** - LSTM + ONNX AI engine for real-time prediction (NEW!)
 - 📡 **REST API** - FastAPI-based inference endpoint with Prometheus metrics
 - 🚀 **Dual Model Support** - ONNX (fast) with PyTorch fallback for reliability
+- 🔍 **Dynamic Pool Fetcher** - Multi-chain pool data fetching with TVL analysis (NEW!)
 
 ---
 
@@ -907,6 +908,7 @@ db.all(`
 - 📖 [Full Deployment Guide](./DEPLOYMENT.md)
 - 🔐 [Security Best Practices](./SECURITY.md)
 - 🐛 [Troubleshooting Guide](./TROUBLESHOOTING.md)
+- 🔄 [Dynamic Pool Fetcher Guide](./docs/POOL-FETCHER.md)
 
 ## 🎯 Roadmap
 
