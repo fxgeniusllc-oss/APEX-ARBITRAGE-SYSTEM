@@ -1,18 +1,18 @@
-# Python Orchestrator Dependencies
-web3==6.11.3
-xgboost==2.0.2
-onnxruntime==1.16.3
-numpy==1.26.2
-pandas==2.1.4
-scikit-learn==1.3.2
-asyncio==3.4.3
-aiohttp==3.9.1
-python-dotenv==1.0.0
+# Python Orchestrator Dependencies (APEX Specification)
+numpy>=1.24.0
+pandas>=2.0.0
+xgboost>=2.0.0
+scikit-learn>=1.3.0
+joblib>=1.3.0
+onnxruntime>=1.16.0
+asyncio>=3.4.3
+aiohttp>=3.9.0
+web3>=6.11.0
+python-dotenv>=1.0.0
 
 # ML Model Training
-joblib==1.3.2
-lightgbm==4.1.0
+lightgbm>=4.1.0
 
 # Monitoring & Logging
-prometheus-client==0.19.0
-psutil==5.9.6
+prometheus-client>=0.19.0
+psutil>=5.9.6
