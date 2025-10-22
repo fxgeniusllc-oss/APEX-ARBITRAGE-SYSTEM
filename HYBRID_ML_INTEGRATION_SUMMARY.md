@@ -161,7 +161,7 @@ New dependencies:
 ./scripts/start-ai-system.sh
 
 # Option 2: Using npm
-npm run ai:start
+yarn run ai:start
 
 # Option 3: Manual
 python3 src/python/omni_mev_ai_engine.py

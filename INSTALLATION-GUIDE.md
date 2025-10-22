@@ -68,12 +68,12 @@ After installation completes, you'll need to:
 
 2. **Verify the installation**:
    ```bash
-   npm run validate
+   yarn run validate
    ```
 
 3. **Start the system**:
    ```bash
-   npm start
+   yarn start
    ```
 
 ---
@@ -109,20 +109,21 @@ For advanced users who want complete control:
 ```bash
 # Ubuntu/Debian
 sudo apt-get update
-sudo apt-get install -y nodejs npm python3 python3-pip curl build-essential
+sudo apt-get install -y nodejs python3 python3-pip curl build-essential
 
 # macOS
 brew install node python3
 
 # Install Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# Install yarn globally
+npm install -g yarn
 ```
 
 #### Step 2: Install Node Dependencies
 
 ```bash
-npm install
-# or
 yarn install
 ```
 
@@ -164,7 +165,7 @@ Run a complete validation of your installation:
 ```bash
 node scripts/comprehensive-validation.js
 # or
-npm run validate
+yarn run validate
 ```
 
 This checks:
@@ -183,7 +184,7 @@ This checks:
 For a faster check:
 
 ```bash
-npm run verify
+yarn run verify
 ```
 
 ### Test Installer Components
@@ -212,18 +213,15 @@ To test the installer without running it:
 
 ### Node Dependencies Fail to Install
 
-**Problem**: `npm install` or `yarn install` fails
+**Problem**: `yarn install` fails
 
 **Solution**:
 ```bash
-# Clear npm cache
-npm cache clean --force
+# Clear yarn cache
+yarn cache clean
 
 # Try with increased timeout
-npm install --network-timeout 600000
-
-# Or use yarn
-yarn install
+yarn install --network-timeout 600000
 ```
 
 ### Python Dependencies Fail to Install
@@ -294,13 +292,13 @@ After installation, verify these components:
 - [ ] Python 3.8+ installed (`python3 --version`)
 - [ ] Rust/Cargo installed (`cargo --version`)
 - [ ] node_modules directory exists
-- [ ] All npm packages installed
+- [ ] All yarn packages installed
 - [ ] All Python packages installed
 - [ ] Rust engine built
 - [ ] .env file configured
 - [ ] logs/ directory exists
 - [ ] data/models/ directory exists
-- [ ] Validation script passes (`npm run validate`)
+- [ ] Validation script passes (`yarn run validate`)
 
 ---
 
@@ -309,14 +307,14 @@ After installation, verify these components:
 If you encounter issues:
 
 1. **Check Documentation**: Review [README.md](README.md) and [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
-2. **Run Validation**: `npm run validate` to identify issues
+2. **Run Validation**: `yarn run validate` to identify issues
 3. **Check Logs**: Look in `logs/` directory for error messages
 4. **Review .env**: Ensure all required values are set
 5. **Open an Issue**: Create a GitHub issue with:
    - Your OS and version
    - Node.js, Python, Rust versions
    - Complete error messages
-   - Output of `npm run validate`
+   - Output of `yarn run validate`
 
 ---
 
@@ -325,9 +323,9 @@ If you encounter issues:
 Once installation is complete:
 
 1. **Configure** - Set up your .env file with real values
-2. **Test** - Run `npm test` to verify functionality
-3. **Deploy** - Deploy contracts with `npm run deploy`
-4. **Start** - Begin trading with `npm start`
-5. **Monitor** - Watch performance with `npm run logs`
+2. **Test** - Run `yarn test` to verify functionality
+3. **Deploy** - Deploy contracts with `yarn run deploy`
+4. **Start** - Begin trading with `yarn start`
+5. **Monitor** - Watch performance with `yarn run logs`
 
 Happy Trading! 🚀💰

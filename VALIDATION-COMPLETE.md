@@ -260,7 +260,7 @@ The system is fully validated and ready for:
 
 Run all tests:
 ```bash
-npm test
+yarn test
 ```
 
 Run system validation:

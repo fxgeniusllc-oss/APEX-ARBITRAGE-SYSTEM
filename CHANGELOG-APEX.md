@@ -52,12 +52,12 @@ Complete refactoring and configuration of the APEX Arbitrage System setup proces
      - `express` ^4.18.2
      - `cors` ^2.8.5
    - Added APEX-specific scripts:
-     - `npm run verify` - System verification
-     - `npm run monitor` - Live monitoring
-     - `npm run benchmark` - Performance testing
-     - `npm run build:rust` - Build APEX Rust engine
-     - `npm run build:all` - Build all components
-     - `npm run legacy` - Run legacy system
+     - `yarn run verify` - System verification
+     - `yarn run monitor` - Live monitoring
+     - `yarn run benchmark` - Performance testing
+     - `yarn run build:rust` - Build APEX Rust engine
+     - `yarn run build:all` - Build all components
+     - `yarn run legacy` - Run legacy system
    - Added dev dependencies:
      - `@nomicfoundation/hardhat-ethers` ^3.0.5
      - `eslint` ^8.55.0
@@ -282,7 +282,7 @@ Creates `src/apex-production-runner.js`:
 
 4. **Verify everything works:**
    ```bash
-   npm run verify
+   yarn run verify
    ```
 
 ### For Fresh Installations
@@ -302,7 +302,7 @@ Creates `src/apex-production-runner.js`:
 
 3. **Start trading:**
    ```bash
-   npm start
+   yarn start
    ```
 
 ---
@@ -311,22 +311,22 @@ Creates `src/apex-production-runner.js`:
 
 ### New Commands
 ```bash
-npm run verify      # Verify complete setup
-npm run monitor     # Live monitoring dashboard
-npm run benchmark   # Performance benchmarks
-npm run build:rust  # Build APEX Rust engine
-npm run build:all   # Build all components
-npm run legacy      # Run legacy system
-npm run lint        # ESLint code checking
-npm run format      # Prettier code formatting
+yarn run verify      # Verify complete setup
+yarn run monitor     # Live monitoring dashboard
+yarn run benchmark   # Performance benchmarks
+yarn run build:rust  # Build APEX Rust engine
+yarn run build:all   # Build all components
+yarn run legacy      # Run legacy system
+yarn run lint        # ESLint code checking
+yarn run format      # Prettier code formatting
 ```
 
 ### Existing Commands (Enhanced)
 ```bash
-npm start           # Now runs apex-production-runner.js
-npm run dev         # Development mode with NODE_ENV
-npm test            # Integration tests
-npm run deploy      # Deploy to polygon network
+yarn start           # Now runs apex-production-runner.js
+yarn run dev         # Development mode with NODE_ENV
+yarn test            # Integration tests
+yarn run deploy      # Deploy to polygon network
 ```
 
 ---
@@ -447,8 +447,8 @@ docs/
 1. Run `./setup-apex.sh` for complete setup
 2. Read `docs/APEX-SETUP.md` for detailed guide
 3. Configure `.env` with your credentials
-4. Run `npm run verify` to check setup
-5. Start with `npm start`
+4. Run `yarn run verify` to check setup
+5. Start with `yarn start`
 
 ### For Developers
 1. Review `docs/ARCHITECTURE.md` for system design
@@ -478,7 +478,7 @@ MIT License - See LICENSE file for details
 For issues or questions:
 1. Check `docs/APEX-SETUP.md`
 2. Review `docs/TROUBLESHOOTING.md`
-3. Run `npm run verify` for diagnostics
+3. Run `yarn run verify` for diagnostics
 4. Check GitHub issues
 
 ---

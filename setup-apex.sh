@@ -39,12 +39,12 @@ if [ "$NODE_VERSION" -lt 18 ]; then
 fi
 echo -e "${GREEN}✅ Node.js $(node -v)${NC}"
 
-# Check npm
-if ! command -v npm &> /dev/null; then
-    echo -e "${RED}❌ npm not found${NC}"
+# Check yarn
+if ! command -v yarn &> /dev/null; then
+    echo -e "${RED}❌ yarn not found${NC}"
     exit 1
 fi
-echo -e "${GREEN}✅ npm $(npm -v)${NC}"
+echo -e "${GREEN}✅ yarn $(yarn -v)${NC}"
 
 # Check Python
 if ! command -v python3 &> /dev/null; then
@@ -107,7 +107,7 @@ cat > package.json << 'EOF'
     "monitor": "node scripts/monitor.js",
     "benchmark": "node scripts/benchmark.js",
     "build:rust": "(cd rust-engine && cargo build --release)",
-    "build:all": "npm run build:rust",
+    "build:all": "yarn run build:rust",
     "lint": "eslint src/**/*.js",
     "format": "prettier --write \"src/**/*.js\""
   },
@@ -142,7 +142,7 @@ echo -e "${GREEN}✅ package.json created${NC}"
 
 # Install Node dependencies
 echo -e "${YELLOW}Installing Node.js dependencies (this may take a few minutes)...${NC}"
-npm install --silent
+yarn install --silent
 
 echo -e "${GREEN}✅ Node.js dependencies installed${NC}"
 echo ""
@@ -613,16 +613,16 @@ echo "   cp .env.example .env"
 echo "   nano .env  # Add your RPC URLs and private key"
 echo ""
 echo "2️⃣  Deploy smart contracts (if needed):"
-echo "   npm run deploy"
+echo "   yarn run deploy"
 echo ""
 echo "3️⃣  Start the system:"
-echo "   npm start"
+echo "   yarn start"
 echo ""
 echo "4️⃣  Monitor performance:"
-echo "   npm run monitor"
+echo "   yarn run monitor"
 echo ""
 echo "5️⃣  Run benchmarks:"
-echo "   npm run benchmark"
+echo "   yarn run benchmark"
 echo ""
 echo -e "${YELLOW}⚠️  IMPORTANT:${NC}"
 echo "   • Test thoroughly on testnet first"
@@ -630,5 +630,5 @@ echo "   • Monitor gas prices and profitability"
 echo "   • Never commit .env to version control"
 echo "   • Keep your private keys secure"
 echo ""
-echo -e "${GREEN}Ready to start trading! Run: npm start${NC}"
+echo -e "${GREEN}Ready to start trading! Run: yarn start${NC}"
 echo ""

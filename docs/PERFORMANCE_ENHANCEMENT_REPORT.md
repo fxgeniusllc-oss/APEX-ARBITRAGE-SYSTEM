@@ -211,7 +211,7 @@ Opportunities by Score Range:
 
 ```bash
 # Validate performance on 10,000+ opportunities
-npm run validate:performance
+yarn run validate:performance
 
 # Or manually
 node scripts/validate-performance.js
@@ -228,7 +228,7 @@ python3 scripts/train_ml_models.py
 
 ```bash
 # Start with ML-enhanced filtering
-npm start
+yarn start
 
 # System will automatically:
 # 1. Score each opportunity (0-100)

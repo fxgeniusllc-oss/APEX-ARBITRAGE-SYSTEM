@@ -5,7 +5,7 @@
  * 
  * This script performs a complete validation of the system installation:
  * - Prerequisites (Node.js, Python, Rust)
- * - Dependencies (npm packages, Python packages, Rust binaries)
+ * - Dependencies (yarn packages, Python packages, Rust binaries)
  * - Configuration files
  * - Directory structure
  * - Critical files
@@ -99,7 +99,7 @@ function validatePrerequisites() {
         return major >= 18;
     });
     
-    check('npm installed', () => exec('npm --version') !== null);
+    check('yarn installed', () => exec('yarn --version') !== null);
     
     check('Python 3 installed', () => {
         const version = exec('python3 --version');
@@ -266,7 +266,7 @@ function validateScripts() {
         ];
         
         requiredScripts.forEach(script => {
-            check(`npm script '${script}' defined`, () => scripts[script] !== undefined);
+            check(`yarn script '${script}' defined`, () => scripts[script] !== undefined);
         });
         
         const optionalScripts = [
@@ -277,7 +277,7 @@ function validateScripts() {
         ];
         
         optionalScripts.forEach(script => {
-            check(`npm script '${script}' defined`, () => scripts[script] !== undefined, false);
+            check(`yarn script '${script}' defined`, () => scripts[script] !== undefined, false);
         });
     }
 }
@@ -312,14 +312,14 @@ function printSummary() {
         console.log(`${colors.green}✅ ALL CHECKS PASSED - System is ready!${colors.reset}`);
         console.log('');
         console.log('You can now start the system with:');
-        console.log('  npm start');
+        console.log('  yarn start');
         return 0;
     } else if (failedChecks === 0) {
         console.log(`${colors.yellow}⚠️  ${warnings} warning(s) found${colors.reset}`);
         console.log('System should work but review warnings before production use.');
         console.log('');
         console.log('You can start the system with:');
-        console.log('  npm start');
+        console.log('  yarn start');
         return 0;
     } else {
         console.log(`${colors.red}❌ ${failedChecks} critical error(s) found${colors.reset}`);

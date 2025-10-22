@@ -46,7 +46,7 @@ POOL_UPDATE_INTERVAL=300000  # 5 minutes default
 
 **Run Standalone**:
 ```bash
-npm run start:node
+yarn run start:node
 # or
 node src/dex_pool_fetcher.js
 ```
@@ -343,7 +343,7 @@ pip install aiohttp web3 eth-abi
 ### Node.js Dependencies
 
 ```bash
-npm install ethers dotenv chalk
+yarn install ethers dotenv chalk
 ```
 
 ---
@@ -363,7 +363,7 @@ python -m unittest tests/test_pool_fetchers.py
 ### Integration Test
 ```bash
 # Start pool fetcher
-npm run start:node
+yarn run start:node
 
 # In another terminal, run Python fetchers
 python src/python/uniswapv3_tvl_fetcher.py

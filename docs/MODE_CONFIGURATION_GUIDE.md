@@ -119,7 +119,7 @@ MODE=LIVE
 
 ```bash
 # Override for single run
-MODE=DEV npm start
+MODE=DEV yarn start
 
 # Python orchestrator
 MODE=SIM python src/python/integrated_orchestrator.py
@@ -190,44 +190,44 @@ if mode == ExecutionMode.LIVE:
 
 ```bash
 # 1. Start in DEV mode (default)
-MODE=DEV npm start
+MODE=DEV yarn start
 
 # 2. Make changes to code
 # 3. Test thoroughly in DEV mode
 # 4. Review logs and metrics
 
 # 5. Switch to SIM mode for backtesting
-MODE=SIM npm start
+MODE=SIM yarn start
 
 # 6. Analyze historical performance
 # 7. Validate strategy with real market conditions
 
 # 8. When confident, switch to LIVE
-MODE=LIVE npm start  # Use with caution!
+MODE=LIVE yarn start  # Use with caution!
 ```
 
 ### Testing a New Strategy
 
 ```bash
 # Step 1: Develop in DEV mode
-MODE=DEV npm start
+MODE=DEV yarn start
 
 # Step 2: Collect simulation data
 # Let it run for 24 hours, observe opportunities
 
 # Step 3: Backtest in SIM mode
-MODE=SIM npm start
+MODE=SIM yarn start
 
 # Step 4: Analyze results
 # Review logs in logs/ directory
 # Check metrics in database
 
 # Step 5: Small LIVE test
-MODE=LIVE MIN_PROFIT_USD=10 npm start
+MODE=LIVE MIN_PROFIT_USD=10 yarn start
 # Start with higher profit threshold
 
 # Step 6: Full deployment
-MODE=LIVE MIN_PROFIT_USD=5 npm start
+MODE=LIVE MIN_PROFIT_USD=5 yarn start
 ```
 
 ## Monitoring Mode Status
@@ -267,7 +267,7 @@ The system validates the MODE setting on startup:
 
 ```javascript
 // Invalid mode will throw error
-MODE=INVALID npm start
+MODE=INVALID yarn start
 // Error: Invalid MODE: INVALID. Must be one of: LIVE, DEV, SIM
 ```
 
@@ -304,7 +304,7 @@ Valid modes:
 grep MODE .env
 
 # Check balance
-npm run verify
+yarn run verify
 
 # Review logs
 tail -f logs/system.log
@@ -316,7 +316,7 @@ tail -f logs/system.log
 
 ```bash
 # Safest way to test
-MODE=DEV npm start
+MODE=DEV yarn start
 
 # Or explicitly set in .env
 echo "MODE=DEV" >> .env
@@ -327,7 +327,7 @@ echo "MODE=DEV" >> .env
 ### 1. Always Start with DEV Mode
 ```bash
 # Initial development
-MODE=DEV npm start
+MODE=DEV yarn start
 ```
 
 ### 2. Progressive Testing
@@ -359,19 +359,19 @@ MAX_DAILY_LOSS=20        # Strict loss limit
 
 ```bash
 # Development
-MODE=DEV npm start
+MODE=DEV yarn start
 
 # Simulation
-MODE=SIM npm start
+MODE=SIM yarn start
 
 # Production (careful!)
-MODE=LIVE npm start
+MODE=LIVE yarn start
 
 # Check current mode
 echo $MODE
 
 # Override temporarily
-MODE=DEV npm run verify
+MODE=DEV yarn run verify
 ```
 
 ## Support

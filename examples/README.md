@@ -20,7 +20,7 @@ A comprehensive example showing how to integrate transaction transparency into t
 
 Make sure you have installed all dependencies:
 ```bash
-npm install
+yarn install
 ```
 
 ### Run the Integration Example
@@ -162,5 +162,5 @@ For complete documentation, see:
 For questions or issues:
 1. Check the demo script: `scripts/transparency-demo.js`
 2. Review the documentation: `docs/TRANSACTION_TRANSPARENCY.md`
-3. Run the tests: `npm test tests/transaction-transparency.test.js`
+3. Run the tests: `yarn test tests/transaction-transparency.test.js`
 4. Open an issue on GitHub

@@ -84,7 +84,7 @@ The following packages are already included in `package.json`:
 The terminal display is automatically integrated into the main APEX system (`src/index.js`). When you start the system, it will display the comprehensive dashboard:
 
 ```bash
-npm start
+yarn start
 ```
 
 ### Standalone Demo
@@ -424,7 +424,7 @@ Run the terminal display tests:
 
 ```bash
 # Run all tests
-npm test
+yarn test
 
 # Run specific test
 node --test tests/terminal-display.test.js

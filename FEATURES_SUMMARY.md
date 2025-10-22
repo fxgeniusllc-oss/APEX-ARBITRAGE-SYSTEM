@@ -377,13 +377,13 @@ All components configurable via environment variables:
 ### Basic Usage
 ```bash
 # Development (safe)
-MODE=DEV npm start
+MODE=DEV yarn start
 
 # Simulation
-MODE=SIM npm start
+MODE=SIM yarn start
 
 # Production (careful!)
-MODE=LIVE npm start
+MODE=LIVE yarn start
 ```
 
 ### Python Orchestrator
