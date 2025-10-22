@@ -6,6 +6,7 @@
 
 import { ethers } from 'ethers';
 import chalk from 'chalk';
+import { BATCH_PROCESSING_CONFIG } from './config.js';
 
 export class MerkleTreeSender {
     constructor(provider, wallet) {
@@ -197,7 +198,7 @@ export class MerkleTreeSender {
         ];
 
         // Simulated contract address (replace with actual deployed contract)
-        const batchProcessorAddress = process.env.BATCH_PROCESSOR_ADDRESS || '0x0000000000000000000000000000000000000000';
+        const batchProcessorAddress = BATCH_PROCESSING_CONFIG.processorAddress;
 
         if (batchProcessorAddress === '0x0000000000000000000000000000000000000000') {
             console.log(chalk.yellow('⚠️  No batch processor contract configured - simulating submission'));

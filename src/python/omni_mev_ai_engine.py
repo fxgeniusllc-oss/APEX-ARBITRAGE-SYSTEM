@@ -7,7 +7,6 @@ models for real-time arbitrage opportunity prediction and decision making.
 It complements the existing XGBoost + ONNX ensemble in orchestrator.py.
 """
 
-import os
 import time
 import json
 import asyncio
@@ -17,7 +16,16 @@ import requests
 from fastapi import FastAPI, Request, HTTPException
 from pydantic import BaseModel
 from prometheus_client import start_http_server, Gauge
-from dotenv import load_dotenv
+
+# Import centralized configuration
+from config import (
+    ExecutionMode,
+    CURRENT_MODE,
+    AIEngineConfig,
+    RedisConfig,
+    PrometheusConfig,
+    get_mode_display
+)
 
 # Conditional imports for ML libraries
 try:
@@ -43,7 +51,7 @@ except ImportError:
     print("⚠️  Redis not installed. Install with: pip install redis")
 
 # -------------------------------------------------------------------
-# Load environment variables
+# Configuration from centralized config module
 # -------------------------------------------------------------------
 load_dotenv()
 
