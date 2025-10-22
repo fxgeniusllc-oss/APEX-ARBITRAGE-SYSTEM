@@ -213,15 +213,15 @@ function generateRegressionReport() {
     results.regression_metrics.coverage = {
         total_test_suites: results.summary.total_suites,
         passing_test_suites: results.summary.passed_suites,
-        test_suite_pass_rate: results.summary.passed_suites / results.summary.total_suites,
+        test_suite_pass_rate: results.summary.total_suites > 0 ? results.summary.passed_suites / results.summary.total_suites : 0,
         total_test_cases: results.summary.total_tests,
         passing_test_cases: results.summary.passed_tests,
-        test_case_pass_rate: results.summary.passed_tests / results.summary.total_tests
+        test_case_pass_rate: results.summary.total_tests > 0 ? results.summary.passed_tests / results.summary.total_tests : 0
     };
     
     // Calculate success rates
     results.regression_metrics.success_rates = {
-        overall_test_success_rate: results.summary.passed_tests / results.summary.total_tests,
+        overall_test_success_rate: results.summary.total_tests > 0 ? results.summary.passed_tests / results.summary.total_tests : 0,
         javascript_tests: {
             total: 0,
             passed: 0,
