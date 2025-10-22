@@ -125,40 +125,27 @@ If you used the one-click installer (`install-and-run.sh`), you're already set u
    ```bash
    node scripts/comprehensive-validation.js
    # Or use the npm script:
-   yarn run verify
-   
-   # Complete wiring validation (recommended)
-   yarn run verify:wiring
-   
-   # WebSocket connection validation
-   yarn run verify:websocket
-   
-   # Run all validation checks
-   yarn run verify:all
-   
-   # End-to-end integration test
-   yarn run test:integration
+   npm run verify
    ```
 
 3. **Start the system:**
    ```bash
-   yarn start
+   npm start
    ```
 
 ### Available Commands
 
 ```bash
-# System Operation
-yarn start                             # Start production system
-yarn run dev                           # Development mode
-yarn run verify                        # Verify setup (quick check)
-yarn run validate:performance          # Validate ML performance (NEW!)
-yarn scripts/comprehensive-validation.js  # Complete validation
-yarn run monitor                       # Live monitoring dashboard
-yarn run benchmark                     # Performance benchmarks
-yarn run deploy                        # Deploy smart contracts
-yarn run start:all                     # Start everything (Node + Python)
-python scripts/train_ml_models.py    # Train ML models (NEW!)
+npm start                             # Start production system
+npm run dev                           # Development mode
+npm run verify                        # Verify setup (quick check)
+node scripts/comprehensive-validation.js  # Complete validation
+npm run monitor                       # Live monitoring dashboard
+npm run benchmark                     # Performance benchmarks
+npm run deploy                        # Deploy smart contracts
+npm test                              # Run tests
+npm run ai:start                      # Start AI engine
+npm run start:all                     # Start everything (Node + Python)
 ```
 
 ### Documentation
@@ -174,49 +161,6 @@ python scripts/train_ml_models.py    # Train ML models (NEW!)
 - 🏗️ [Architecture](docs/ARCHITECTURE.md) - System design and components
 - 🚀 [Deployment Guide](docs/DEPLOYMENT.md) - Production deployment steps
 - 🔧 [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issues and solutions
-
----
-
-## ✅ System Validation & Readiness
-
-### Complete System Validation
-
-The APEX system includes comprehensive validation tools to ensure all components are properly wired and ready:
-
-```bash
-# Complete system wiring validation (96.2% success rate)
-yarn run verify:wiring
-
-# WebSocket real-time connection validation
-yarn run verify:websocket
-
-# End-to-end integration test (100% success rate)
-yarn run test:integration
-
-# Run all validation checks
-yarn run verify:all
-```
-
-### What Gets Validated
-
-The validation tools verify:
-
-1. **✅ Execution Modes** - LIVE/DEV/SIM working correctly
-2. **✅ Multi-Chain Support** - All 6 chains configured (Polygon, Ethereum, Arbitrum, Optimism, Base, BSC)
-3. **✅ DEX Integration** - 8+ DEXes configured and ready
-4. **✅ Real-Time Data** - DEX pool fetchers, TVL orchestrator, SDK loaders
-5. **✅ WebSocket Connections** - Real-time mempool monitoring and data streaming
-6. **✅ Mempool Monitoring** - MEV strategies (front-running, back-running, sandwich)
-7. **✅ 4x4x4x4 Parallel Execution** - Micro Raptor Bots for parallel processing
-8. **✅ ML/AI Engine** - Ensemble models and prediction capabilities
-9. **✅ Safety Mechanisms** - Profit thresholds, gas limits, loss limits
-10. **✅ System Integration** - All components properly wired together
-
-### System Readiness Report
-
-For a complete system readiness report, see [SYSTEM-READINESS.md](SYSTEM-READINESS.md)
-
-For MEV strategies documentation, see [docs/MEV-STRATEGIES.md](docs/MEV-STRATEGIES.md)
 
 ---
 
@@ -364,27 +308,6 @@ contract.withdrawProfits(tokenAddress, yourAddress);
 ---
 
 ## 📈 Expected Performance
-
-### Enhanced ML-Optimized Performance (NEW!)
-
-With the ML-enhanced opportunity scoring system:
-
-| Metric | Value |
-|--------|-------|
-| **Success Rate** | **95.52%** (up from 60-80%) |
-| Opportunity Detection | 10,000+ historical samples |
-| ML Filtering Rate | 99.3% (only top 0.7% executed) |
-| Avg Execution Time | 201ms |
-| Daily Profit Potential | $500-2000 (optimized) |
-| False Positive Rate | <5% |
-
-**Key Features**:
-- 🤖 ML-enhanced 4-component scoring (Profit, Risk, Liquidity, Success)
-- 📊 Real-time performance tracking (95% target, 99.9% excellence)
-- 🎯 Exponential success probability mapping
-- ⚡ 40,320 time-series data points for pattern analysis
-
-See [Performance Enhancement Report](docs/PERFORMANCE_ENHANCEMENT_REPORT.md) for details.
 
 ### Optimal Market Conditions
 
