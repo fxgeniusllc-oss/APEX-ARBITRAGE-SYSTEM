@@ -1,12 +1,12 @@
 """
-Base Adapter Class for DEX Integrations
-Provides a unified interface for all DEX adapters in Python
+Base Adapter Module for DEX Integrations
+Provides base classes and utilities for interacting with various DEX protocols
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Dict, Optional, Tuple, Any
-from decimal import Decimal
-import json
+from typing import List, Dict, Any, Optional, Tuple
+from web3 import Web3
+from eth_typing import Address
 import logging
 
 logger = logging.getLogger(__name__)
@@ -18,344 +18,312 @@ class BaseAdapter(ABC):
     All DEX-specific adapters should inherit from this class
     """
 
-    def __init__(self, provider, config: Dict[str, Any]):
+    def __init__(self, web3: Web3, config: Dict[str, Any]):
         """
         Initialize the adapter
         
         Args:
-            provider: Web3 provider instance
-            config: Configuration dictionary with DEX-specific settings
+            web3: Web3 instance connected to the blockchain
+            config: Configuration dictionary containing contract addresses and settings
         """
-        self.provider = provider
+        self.web3 = web3
         self.config = config
-        self.initialized = False
-        self.name = config.get('name', 'Unknown DEX')
-        self.type = config.get('type', 'unknown')
+        self.contracts = {}
+        self._initialize_contracts()
 
     @abstractmethod
-    async def initialize(self) -> bool:
-        """
-        Initialize the adapter with necessary contracts and connections
-        
-        Returns:
-            bool: True if initialization successful, False otherwise
-        """
+    def _initialize_contracts(self):
+        """Initialize contract instances - must be implemented by subclasses"""
         pass
 
     @abstractmethod
-    async def get_pool(self, token0: str, token1: str, **kwargs) -> Optional[str]:
+    def get_quote(self, token_in: Address, token_out: Address, amount_in: int) -> int:
         """
-        Get pool/pair address for two tokens
+        Get quote for swap
         
         Args:
-            token0: First token address
-            token1: Second token address
-            **kwargs: Additional parameters (e.g., fee tier for Uniswap V3)
-            
-        Returns:
-            Pool address or None if not found
-        """
-        pass
-
-    @abstractmethod
-    async def get_all_pools(self, limit: int = 100) -> List[Dict[str, Any]]:
-        """
-        Get all pools/pairs from the DEX
-        
-        Args:
-            limit: Maximum number of pools to fetch
-            
-        Returns:
-            List of pool information dictionaries
-        """
-        pass
-
-    @abstractmethod
-    async def get_pool_info(self, pool_address: str) -> Optional[Dict[str, Any]]:
-        """
-        Get detailed information about a specific pool
-        
-        Args:
-            pool_address: Address of the pool
-            
-        Returns:
-            Dictionary with pool information or None if not found
-        """
-        pass
-
-    @abstractmethod
-    async def get_reserves(self, pool_address: str) -> Optional[Dict[str, Any]]:
-        """
-        Get reserves/liquidity information for a pool
-        
-        Args:
-            pool_address: Address of the pool
-            
-        Returns:
-            Dictionary with reserve information or None if error
-        """
-        pass
-
-    @abstractmethod
-    async def get_amount_out(self, amount_in: int, path: List[str], **kwargs) -> Optional[int]:
-        """
-        Get expected output amount for a given input
-        
-        Args:
+            token_in: Input token address
+            token_out: Output token address
             amount_in: Input amount
-            path: List of token addresses in the swap path
-            **kwargs: Additional parameters
             
         Returns:
-            Expected output amount or None if error
+            Expected output amount
         """
         pass
 
-    async def calculate_price_impact(
-        self, 
-        amount_in: int, 
-        reserve_in: int, 
-        reserve_out: int
-    ) -> Decimal:
+    @abstractmethod
+    def execute_swap(
+        self,
+        token_in: Address,
+        token_out: Address,
+        amount_in: int,
+        min_amount_out: int,
+        recipient: Address,
+        deadline: int
+    ) -> str:
         """
-        Calculate price impact for a swap
+        Execute swap
         
         Args:
+            token_in: Input token address
+            token_out: Output token address
             amount_in: Input amount
-            reserve_in: Input token reserve
-            reserve_out: Output token reserve
+            min_amount_out: Minimum output amount (slippage protection)
+            recipient: Recipient address
+            deadline: Transaction deadline timestamp
             
         Returns:
-            Price impact as a percentage
+            Transaction hash
+        """
+        pass
+
+    def get_gas_estimate(
+        self,
+        token_in: Address,
+        token_out: Address,
+        amount_in: int
+    ) -> int:
+        """
+        Estimate gas for swap transaction
+        
+        Args:
+            token_in: Input token address
+            token_out: Output token address
+            amount_in: Input amount
+            
+        Returns:
+            Estimated gas units
         """
         try:
-            if reserve_in == 0 or reserve_out == 0:
-                return Decimal('0')
-            
-            # Constant product formula: (x + dx) * (y - dy) = k
-            # dy = (y * dx) / (x + dx)
-            amount_out = (reserve_out * amount_in) // (reserve_in + amount_in)
-            
-            # Price impact = (1 - (dy/dx) / (y/x)) * 100
-            spot_price = Decimal(reserve_out) / Decimal(reserve_in)
-            execution_price = Decimal(amount_out) / Decimal(amount_in)
-            price_impact = abs(1 - (execution_price / spot_price)) * 100
-            
-            return price_impact
+            # This is a generic implementation
+            # Subclasses can override for protocol-specific estimation
+            return 150000
         except Exception as e:
-            logger.error(f"Error calculating price impact: {e}")
-            return Decimal('0')
+            logger.error(f"Error estimating gas: {e}")
+            return 200000  # Safe default
 
-    def to_dict(self) -> Dict[str, Any]:
+    def check_approval(
+        self,
+        token: Address,
+        owner: Address,
+        spender: Address
+    ) -> int:
         """
-        Convert adapter state to dictionary
+        Check token approval amount
         
+        Args:
+            token: Token address
+            owner: Owner address
+            spender: Spender address
+            
         Returns:
-            Dictionary representation of the adapter
+            Current allowance
         """
-        return {
-            'name': self.name,
-            'type': self.type,
-            'initialized': self.initialized,
-            'config': self.config
-        }
+        try:
+            token_abi = [
+                {
+                    "constant": True,
+                    "inputs": [
+                        {"name": "owner", "type": "address"},
+                        {"name": "spender", "type": "address"}
+                    ],
+                    "name": "allowance",
+                    "outputs": [{"name": "", "type": "uint256"}],
+                    "type": "function"
+                }
+            ]
+            token_contract = self.web3.eth.contract(address=token, abi=token_abi)
+            return token_contract.functions.allowance(owner, spender).call()
+        except Exception as e:
+            logger.error(f"Error checking approval: {e}")
+            return 0
 
-    def __str__(self) -> str:
-        """String representation of the adapter"""
-        return f"{self.name} Adapter (Type: {self.type}, Initialized: {self.initialized})"
-
-    def __repr__(self) -> str:
-        """Developer-friendly string representation"""
-        return f"<{self.__class__.__name__}(name={self.name}, type={self.type})>"
+    def approve_token(
+        self,
+        token: Address,
+        spender: Address,
+        amount: int,
+        private_key: str
+    ) -> str:
+        """
+        Approve token spending
+        
+        Args:
+            token: Token address
+            spender: Spender address
+            amount: Approval amount
+            private_key: Private key for signing
+            
+        Returns:
+            Transaction hash
+        """
+        try:
+            token_abi = [
+                {
+                    "constant": False,
+                    "inputs": [
+                        {"name": "spender", "type": "address"},
+                        {"name": "amount", "type": "uint256"}
+                    ],
+                    "name": "approve",
+                    "outputs": [{"name": "", "type": "bool"}],
+                    "type": "function"
+                }
+            ]
+            token_contract = self.web3.eth.contract(address=token, abi=token_abi)
+            account = self.web3.eth.account.from_key(private_key)
+            
+            tx = token_contract.functions.approve(spender, amount).build_transaction({
+                'from': account.address,
+                'nonce': self.web3.eth.get_transaction_count(account.address),
+                'gas': 100000,
+                'gasPrice': self.web3.eth.gas_price
+            })
+            
+            signed_tx = account.sign_transaction(tx)
+            tx_hash = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
+            return tx_hash.hex()
+        except Exception as e:
+            logger.error(f"Error approving token: {e}")
+            raise
 
 
 class UniswapV2Adapter(BaseAdapter):
-    """
-    Adapter for Uniswap V2 and compatible DEXs (SushiSwap, QuickSwap, etc.)
-    """
+    """Adapter for Uniswap V2 and compatible DEXs (SushiSwap, QuickSwap, etc.)"""
 
-    def __init__(self, provider, config: Dict[str, Any]):
-        super().__init__(provider, config)
-        self.factory_contract = None
-        self.router_contract = None
+    def _initialize_contracts(self):
+        """Initialize Uniswap V2 contracts"""
+        router_abi = [
+            {
+                "inputs": [
+                    {"internalType": "uint256", "name": "amountIn", "type": "uint256"},
+                    {"internalType": "address[]", "name": "path", "type": "address[]"}
+                ],
+                "name": "getAmountsOut",
+                "outputs": [{"internalType": "uint256[]", "name": "amounts", "type": "uint256[]"}],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ]
+        self.contracts['router'] = self.web3.eth.contract(
+            address=self.config['router'],
+            abi=router_abi
+        )
 
-    async def initialize(self) -> bool:
-        """Initialize Uniswap V2 adapter"""
+    def get_quote(self, token_in: Address, token_out: Address, amount_in: int) -> int:
+        """Get quote from Uniswap V2"""
         try:
-            # Initialize factory and router contracts
-            # Implementation depends on the Web3 library being used
-            logger.info(f"Initializing {self.name} adapter")
-            self.initialized = True
-            return True
+            path = [token_in, token_out]
+            amounts = self.contracts['router'].functions.getAmountsOut(amount_in, path).call()
+            return amounts[-1]
         except Exception as e:
-            logger.error(f"Failed to initialize {self.name}: {e}")
-            return False
+            logger.error(f"Error getting Uniswap V2 quote: {e}")
+            return 0
 
-    async def get_pool(self, token0: str, token1: str, **kwargs) -> Optional[str]:
-        """Get pair address for two tokens"""
-        if not self.initialized:
-            await self.initialize()
-        
-        try:
-            # Call factory.getPair(token0, token1)
-            # Implementation depends on the Web3 library
-            pass
-        except Exception as e:
-            logger.error(f"Error getting pool: {e}")
-            return None
-
-    async def get_all_pools(self, limit: int = 100) -> List[Dict[str, Any]]:
-        """Get all pairs from Uniswap V2 factory"""
-        if not self.initialized:
-            await self.initialize()
-        
-        pools = []
-        try:
-            # Fetch pairs from factory
-            # Implementation depends on the Web3 library
-            pass
-        except Exception as e:
-            logger.error(f"Error fetching pools: {e}")
-        
-        return pools
-
-    async def get_pool_info(self, pool_address: str) -> Optional[Dict[str, Any]]:
-        """Get pair information"""
-        try:
-            # Get token0, token1, reserves, etc.
-            # Implementation depends on the Web3 library
-            pass
-        except Exception as e:
-            logger.error(f"Error getting pool info: {e}")
-            return None
-
-    async def get_reserves(self, pool_address: str) -> Optional[Dict[str, Any]]:
-        """Get pair reserves"""
-        try:
-            # Call pair.getReserves()
-            # Implementation depends on the Web3 library
-            pass
-        except Exception as e:
-            logger.error(f"Error getting reserves: {e}")
-            return None
-
-    async def get_amount_out(self, amount_in: int, path: List[str], **kwargs) -> Optional[int]:
-        """Get expected output amount"""
-        if not self.initialized:
-            await self.initialize()
-        
-        try:
-            # Call router.getAmountsOut(amount_in, path)
-            # Implementation depends on the Web3 library
-            pass
-        except Exception as e:
-            logger.error(f"Error getting amount out: {e}")
-            return None
+    def execute_swap(
+        self,
+        token_in: Address,
+        token_out: Address,
+        amount_in: int,
+        min_amount_out: int,
+        recipient: Address,
+        deadline: int
+    ) -> str:
+        """Execute swap on Uniswap V2"""
+        # Implementation would require full router ABI and transaction signing
+        raise NotImplementedError("Execute swap requires full implementation")
 
 
 class UniswapV3Adapter(BaseAdapter):
-    """
-    Adapter for Uniswap V3
-    """
+    """Adapter for Uniswap V3"""
 
-    def __init__(self, provider, config: Dict[str, Any]):
-        super().__init__(provider, config)
-        self.factory_contract = None
-        self.quoter_contract = None
-        self.fee_tiers = [500, 3000, 10000]  # 0.05%, 0.3%, 1%
+    def _initialize_contracts(self):
+        """Initialize Uniswap V3 contracts"""
+        quoter_abi = [
+            {
+                "inputs": [
+                    {"internalType": "address", "name": "tokenIn", "type": "address"},
+                    {"internalType": "address", "name": "tokenOut", "type": "address"},
+                    {"internalType": "uint24", "name": "fee", "type": "uint24"},
+                    {"internalType": "uint256", "name": "amountIn", "type": "uint256"},
+                    {"internalType": "uint160", "name": "sqrtPriceLimitX96", "type": "uint160"}
+                ],
+                "name": "quoteExactInputSingle",
+                "outputs": [{"internalType": "uint256", "name": "amountOut", "type": "uint256"}],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            }
+        ]
+        self.contracts['quoter'] = self.web3.eth.contract(
+            address=self.config['quoter'],
+            abi=quoter_abi
+        )
 
-    async def initialize(self) -> bool:
-        """Initialize Uniswap V3 adapter"""
+    def get_quote(self, token_in: Address, token_out: Address, amount_in: int, fee: int = 3000) -> int:
+        """Get quote from Uniswap V3"""
         try:
-            logger.info(f"Initializing {self.name} adapter")
-            self.initialized = True
-            return True
+            # Note: This requires a static call
+            amount_out = self.contracts['quoter'].functions.quoteExactInputSingle(
+                token_in,
+                token_out,
+                fee,
+                amount_in,
+                0
+            ).call()
+            return amount_out
         except Exception as e:
-            logger.error(f"Failed to initialize {self.name}: {e}")
-            return False
+            logger.error(f"Error getting Uniswap V3 quote: {e}")
+            return 0
 
-    async def get_pool(self, token0: str, token1: str, **kwargs) -> Optional[str]:
-        """Get pool address for two tokens with specific fee tier"""
-        if not self.initialized:
-            await self.initialize()
-        
-        fee = kwargs.get('fee', 3000)  # Default to 0.3%
-        
-        try:
-            # Call factory.getPool(token0, token1, fee)
-            # Implementation depends on the Web3 library
-            pass
-        except Exception as e:
-            logger.error(f"Error getting pool: {e}")
-            return None
-
-    async def get_all_pools(self, limit: int = 100) -> List[Dict[str, Any]]:
-        """Get Uniswap V3 pools"""
-        if not self.initialized:
-            await self.initialize()
-        
-        pools = []
-        # V3 requires different approach (event-based or subgraph)
-        return pools
-
-    async def get_pool_info(self, pool_address: str) -> Optional[Dict[str, Any]]:
-        """Get pool information"""
-        try:
-            # Get token0, token1, fee, liquidity, slot0, etc.
-            pass
-        except Exception as e:
-            logger.error(f"Error getting pool info: {e}")
-            return None
-
-    async def get_reserves(self, pool_address: str) -> Optional[Dict[str, Any]]:
-        """Get pool liquidity data"""
-        try:
-            # Call pool.liquidity() and pool.slot0()
-            pass
-        except Exception as e:
-            logger.error(f"Error getting reserves: {e}")
-            return None
-
-    async def get_amount_out(self, amount_in: int, path: List[str], **kwargs) -> Optional[int]:
-        """Get expected output amount using quoter"""
-        if not self.initialized:
-            await self.initialize()
-        
-        try:
-            # Call quoter.quoteExactInput() with encoded path
-            pass
-        except Exception as e:
-            logger.error(f"Error getting amount out: {e}")
-            return None
+    def execute_swap(
+        self,
+        token_in: Address,
+        token_out: Address,
+        amount_in: int,
+        min_amount_out: int,
+        recipient: Address,
+        deadline: int
+    ) -> str:
+        """Execute swap on Uniswap V3"""
+        # Implementation would require full router ABI and transaction signing
+        raise NotImplementedError("Execute swap requires full implementation")
 
 
 class AdapterFactory:
-    """
-    Factory for creating appropriate adapter instances
-    """
+    """Factory for creating appropriate adapter instances"""
 
     @staticmethod
-    def create_adapter(dex_type: str, provider, config: Dict[str, Any]) -> BaseAdapter:
+    def create_adapter(
+        adapter_type: str,
+        web3: Web3,
+        config: Dict[str, Any]
+    ) -> BaseAdapter:
         """
-        Create an adapter instance based on DEX type
+        Create adapter instance
         
         Args:
-            dex_type: Type of DEX (uniswap-v2, uniswap-v3, etc.)
-            provider: Web3 provider
+            adapter_type: Type of adapter ('uniswap-v2', 'uniswap-v3', etc.)
+            web3: Web3 instance
             config: Configuration dictionary
             
         Returns:
-            Appropriate adapter instance
+            Adapter instance
         """
-        if dex_type in ['uniswap-v2', 'sushiswap', 'quickswap']:
-            return UniswapV2Adapter(provider, config)
-        elif dex_type == 'uniswap-v3':
-            return UniswapV3Adapter(provider, config)
-        else:
-            raise ValueError(f"Unsupported DEX type: {dex_type}")
+        adapters = {
+            'uniswap-v2': UniswapV2Adapter,
+            'uniswap-v3': UniswapV3Adapter,
+            'sushiswap': UniswapV2Adapter,
+            'quickswap': UniswapV2Adapter
+        }
+        
+        adapter_class = adapters.get(adapter_type)
+        if not adapter_class:
+            raise ValueError(f"Unknown adapter type: {adapter_type}")
+        
+        return adapter_class(web3, config)
 
 
-# Export classes
+# Export public interface
 __all__ = [
     'BaseAdapter',
     'UniswapV2Adapter',
