@@ -2,16 +2,16 @@
  * Tests for Dynamic Pool Fetcher
  */
 
-const { test, describe } = require('node:test');
-const assert = require('node:assert');
-const { DexPoolFetcher } = require('../src/dex_pool_fetcher');
-const { 
+import { test, describe } from 'node:test';
+import assert from 'node:assert';
+import { DexPoolFetcher } from '../src/dex_pool_fetcher.js';
+import { 
     loadPoolsFromSDK, 
     filterByLiquidity, 
     sortByLiquidity,
     COMMON_TOKENS,
     UNISWAP_V3_FEES 
-} = require('../src/sdk_pool_loader');
+} from '../src/sdk_pool_loader.js';
 
 describe('DexPoolFetcher', () => {
     test('should initialize without errors', () => {

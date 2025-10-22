@@ -32,6 +32,7 @@
     "dev": "node --watch src/index.js",
     "build:rust": "cd src/rust && cargo build --release",
     "test": "node --test tests/*.test.js",
+    "test:regression": "node scripts/run-regression-tests.js",
     "deploy": "hardhat run scripts/deploy.js",
     "verify": "node scripts/verify-setup.js",
     "validate:performance": "node scripts/validate-performance.js",

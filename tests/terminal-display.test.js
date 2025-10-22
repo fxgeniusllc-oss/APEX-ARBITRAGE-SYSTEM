@@ -3,9 +3,9 @@
  * Tests the comprehensive terminal display functionality
  */
 
-const { describe, it, before, after } = require('node:test');
-const assert = require('node:assert');
-const { TerminalDisplay } = require('../src/utils/terminalDisplay.js');
+import { describe, it, before, after } from 'node:test';
+import assert from 'node:assert';
+import { TerminalDisplay } from '../src/utils/terminalDisplay.js';
 
 describe('TerminalDisplay Module', () => {
     let display;
