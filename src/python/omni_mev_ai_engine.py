@@ -53,14 +53,16 @@ except ImportError:
 # -------------------------------------------------------------------
 # Configuration from centralized config module
 # -------------------------------------------------------------------
-LIVE_MODE = (CURRENT_MODE == ExecutionMode.LIVE)
-AI_MODEL_PATH = AIEngineConfig.model_path
-AI_THRESHOLD = AIEngineConfig.threshold
-REDIS_HOST = RedisConfig.host
-REDIS_PORT = RedisConfig.port
-PROMETHEUS_PORT = PrometheusConfig.port
-AI_ENGINE_PORT = AIEngineConfig.engine_port
-RUST_ENGINE_URL = AIEngineConfig.rust_engine_url
+load_dotenv()
+
+LIVE_MODE = os.getenv("LIVE_TRADING", "false").lower() == "true"
+AI_MODEL_PATH = os.getenv("AI_MODEL_PATH", "./data/models/lstm_omni.onnx")
+AI_THRESHOLD = float(os.getenv("AI_THRESHOLD", "0.88"))
+REDIS_HOST = os.getenv("REDIS_HOST", "127.0.0.1")
+REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
+PROMETHEUS_PORT = int(os.getenv("PROMETHEUS_PORT", "9090"))
+AI_ENGINE_PORT = int(os.getenv("AI_ENGINE_PORT", "8001"))
+RUST_ENGINE_URL = os.getenv("RUST_ENGINE_URL", "http://localhost:7000")
 
 # -------------------------------------------------------------------
 # Redis Cache + Prometheus Setup
