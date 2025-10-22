@@ -36,6 +36,7 @@ export class PerformanceTracker {
             
             // Timing metrics
             avgExecutionTime: 0,
+            // 'Infinity' indicates no execution time data yet; will be replaced by first measurement
             minExecutionTime: Infinity,
             maxExecutionTime: 0,
             
