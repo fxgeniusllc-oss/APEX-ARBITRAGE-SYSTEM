@@ -150,6 +150,8 @@ $28.50/trade → $34.20/trade → $38.90/trade → $46.33/trade (+62%)
 
 **The easiest way to get started** - install everything and start trading in one command:
 
+#### Linux / macOS
+
 ```bash
 # Clone the repository
 git clone https://github.com/fxgeniusllc-oss/APEX-ARBITRAGE-SYSTEM.git
@@ -158,6 +160,17 @@ cd APEX-ARBITRAGE-SYSTEM
 # Run ONE-CLICK install and start
 chmod +x install-and-run.sh
 ./install-and-run.sh
+```
+
+#### Windows
+
+```cmd
+REM Clone the repository
+git clone https://github.com/fxgeniusllc-oss/APEX-ARBITRAGE-SYSTEM.git
+cd APEX-ARBITRAGE-SYSTEM
+
+REM Run ONE-CLICK install and start
+install-and-run.bat
 ```
 
 This automated script will:
