@@ -135,11 +135,11 @@ SLIPPAGE_BPS=50               # 0.5% slippage tolerance
 
 ### ✅ Validation Scripts
 
-- ✅ `npm run precheck` - Pre-operation checklist
-- ✅ `npm run validate` - Comprehensive validation
-- ✅ `npm run validate:performance` - Performance validation
-- ✅ `npm run test:regression` - Regression testing
-- ✅ `npm run verify` - System integrity audit
+- ✅ `yarn run precheck` - Pre-operation checklist
+- ✅ `yarn run validate` - Comprehensive validation
+- ✅ `yarn run validate:performance` - Performance validation
+- ✅ `yarn run test:regression` - Regression testing
+- ✅ `yarn run verify` - System integrity audit
 
 ### ✅ Test Results Summary
 
@@ -301,7 +301,7 @@ Coverage: Comprehensive
 
 1. **✅ COMPLETED:** Run pre-operation checklist before deployment
    ```bash
-   npm run precheck
+   yarn run precheck
    ```
 
 2. **✅ COMPLETED:** Verify all safety parameters are configured
@@ -319,7 +319,7 @@ Coverage: Comprehensive
 
 4. **Build Rust engine for maximum performance**
    ```bash
-   npm run build:rust
+   yarn run build:rust
    ```
 
 5. **Set up monitoring and alerting**
@@ -427,21 +427,21 @@ The APEX Arbitrage System meets all requirements for live production deployment:
 
 ```bash
 # Validation
-npm run precheck           # Pre-operation checklist
-npm run validate           # Comprehensive validation
-npm run verify             # System integrity audit
+yarn run precheck           # Pre-operation checklist
+yarn run validate           # Comprehensive validation
+yarn run verify             # System integrity audit
 
 # Testing
-npm run test               # Run tests
-npm run test:regression    # Regression tests
+yarn run test               # Run tests
+yarn run test:regression    # Regression tests
 
 # Operations
-npm start                  # Start system
-npm run dev                # Development mode
-npm run monitor            # Monitoring dashboard
+yarn start                  # Start system
+yarn run dev                # Development mode
+yarn run monitor            # Monitoring dashboard
 
 # Maintenance
-npm run build:rust         # Build Rust engine
+yarn run build:rust         # Build Rust engine
 python scripts/train_ml_models.py  # Train ML models
 ```
 

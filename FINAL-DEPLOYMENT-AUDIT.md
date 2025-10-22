@@ -73,11 +73,11 @@ The following warnings should be reviewed and addressed:
 1. Always use a dedicated wallet for trading operations
 2. Start with small amounts in DEV mode before LIVE deployment
 3. Set up monitoring alerts (Telegram/email) for all operations
-4. Run benchmarks: npm run validate:performance
-5. Build Rust engine for maximum performance: npm run build:rust
-6. Run pre-operation checklist: npm run precheck
-7. Run full validation: npm run validate
-8. Run regression tests: npm run test:regression
+4. Run benchmarks: yarn run validate:performance
+5. Build Rust engine for maximum performance: yarn run build:rust
+6. Run pre-operation checklist: yarn run precheck
+7. Run full validation: yarn run validate
+8. Run regression tests: yarn run test:regression
 9. Test in DEV mode thoroughly before switching to LIVE
 10. Set up monitoring and logging before production deployment
 11. Prepare rollback plan in case of issues
@@ -94,23 +94,23 @@ The following warnings should be reviewed and addressed:
 - [ ] Monitoring and alerting set up
 - [ ] Telegram notifications configured
 - [ ] System tested in DEV mode
-- [ ] Pre-operation checklist passed (`npm run precheck`)
+- [ ] Pre-operation checklist passed (`yarn run precheck`)
 - [ ] Backup and recovery plan in place
 
 ### Validation Steps
 
 ```bash
 # Run pre-operation checklist
-npm run precheck
+yarn run precheck
 
 # Run comprehensive validation
-npm run validate
+yarn run validate
 
 # Run performance validation
-npm run validate:performance
+yarn run validate:performance
 
 # Run regression tests
-npm run test:regression
+yarn run test:regression
 ```
 
 ### Post-Deployment Actions

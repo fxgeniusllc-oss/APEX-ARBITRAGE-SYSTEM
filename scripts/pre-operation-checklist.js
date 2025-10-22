@@ -14,7 +14,7 @@
  * ✅ Generates a comprehensive operational readiness report
  * 
  * Run with: node scripts/pre-operation-checklist.js
- * Or via npm: npm run precheck
+ * Or via yarn: yarn run precheck
  */
 
 import chalk from 'chalk';
@@ -491,7 +491,7 @@ async function generateReport() {
     }
     
     console.log(chalk.cyan('You can now start the system with:'));
-    console.log(chalk.white('  npm start'));
+    console.log(chalk.white('  yarn start'));
     log.space();
     
     return !hasErrors && hasActiveChains;

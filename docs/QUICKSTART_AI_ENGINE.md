@@ -66,7 +66,7 @@ python3 src/python/omni_mev_ai_engine.py
 python3 src/python/integration_example.py
 ```
 
-### Option 3: Using npm Scripts
+### Option 3: Using yarn Scripts
 
 ```bash
 # Start AI engine

@@ -70,7 +70,7 @@ This document compares the two setup approaches for the APEX Arbitrage System.
 
 **Step 1: Prerequisites Check**
 - ✅ Node.js 18+ validation
-- ✅ npm validation
+- ✅ yarn validation
 - ✅ Python 3 validation
 - ✅ Rust auto-installation
 
@@ -89,7 +89,7 @@ This document compares the two setup approaches for the APEX Arbitrage System.
 - ✅ Creates APEX-specific package.json v2.0.0
 - ✅ Installs dependencies: web3, ethers, dotenv, winston, express, etc.
 - ✅ Installs dev dependencies: hardhat, eslint, prettier, mocha, chai
-- ✅ Configures 12+ npm scripts
+- ✅ Configures 12+ yarn scripts
 
 **Step 4: Python Environment**
 - ✅ Creates python/requirements.txt

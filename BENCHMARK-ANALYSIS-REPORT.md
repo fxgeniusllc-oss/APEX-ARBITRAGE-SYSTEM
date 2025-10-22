@@ -105,13 +105,13 @@ This comprehensive benchmark analysis demonstrates the APEX Arbitrage System's e
 ### Critical
 
 1. **Run comprehensive validation before deployment**
-   - Command: `npm run precheck && npm run validate`
+   - Command: `yarn run precheck && yarn run validate`
    - Impact: CRITICAL
 
 ### High Priority
 
 2. **Build Rust engine for maximum speed**
-   - Command: `npm run build:rust`
+   - Command: `yarn run build:rust`
    - Impact: HIGH
 
 3. **Train ML models with latest data**

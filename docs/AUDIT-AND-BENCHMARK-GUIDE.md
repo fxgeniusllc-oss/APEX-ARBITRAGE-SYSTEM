@@ -21,7 +21,7 @@ The APEX system now includes powerful tools for final deployment evaluation:
 
 ```bash
 # Run complete audit and benchmark analysis
-npm run audit:full
+yarn run audit:full
 ```
 
 This will:
@@ -33,10 +33,10 @@ This will:
 
 ```bash
 # Run final deployment audit only
-npm run audit:deployment
+yarn run audit:deployment
 
 # Run benchmark analysis only
-npm run benchmark:analysis
+yarn run benchmark:analysis
 ```
 
 ---
@@ -56,7 +56,7 @@ The final deployment audit evaluates:
 ### Usage
 
 ```bash
-npm run audit:deployment
+yarn run audit:deployment
 ```
 
 ### Output
@@ -116,10 +116,10 @@ The script provides:
 
 ```bash
 # In your deployment pipeline
-npm run audit:deployment
+yarn run audit:deployment
 if [ $? -eq 0 ]; then
     echo "Audit passed, proceeding with deployment"
-    npm start
+    yarn start
 else
     echo "Audit failed, aborting deployment"
     exit 1
@@ -143,7 +143,7 @@ The benchmark analysis provides:
 ### Usage
 
 ```bash
-npm run benchmark:analysis
+yarn run benchmark:analysis
 ```
 
 ### Output
@@ -334,13 +334,13 @@ cat FINAL-DEPLOYMENT-CHECKLIST.md
 
 ```bash
 # Step 1: Run pre-operation checklist
-npm run precheck
+yarn run precheck
 
 # Step 2: Run final deployment audit
-npm run audit:deployment
+yarn run audit:deployment
 
 # Step 3: Run benchmark analysis
-npm run benchmark:analysis
+yarn run benchmark:analysis
 
 # Step 4: Review reports
 cat FINAL-DEPLOYMENT-AUDIT.md
@@ -352,7 +352,7 @@ cat FINAL-DEPLOYMENT-CHECKLIST.md
 # Work through each item
 
 # Step 6: If all pass, deploy
-npm start
+yarn start
 ```
 
 ### After Changes
@@ -361,26 +361,26 @@ After making any significant changes to the system:
 
 ```bash
 # Re-run audit to ensure nothing broke
-npm run audit:deployment
+yarn run audit:deployment
 
 # Re-run benchmarks to verify performance
-npm run benchmark:analysis
+yarn run benchmark:analysis
 
 # Check for regressions
-npm run test:regression
+yarn run test:regression
 ```
 
 ### Regular Monitoring
 
 ```bash
 # Daily: Check system health
-npm run precheck
+yarn run precheck
 
 # Weekly: Run benchmarks
-npm run benchmark:analysis
+yarn run benchmark:analysis
 
 # Monthly: Full audit
-npm run audit:full
+yarn run audit:full
 ```
 
 ---
@@ -444,7 +444,7 @@ npm run audit:full
 **Problem:** Performance metrics below expectations
 
 **Solutions:**
-1. Build Rust engine: `npm run build:rust`
+1. Build Rust engine: `yarn run build:rust`
 2. Train ML models: `python scripts/train_ml_models.py`
 3. Optimize configuration parameters
 4. Check system resources (CPU, memory, network)
@@ -475,17 +475,17 @@ npm run audit:full
 
 ```bash
 # Validation
-npm run precheck           # Pre-operation checklist
-npm run validate           # Comprehensive validation
-npm run verify             # System integrity
+yarn run precheck           # Pre-operation checklist
+yarn run validate           # Comprehensive validation
+yarn run verify             # System integrity
 
 # Testing
-npm run test               # Unit tests
-npm run test:regression    # Regression tests
+yarn run test               # Unit tests
+yarn run test:regression    # Regression tests
 
 # Performance
-npm run validate:performance  # ML performance validation
-npm run build:rust         # Build Rust engine
+yarn run validate:performance  # ML performance validation
+yarn run build:rust         # Build Rust engine
 ```
 
 ---
@@ -530,7 +530,7 @@ npm run build:rust         # Build Rust engine
 
 ```bash
 # Example CI/CD integration
-npm run audit:deployment && npm run benchmark:analysis && npm start
+yarn run audit:deployment && yarn run benchmark:analysis && yarn start
 ```
 
 ### Q: What if I get warnings but no critical issues?
@@ -564,21 +564,21 @@ npm run audit:deployment && npm run benchmark:analysis && npm start
 
 ```bash
 # Clean install
-npm install
+yarn install
 
 # Build everything
-npm run build:rust
+yarn run build:rust
 
 # Run all validation
-npm run precheck
-npm run validate
-npm run audit:full
+yarn run precheck
+yarn run validate
+yarn run audit:full
 
 # Review reports
 ls -la *.md | grep -E "(AUDIT|BENCHMARK|READINESS)"
 
 # If all good, deploy
-npm start
+yarn start
 ```
 
 ### Example 2: Post-Update Validation
@@ -588,29 +588,29 @@ npm start
 git pull origin main
 
 # Re-install dependencies
-npm install
+yarn install
 
 # Run audit to check for regressions
-npm run audit:deployment
+yarn run audit:deployment
 
 # Run benchmarks to verify performance
-npm run benchmark:analysis
+yarn run benchmark:analysis
 
 # If good, restart system
-npm start
+yarn start
 ```
 
 ### Example 3: Weekly Health Check
 
 ```bash
 # Check system health
-npm run precheck
+yarn run precheck
 
 # Run performance benchmarks
-npm run benchmark:analysis
+yarn run benchmark:analysis
 
 # Review logs
-npm run logs
+yarn run logs
 
 # Check database
 ls -lh data/*.db
@@ -622,7 +622,7 @@ ls -lh data/*.db
 
 1. **Run your first audit**
    ```bash
-   npm run audit:deployment
+   yarn run audit:deployment
    ```
 
 2. **Review the results**
@@ -634,7 +634,7 @@ ls -lh data/*.db
 
 4. **Run benchmark analysis**
    ```bash
-   npm run benchmark:analysis
+   yarn run benchmark:analysis
    ```
 
 5. **Review production readiness**
@@ -649,7 +649,7 @@ ls -lh data/*.db
 
 7. **Deploy with confidence!**
    ```bash
-   npm start
+   yarn start
    ```
 
 ---

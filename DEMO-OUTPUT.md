@@ -134,12 +134,12 @@ Running validation script...
 ✅ scripts/validate-system.js exists
 
 ━━━ NPM Scripts ━━━
-✅ npm script 'start' defined
-✅ npm script 'test' defined
-✅ npm script 'deploy' defined
-✅ npm script 'verify' defined
-✅ npm script 'ai:start' defined
-✅ npm script 'build:rust' defined
+✅ yarn script 'start' defined
+✅ yarn script 'test' defined
+✅ yarn script 'deploy' defined
+✅ yarn script 'verify' defined
+✅ yarn script 'ai:start' defined
+✅ yarn script 'build:rust' defined
 
 ━━━ Test Files ━━━
 ✅ tests/ directory exists

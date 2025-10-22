@@ -18,7 +18,7 @@
  * 
  * Usage:
  *   node scripts/final-deployment-audit.js
- *   npm run audit:deployment
+ *   yarn run audit:deployment
  * 
  * Exit Codes:
  *   0 - System ready for production deployment
@@ -167,7 +167,7 @@ async function auditSystemConfiguration() {
     'System',
     'Dependencies installed (node_modules)',
     fileExists(nodeModulesPath),
-    'Run: npm install or yarn install',
+    'Run: yarn install',
     true
   );
   
@@ -362,8 +362,8 @@ async function auditPerformance() {
     'For benchmark analysis'
   );
   
-  addRecommendation('Run benchmarks: npm run validate:performance');
-  addRecommendation('Build Rust engine for maximum performance: npm run build:rust');
+  addRecommendation('Run benchmarks: yarn run validate:performance');
+  addRecommendation('Build Rust engine for maximum performance: yarn run build:rust');
 }
 
 // Audit Section 5: Integration & Testing
@@ -400,9 +400,9 @@ async function auditIntegration() {
     true
   );
   
-  addRecommendation('Run pre-operation checklist: npm run precheck');
-  addRecommendation('Run full validation: npm run validate');
-  addRecommendation('Run regression tests: npm run test:regression');
+  addRecommendation('Run pre-operation checklist: yarn run precheck');
+  addRecommendation('Run full validation: yarn run validate');
+  addRecommendation('Run regression tests: yarn run test:regression');
 }
 
 // Audit Section 6: Production Readiness
@@ -644,23 +644,23 @@ The following warnings should be reviewed and addressed:
 - [ ] Monitoring and alerting set up
 - [ ] Telegram notifications configured
 - [ ] System tested in DEV mode
-- [ ] Pre-operation checklist passed (\`npm run precheck\`)
+- [ ] Pre-operation checklist passed (\`yarn run precheck\`)
 - [ ] Backup and recovery plan in place
 
 ### Validation Steps
 
 \`\`\`bash
 # Run pre-operation checklist
-npm run precheck
+yarn run precheck
 
 # Run comprehensive validation
-npm run validate
+yarn run validate
 
 # Run performance validation
-npm run validate:performance
+yarn run validate:performance
 
 # Run regression tests
-npm run test:regression
+yarn run test:regression
 \`\`\`
 
 ### Post-Deployment Actions

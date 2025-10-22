@@ -56,28 +56,22 @@ if %NODE_MAJOR% LSS 18 (
     exit /b 1
 )
 
-REM Check npm
-where npm >nul 2>nul
-if %ERRORLEVEL% NEQ 0 (
-    echo [ERROR] npm not found!
-    echo npm should be installed with Node.js.
-    pause
-    exit /b 1
-)
-echo [OK] npm
-
 REM Check yarn
 where yarn >nul 2>nul
-if %ERRORLEVEL% NEQ 0 (
-    echo [WARN] yarn not found. Installing...
-    call npm install -g yarn
-    if %ERRORLEVEL% NEQ 0 (
-        echo [ERROR] Failed to install yarn
-        pause
-        exit /b 1
-    )
+if %ERRORLEVEL% EQU 0 (
+    echo [OK] yarn already installed
+    goto :yarn_ready
 )
+
+REM If yarn not found, try to enable corepack
+echo [INFO] yarn not found, enabling corepack...
+call corepack enable
+call corepack prepare yarn@stable --activate
+
+:yarn_ready
 echo [OK] yarn
+
+
 
 REM Check Python
 echo.
@@ -134,15 +128,9 @@ if not exist package.json (
 echo Installing Node.js packages (this may take a few minutes)...
 call yarn install --network-timeout 600000
 if %ERRORLEVEL% NEQ 0 (
-    echo [ERROR] Failed to install Node.js dependencies
-    echo.
-    echo Trying with npm instead...
-    call npm install --legacy-peer-deps
-    if %ERRORLEVEL% NEQ 0 (
-        echo [ERROR] Failed to install dependencies
-        pause
-        exit /b 1
-    )
+    echo [ERROR] Failed to install Node.js dependencies with yarn
+    pause
+    exit /b 1
 )
 
 echo.
@@ -359,7 +347,7 @@ echo To stop: Press Ctrl+C
 echo.
 
 REM Start the system
-call npm start
+call yarn start
 
 REM If we get here, the system has stopped
 echo.

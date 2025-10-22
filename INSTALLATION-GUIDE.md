@@ -49,7 +49,7 @@ The installer will automatically install these if missing:
 - **Node.js** 18+ (LTS recommended)
 - **Python** 3.8+
 - **Rust** 1.70+ (with Cargo)
-- **npm/yarn** (package managers)
+- **yarn** (package managers)
 - **pip3** (Python package manager)
 
 ### Post-Installation
@@ -118,7 +118,7 @@ brew install node python3
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # Install yarn globally
-npm install -g yarn
+yarn install -g yarn
 ```
 
 #### Step 2: Install Node Dependencies

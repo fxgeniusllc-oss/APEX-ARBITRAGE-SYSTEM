@@ -16,7 +16,7 @@
  * 
  * Usage:
  *   node scripts/benchmark-analysis.js
- *   npm run benchmark:analysis
+ *   yarn run benchmark:analysis
  * 
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -415,7 +415,7 @@ function generateRecommendations() {
     {
       category: 'Performance',
       recommendation: 'Build Rust engine for maximum speed',
-      command: 'npm run build:rust',
+      command: 'yarn run build:rust',
       impact: 'HIGH'
     },
     {
@@ -433,7 +433,7 @@ function generateRecommendations() {
     {
       category: 'Testing',
       recommendation: 'Run comprehensive validation before deployment',
-      command: 'npm run precheck && npm run validate',
+      command: 'yarn run precheck && yarn run validate',
       impact: 'CRITICAL'
     },
     {
@@ -603,13 +603,13 @@ This comprehensive benchmark analysis demonstrates the APEX Arbitrage System's e
 ### Critical
 
 1. **Run comprehensive validation before deployment**
-   - Command: \`npm run precheck && npm run validate\`
+   - Command: \`yarn run precheck && yarn run validate\`
    - Impact: CRITICAL
 
 ### High Priority
 
 2. **Build Rust engine for maximum speed**
-   - Command: \`npm run build:rust\`
+   - Command: \`yarn run build:rust\`
    - Impact: HIGH
 
 3. **Train ML models with latest data**

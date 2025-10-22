@@ -157,9 +157,9 @@ Added new NPM scripts:
 
 **Usage:**
 ```bash
-npm run audit:deployment   # Run final deployment audit
-npm run benchmark:analysis # Run benchmark analysis
-npm run audit:full         # Run both
+yarn run audit:deployment   # Run final deployment audit
+yarn run benchmark:analysis # Run benchmark analysis
+yarn run audit:full         # Run both
 ```
 
 ---
@@ -431,36 +431,36 @@ All success criteria met:
 
 ```bash
 # One command to check everything
-npm run audit:full
+yarn run audit:full
 ```
 
 ### Pre-Deployment Workflow
 
 ```bash
 # Step 1: Pre-operation checklist
-npm run precheck
+yarn run precheck
 
 # Step 2: Final deployment audit
-npm run audit:deployment
+yarn run audit:deployment
 
 # Step 3: Benchmark analysis
-npm run benchmark:analysis
+yarn run benchmark:analysis
 
 # Step 4: Review reports
 cat FINAL-DEPLOYMENT-AUDIT.md
 cat BENCHMARK-ANALYSIS-REPORT.md
 
 # Step 5: Deploy if ready
-npm start
+yarn start
 ```
 
 ### CI/CD Integration
 
 ```bash
 # In your CI/CD pipeline
-npm run audit:deployment || exit 1
-npm run benchmark:analysis || exit 1
-npm start
+yarn run audit:deployment || exit 1
+yarn run benchmark:analysis || exit 1
+yarn start
 ```
 
 ---
@@ -517,16 +517,16 @@ npm start
 
 ```bash
 # Audit and benchmark
-npm run audit:deployment
-npm run benchmark:analysis
-npm run audit:full
+yarn run audit:deployment
+yarn run benchmark:analysis
+yarn run audit:full
 
 # Validation
-npm run precheck
-npm run validate
+yarn run precheck
+yarn run validate
 
 # Help
-npm run --help
+yarn run --help
 ```
 
 ---
