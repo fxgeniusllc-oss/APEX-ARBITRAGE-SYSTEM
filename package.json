@@ -39,7 +39,10 @@
     "verify": "node scripts/verify-setup.js",
     "validate:performance": "node scripts/validate-performance.js",
     "ai:start": "python3 src/python/omni_mev_ai_engine.py",
-    "ai:dev": "uvicorn src.python.omni_mev_ai_engine:app --reload --port 8001"
+    "ai:dev": "uvicorn src.python.omni_mev_ai_engine:app --reload --port 8001",
+    "audit:deployment": "node scripts/final-deployment-audit.js",
+    "benchmark:analysis": "node scripts/benchmark-analysis.js",
+    "audit:full": "node scripts/final-deployment-audit.js && node scripts/benchmark-analysis.js"
   },
   "keywords": [
     "arbitrage",
