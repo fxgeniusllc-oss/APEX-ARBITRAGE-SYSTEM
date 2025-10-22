@@ -249,12 +249,16 @@ function generateRegressionReport() {
         results.regression_metrics.success_rates.javascript_tests.success_rate = 
             results.regression_metrics.success_rates.javascript_tests.passed / 
             results.regression_metrics.success_rates.javascript_tests.total;
+    } else {
+        results.regression_metrics.success_rates.javascript_tests.success_rate = 0;
     }
     
     if (results.regression_metrics.success_rates.python_tests.total > 0) {
         results.regression_metrics.success_rates.python_tests.success_rate = 
             results.regression_metrics.success_rates.python_tests.passed / 
             results.regression_metrics.success_rates.python_tests.total;
+    } else {
+        results.regression_metrics.success_rates.python_tests.success_rate = 0;
     }
 }
 
