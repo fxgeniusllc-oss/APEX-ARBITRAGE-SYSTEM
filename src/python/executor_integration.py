@@ -171,7 +171,6 @@ class IntegratedExecutor:
 
 async def run_integrated_demo():
     """Demo function for integrated executor"""
-    import os
     
     print("\n🎮 INTEGRATED EXECUTOR DEMO\n")
     
