@@ -46,7 +46,7 @@ class PredictionResult(BaseModel):
 class BatchPredictionRequest(BaseModel):
     """Batch prediction request"""
     opportunities: List[OpportunityInput]
-    threshold: float = 0.8
+    threshold: float = 0.88
     use_gpu: bool = False
 
 
@@ -234,7 +234,7 @@ async def batch_predict(request: BatchPredictionRequest):
 
 
 @app.post("/predict/single")
-async def single_predict(opportunity: OpportunityInput, threshold: float = 0.8):
+async def single_predict(opportunity: OpportunityInput, threshold: float = 0.88):
     """
     Single opportunity prediction endpoint
     
