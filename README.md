@@ -1180,4 +1180,12 @@ chmod +x quickstart.sh && ./quickstart.sh
 - 📊 [Setup Comparison](docs/SETUP-COMPARISON.md)
 - 🔧 [Troubleshooting](docs/TROUBLESHOOTING.md)
 
+---
+
+## 🤖 GitHub Copilot Integration
+
+This repository is optimized for GitHub Copilot coding agent. If you see warnings about missing `blocked.jsonl` or `blocked.md` files in the workflow logs, this is expected behavior and not an error. See [.github/COPILOT_ARTIFACTS_INFO.md](.github/COPILOT_ARTIFACTS_INFO.md) for details.
+
+---
+
 Happy Trading! 🚀💰
