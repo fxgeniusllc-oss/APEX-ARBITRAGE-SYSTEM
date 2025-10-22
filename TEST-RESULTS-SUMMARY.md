@@ -53,10 +53,10 @@ All tests have been successfully re-run and regression metrics have been capture
 
 ```bash
 # Run all regression tests
-npm run test:regression
+yarn run test:regression
 
 # Run JavaScript tests only
-npm test
+yarn test
 
 # Run Python ML tests
 python tests/test_ml_enhancements.py

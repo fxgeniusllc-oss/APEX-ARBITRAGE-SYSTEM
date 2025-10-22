@@ -43,12 +43,12 @@ The script automatically:
 
 2. **Verify everything works**:
    ```bash
-   npm run validate
+   yarn run validate
    ```
 
 3. **Start trading**:
    ```bash
-   npm start
+   yarn start
    ```
 
 ## Documentation
@@ -60,7 +60,7 @@ The script automatically:
 ## Need Help?
 
 - Run `./test-installer.sh` to check installer components
-- Run `npm run validate` to check your installation
+- Run `yarn run validate` to check your installation
 - See [INSTALLATION-GUIDE.md](../INSTALLATION-GUIDE.md) for troubleshooting
 
 ---

@@ -213,7 +213,7 @@ To test the installer without running it:
 
 ### Node Dependencies Fail to Install
 
-**Problem**: `npm install` or `yarn install` fails
+**Problem**: `yarn install` fails
 
 **Solution**:
 ```bash
@@ -292,13 +292,13 @@ After installation, verify these components:
 - [ ] Python 3.8+ installed (`python3 --version`)
 - [ ] Rust/Cargo installed (`cargo --version`)
 - [ ] node_modules directory exists
-- [ ] All npm packages installed
+- [ ] All yarn packages installed
 - [ ] All Python packages installed
 - [ ] Rust engine built
 - [ ] .env file configured
 - [ ] logs/ directory exists
 - [ ] data/models/ directory exists
-- [ ] Validation script passes (`npm run validate`)
+- [ ] Validation script passes (`yarn run validate`)
 
 ---
 
@@ -307,14 +307,14 @@ After installation, verify these components:
 If you encounter issues:
 
 1. **Check Documentation**: Review [README.md](README.md) and [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
-2. **Run Validation**: `npm run validate` to identify issues
+2. **Run Validation**: `yarn run validate` to identify issues
 3. **Check Logs**: Look in `logs/` directory for error messages
 4. **Review .env**: Ensure all required values are set
 5. **Open an Issue**: Create a GitHub issue with:
    - Your OS and version
    - Node.js, Python, Rust versions
    - Complete error messages
-   - Output of `npm run validate`
+   - Output of `yarn run validate`
 
 ---
 
@@ -323,9 +323,9 @@ If you encounter issues:
 Once installation is complete:
 
 1. **Configure** - Set up your .env file with real values
-2. **Test** - Run `npm test` to verify functionality
-3. **Deploy** - Deploy contracts with `npm run deploy`
-4. **Start** - Begin trading with `npm start`
-5. **Monitor** - Watch performance with `npm run logs`
+2. **Test** - Run `yarn test` to verify functionality
+3. **Deploy** - Deploy contracts with `yarn run deploy`
+4. **Start** - Begin trading with `yarn start`
+5. **Monitor** - Watch performance with `yarn run logs`
 
 Happy Trading! 🚀💰

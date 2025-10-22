@@ -71,7 +71,7 @@ Database and telemetry tests:
 
 ### Run All Tests
 ```bash
-npm test
+yarn test
 ```
 
 ### Run Specific Test File
@@ -162,7 +162,7 @@ For detailed test results and validation report, see:
 Tests are designed to run in CI/CD pipelines:
 ```yaml
 - name: Run Tests
-  run: npm test
+  run: yarn test
   
 - name: Validate System
   run: node scripts/validate-system.js
