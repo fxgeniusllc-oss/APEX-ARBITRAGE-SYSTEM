@@ -85,29 +85,173 @@ const DEX_CONFIGS = {
 };
 
 /**
- * Uniswap V2 Factory ABI (minimal)
+ * Uniswap V2 Factory ABI (expanded)
  */
 const UNISWAP_V2_FACTORY_ABI = [
     'function allPairsLength() external view returns (uint)',
     'function allPairs(uint) external view returns (address)',
-    'function getPair(address tokenA, address tokenB) external view returns (address pair)'
+    'function getPair(address tokenA, address tokenB) external view returns (address pair)',
+    'function feeTo() external view returns (address)',
+    'function feeToSetter() external view returns (address)',
+    'function createPair(address tokenA, address tokenB) external returns (address pair)',
+    'function setFeeTo(address) external',
+    'function setFeeToSetter(address) external',
+    'event PairCreated(address indexed token0, address indexed token1, address pair, uint)'
 ];
 
 /**
- * Uniswap V2 Pair ABI (minimal)
+ * Uniswap V2 Pair ABI (expanded)
  */
 const UNISWAP_V2_PAIR_ABI = [
     'function token0() external view returns (address)',
     'function token1() external view returns (address)',
     'function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast)',
-    'function totalSupply() external view returns (uint)'
+    'function totalSupply() external view returns (uint)',
+    'function price0CumulativeLast() external view returns (uint)',
+    'function price1CumulativeLast() external view returns (uint)',
+    'function kLast() external view returns (uint)',
+    'function MINIMUM_LIQUIDITY() external pure returns (uint)',
+    'function factory() external view returns (address)',
+    'function mint(address to) external returns (uint liquidity)',
+    'function burn(address to) external returns (uint amount0, uint amount1)',
+    'function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external',
+    'function skim(address to) external',
+    'function sync() external',
+    'function balanceOf(address owner) external view returns (uint)',
+    'function approve(address spender, uint value) external returns (bool)',
+    'function transfer(address to, uint value) external returns (bool)',
+    'function transferFrom(address from, address to, uint value) external returns (bool)',
+    'function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external',
+    'function allowance(address owner, address spender) external view returns (uint)',
+    'function name() external pure returns (string memory)',
+    'function symbol() external pure returns (string memory)',
+    'function decimals() external pure returns (uint8)',
+    'function DOMAIN_SEPARATOR() external view returns (bytes32)',
+    'function PERMIT_TYPEHASH() external pure returns (bytes32)',
+    'function nonces(address owner) external view returns (uint)',
+    'event Mint(address indexed sender, uint amount0, uint amount1)',
+    'event Burn(address indexed sender, uint amount0, uint amount1, address indexed to)',
+    'event Swap(address indexed sender, uint amount0In, uint amount1In, uint amount0Out, uint amount1Out, address indexed to)',
+    'event Sync(uint112 reserve0, uint112 reserve1)',
+    'event Approval(address indexed owner, address indexed spender, uint value)',
+    'event Transfer(address indexed from, address indexed to, uint value)'
 ];
 
 /**
- * Balancer Vault ABI (minimal)
+ * Balancer Vault ABI (expanded)
  */
 const BALANCER_VAULT_ABI = [
-    'function getPoolTokens(bytes32 poolId) external view returns (address[] tokens, uint256[] balances, uint256 lastChangeBlock)'
+    'function getPoolTokens(bytes32 poolId) external view returns (address[] tokens, uint256[] balances, uint256 lastChangeBlock)',
+    'function swap(tuple(bytes32 poolId, uint8 kind, address assetIn, address assetOut, uint256 amount, bytes userData) singleSwap, tuple(address sender, bool fromInternalBalance, address recipient, bool toInternalBalance) funds, uint256 limit, uint256 deadline) external payable returns (uint256)',
+    'function batchSwap(uint8 kind, tuple(bytes32 poolId, uint256 assetInIndex, uint256 assetOutIndex, uint256 amount, bytes userData)[] swaps, address[] assets, tuple(address sender, bool fromInternalBalance, address recipient, bool toInternalBalance) funds, int256[] limits, uint256 deadline) external payable returns (int256[] assetDeltas)',
+    'function joinPool(bytes32 poolId, address sender, address recipient, tuple(address[] assets, uint256[] maxAmountsIn, bytes userData, bool fromInternalBalance) request) external payable',
+    'function exitPool(bytes32 poolId, address sender, address recipient, tuple(address[] assets, uint256[] minAmountsOut, bytes userData, bool toInternalBalance) request) external',
+    'function flashLoan(address recipient, address[] tokens, uint256[] amounts, bytes userData) external',
+    'function getInternalBalance(address user, address[] tokens) external view returns (uint256[] balances)',
+    'function manageUserBalance(tuple(uint8 kind, address asset, uint256 amount, address sender, address recipient)[] ops) external payable',
+    'function getPool(bytes32 poolId) external view returns (address, uint8)',
+    'function registerPool(uint8 specialization) external returns (bytes32)',
+    'function getPoolTokenInfo(bytes32 poolId, address token) external view returns (uint256 cash, uint256 managed, uint256 lastChangeBlock, address assetManager)',
+    'function getProtocolFeesCollector() external view returns (address)',
+    'function setPaused(bool paused) external',
+    'function WETH() external view returns (address)',
+    'event Swap(bytes32 indexed poolId, address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut)',
+    'event PoolBalanceChanged(bytes32 indexed poolId, address indexed liquidityProvider, address[] tokens, int256[] deltas, uint256[] protocolFeeAmounts)',
+    'event InternalBalanceChanged(address indexed user, address indexed token, int256 delta)',
+    'event FlashLoan(address indexed recipient, address indexed token, uint256 amount, uint256 feeAmount)'
+];
+
+/**
+ * Curve Registry ABI (expanded)
+ */
+const CURVE_REGISTRY_ABI = [
+    'function pool_count() external view returns (uint256)',
+    'function pool_list(uint256) external view returns (address)',
+    'function get_pool_from_lp_token(address) external view returns (address)',
+    'function get_lp_token(address) external view returns (address)',
+    'function get_n_coins(address) external view returns (uint256)',
+    'function get_coins(address) external view returns (address[8])',
+    'function get_underlying_coins(address) external view returns (address[8])',
+    'function get_decimals(address) external view returns (uint256[8])',
+    'function get_underlying_decimals(address) external view returns (uint256[8])',
+    'function get_rates(address) external view returns (uint256[8])',
+    'function get_gauges(address) external view returns (address[10], int128[10])',
+    'function get_balances(address) external view returns (uint256[8])',
+    'function get_underlying_balances(address) external view returns (uint256[8])',
+    'function get_virtual_price_from_lp_token(address) external view returns (uint256)',
+    'function get_A(address) external view returns (uint256)',
+    'function get_fees(address) external view returns (uint256, uint256)',
+    'function get_admin_balances(address) external view returns (uint256[8])',
+    'function get_coin_indices(address, address, address) external view returns (int128, int128, bool)',
+    'function estimate_gas_used(address, address, address) external view returns (uint256)',
+    'function is_meta(address) external view returns (bool)',
+    'function get_pool_asset_type(address) external view returns (uint256)',
+    'function get_pool_name(address) external view returns (string)',
+    'event PoolAdded(address indexed pool, bytes rate_method_id)',
+    'event PoolRemoved(address indexed pool)'
+];
+
+/**
+ * Curve Pool ABI (expanded)
+ */
+const CURVE_POOL_ABI = [
+    'function coins(uint256) external view returns (address)',
+    'function balances(uint256) external view returns (uint256)',
+    'function get_virtual_price() external view returns (uint256)',
+    'function calc_token_amount(uint256[], bool) external view returns (uint256)',
+    'function add_liquidity(uint256[], uint256) external payable returns (uint256)',
+    'function get_dy(int128, int128, uint256) external view returns (uint256)',
+    'function get_dy_underlying(int128, int128, uint256) external view returns (uint256)',
+    'function exchange(int128, int128, uint256, uint256) external payable returns (uint256)',
+    'function exchange_underlying(int128, int128, uint256, uint256) external payable returns (uint256)',
+    'function remove_liquidity(uint256, uint256[]) external returns (uint256[])',
+    'function remove_liquidity_imbalance(uint256[], uint256) external returns (uint256)',
+    'function remove_liquidity_one_coin(uint256, int128, uint256) external returns (uint256)',
+    'function A() external view returns (uint256)',
+    'function A_precise() external view returns (uint256)',
+    'function fee() external view returns (uint256)',
+    'function admin_fee() external view returns (uint256)',
+    'function admin_balances(uint256) external view returns (uint256)',
+    'function N_COINS() external view returns (uint256)',
+    'event TokenExchange(address indexed buyer, int128 sold_id, uint256 tokens_sold, int128 bought_id, uint256 tokens_bought)',
+    'event TokenExchangeUnderlying(address indexed buyer, int128 sold_id, uint256 tokens_sold, int128 bought_id, uint256 tokens_bought)',
+    'event AddLiquidity(address indexed provider, uint256[] token_amounts, uint256[] fees, uint256 invariant, uint256 token_supply)',
+    'event RemoveLiquidity(address indexed provider, uint256[] token_amounts, uint256[] fees, uint256 token_supply)',
+    'event RemoveLiquidityOne(address indexed provider, uint256 token_amount, uint256 coin_amount, uint256 token_supply)',
+    'event RemoveLiquidityImbalance(address indexed provider, uint256[] token_amounts, uint256[] fees, uint256 invariant, uint256 token_supply)'
+];
+
+/**
+ * Aave V3 Pool ABI (expanded - for flash loans)
+ */
+const AAVE_V3_POOL_ABI = [
+    'function flashLoan(address receiverAddress, address[] assets, uint256[] amounts, uint256[] interestRateModes, address onBehalfOf, bytes params, uint16 referralCode) external',
+    'function flashLoanSimple(address receiverAddress, address asset, uint256 amount, bytes params, uint16 referralCode) external',
+    'function supply(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external',
+    'function withdraw(address asset, uint256 amount, address to) external returns (uint256)',
+    'function borrow(address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode, address onBehalfOf) external',
+    'function repay(address asset, uint256 amount, uint256 interestRateMode, address onBehalfOf) external returns (uint256)',
+    'function repayWithPermit(address asset, uint256 amount, uint256 interestRateMode, address onBehalfOf, uint256 deadline, uint8 permitV, bytes32 permitR, bytes32 permitS) external returns (uint256)',
+    'function repayWithATokens(address asset, uint256 amount, uint256 interestRateMode) external returns (uint256)',
+    'function swapBorrowRateMode(address asset, uint256 interestRateMode) external',
+    'function rebalanceStableBorrowRate(address asset, address user) external',
+    'function setUserUseReserveAsCollateral(address asset, bool useAsCollateral) external',
+    'function liquidationCall(address collateralAsset, address debtAsset, address user, uint256 debtToCover, bool receiveAToken) external',
+    'function getUserAccountData(address user) external view returns (uint256 totalCollateralBase, uint256 totalDebtBase, uint256 availableBorrowsBase, uint256 currentLiquidationThreshold, uint256 ltv, uint256 healthFactor)',
+    'function getReserveData(address asset) external view returns (tuple(uint256 configuration, uint128 liquidityIndex, uint128 currentLiquidityRate, uint128 variableBorrowIndex, uint128 currentVariableBorrowRate, uint128 currentStableBorrowRate, uint40 lastUpdateTimestamp, uint16 id, address aTokenAddress, address stableDebtTokenAddress, address variableDebtTokenAddress, address interestRateStrategyAddress, uint128 accruedToTreasury, uint128 unbacked, uint128 isolationModeTotalDebt))',
+    'function getReservesList() external view returns (address[])',
+    'function FLASHLOAN_PREMIUM_TOTAL() external view returns (uint128)',
+    'function FLASHLOAN_PREMIUM_TO_PROTOCOL() external view returns (uint128)',
+    'function MAX_STABLE_RATE_BORROW_SIZE_PERCENT() external view returns (uint256)',
+    'function BRIDGE_PROTOCOL_FEE() external view returns (uint256)',
+    'function mintUnbacked(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external',
+    'function backUnbacked(address asset, uint256 amount, uint256 fee) external returns (uint256)',
+    'event Supply(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint16 indexed referralCode)',
+    'event Withdraw(address indexed reserve, address indexed user, address indexed to, uint256 amount)',
+    'event Borrow(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint8 interestRateMode, uint256 borrowRate, uint16 indexed referralCode)',
+    'event Repay(address indexed reserve, address indexed user, address indexed repayer, uint256 amount, bool useATokens)',
+    'event FlashLoan(address indexed target, address initiator, address indexed asset, uint256 amount, uint8 interestRateMode, uint256 premium, uint16 indexed referralCode)',
+    'event LiquidationCall(address indexed collateralAsset, address indexed debtAsset, address indexed user, uint256 debtToCover, uint256 liquidatedCollateralAmount, address liquidator, bool receiveAToken)'
 ];
 
 class DexPoolFetcher {
