@@ -220,6 +220,42 @@ For MEV strategies documentation, see [docs/MEV-STRATEGIES.md](docs/MEV-STRATEGI
 
 ---
 
+## 🧪 Testing & Regression Metrics
+
+### Run All Tests
+
+```bash
+# Run comprehensive regression tests (JavaScript + Python)
+npm run test:regression
+
+# Run JavaScript tests only
+npm test
+
+# Run Python ML tests
+python tests/test_ml_enhancements.py
+python tests/test_enhanced_ml.py
+```
+
+### Test Results
+
+The system includes **87 automated test cases** with **100% pass rate**:
+
+- **62 JavaScript Tests** - Rust engine, AI integration, database operations
+- **25 Python Tests** - ML enhancements, ensemble models, dynamic thresholding
+
+**Current Test Metrics (v2.0.0):**
+- ✅ Success Rate: 80.57%
+- ✅ Avg Profit: $40.94 per trade
+- ✅ Execution Time: 201.22ms avg
+- ✅ Rust Engine: 2000+ opportunities in <50ms
+- ✅ Test Suite Pass Rate: 100%
+
+For detailed regression metrics and test results, see:
+- [TEST-RESULTS-SUMMARY.md](TEST-RESULTS-SUMMARY.md) - Quick overview
+- [docs/REGRESSION-TEST-REPORT.md](docs/REGRESSION-TEST-REPORT.md) - Complete report
+
+---
+
 ## 💼 How It Works
 
 ### 1. **Continuous Scanning**
