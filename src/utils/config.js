@@ -1,7 +1,81 @@
 /**
  * APEX System Configuration
- * Centralized configuration management
+ * Centralized configuration management for entire system
+ * Loads and validates all environment variables
  */
+
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+// Load environment variables from .env file
+dotenv.config();
+
+/**
+ * Helper function to get required environment variable
+ * @param {string} key - Environment variable key
+ * @param {string} defaultValue - Default value if not set
+ * @returns {string} - Environment variable value
+ */
+function getEnv(key, defaultValue = undefined) {
+    const value = process.env[key];
+    if (value === undefined && defaultValue === undefined) {
+        console.warn(`⚠️  Environment variable ${key} is not set`);
+    }
+    return value || defaultValue;
+}
+
+/**
+ * Helper function to get required environment variable with validation
+ * @param {string} key - Environment variable key
+ * @throws {Error} - If variable is not set
+ * @returns {string} - Environment variable value
+ */
+function getRequiredEnv(key) {
+    const value = process.env[key];
+    if (!value) {
+        throw new Error(`Required environment variable ${key} is not set. Please check your .env file.`);
+    }
+    return value;
+}
+
+/**
+ * Helper function to parse boolean environment variable
+ * @param {string} key - Environment variable key
+ * @param {boolean} defaultValue - Default value if not set
+ * @returns {boolean} - Parsed boolean value
+ */
+function getBoolEnv(key, defaultValue = false) {
+    const value = process.env[key];
+    if (value === undefined) return defaultValue;
+    return value.toLowerCase() === 'true' || value === '1';
+}
+
+/**
+ * Helper function to parse integer environment variable
+ * @param {string} key - Environment variable key
+ * @param {number} defaultValue - Default value if not set
+ * @returns {number} - Parsed integer value
+ */
+function getIntEnv(key, defaultValue = 0) {
+    const value = process.env[key];
+    if (value === undefined) return defaultValue;
+    const parsed = parseInt(value, 10);
+    return isNaN(parsed) ? defaultValue : parsed;
+}
+
+/**
+ * Helper function to parse float environment variable
+ * @param {string} key - Environment variable key
+ * @param {number} defaultValue - Default value if not set
+ * @returns {number} - Parsed float value
+ */
+function getFloatEnv(key, defaultValue = 0.0) {
+    const value = process.env[key];
+    if (value === undefined) return defaultValue;
+    const parsed = parseFloat(value);
+    return isNaN(parsed) ? defaultValue : parsed;
+}
 
 // Execution Mode Configuration
 export const MODE = {
@@ -10,7 +84,7 @@ export const MODE = {
     SIM: 'SIM'
 };
 
-export const CURRENT_MODE = (process.env.MODE || 'DEV').toUpperCase();
+export const CURRENT_MODE = (getEnv('MODE', 'DEV')).toUpperCase();
 
 // Validate mode
 if (!Object.values(MODE).includes(CURRENT_MODE)) {
@@ -24,49 +98,50 @@ export const MODE_DESCRIPTIONS = {
     [MODE.SIM]: 'SIM MODE - Simulation mode for backtesting and strategy testing with real market data'
 };
 
+// Network/Chain Configuration
 export const CHAINS = {
     POLYGON: {
         name: 'Polygon',
         chainId: 137,
         nativeCurrency: 'MATIC',
-        rpcUrl: process.env.POLYGON_RPC_URL,
-        wssUrl: process.env.POLYGON_WSS_URL,
+        rpcUrl: getEnv('POLYGON_RPC_URL'),
+        wssUrl: getEnv('POLYGON_WSS_URL'),
         explorerUrl: 'https://polygonscan.com'
     },
     ETHEREUM: {
         name: 'Ethereum',
         chainId: 1,
         nativeCurrency: 'ETH',
-        rpcUrl: process.env.ETHEREUM_RPC_URL,
-        wssUrl: process.env.ETHEREUM_WSS_URL,
+        rpcUrl: getEnv('ETHEREUM_RPC_URL'),
+        wssUrl: getEnv('ETHEREUM_WSS_URL'),
         explorerUrl: 'https://etherscan.io'
     },
     ARBITRUM: {
         name: 'Arbitrum',
         chainId: 42161,
         nativeCurrency: 'ETH',
-        rpcUrl: process.env.ARBITRUM_RPC_URL,
+        rpcUrl: getEnv('ARBITRUM_RPC_URL'),
         explorerUrl: 'https://arbiscan.io'
     },
     OPTIMISM: {
         name: 'Optimism',
         chainId: 10,
         nativeCurrency: 'ETH',
-        rpcUrl: process.env.OPTIMISM_RPC_URL,
+        rpcUrl: getEnv('OPTIMISM_RPC_URL'),
         explorerUrl: 'https://optimistic.etherscan.io'
     },
     BASE: {
         name: 'Base',
         chainId: 8453,
         nativeCurrency: 'ETH',
-        rpcUrl: process.env.BASE_RPC_URL,
+        rpcUrl: getEnv('BASE_RPC_URL'),
         explorerUrl: 'https://basescan.org'
     },
     BSC: {
         name: 'BSC',
         chainId: 56,
         nativeCurrency: 'BNB',
-        rpcUrl: process.env.BSC_RPC_URL,
+        rpcUrl: getEnv('BSC_RPC_URL'),
         explorerUrl: 'https://bscscan.com'
     }
 };
@@ -191,12 +266,13 @@ export const ARBITRAGE_ROUTES = [
     }
 ];
 
+// ML Model Configuration
 export const ML_CONFIG = {
-    confidenceThreshold: parseFloat(process.env.ML_CONFIDENCE_THRESHOLD) || 0.8,
-    enableFiltering: process.env.ENABLE_ML_FILTERING === 'true',
+    confidenceThreshold: getFloatEnv('ML_CONFIDENCE_THRESHOLD', 0.8),
+    enableFiltering: getBoolEnv('ENABLE_ML_FILTERING', true),
     modelPaths: {
-        xgboost: process.env.XGBOOST_MODEL_PATH || 'data/models/xgboost_model.json',
-        onnx: process.env.ONNX_MODEL_PATH || 'data/models/onnx_model.onnx'
+        xgboost: getEnv('XGBOOST_MODEL_PATH', 'data/models/xgboost_model.json'),
+        onnx: getEnv('ONNX_MODEL_PATH', 'data/models/onnx_model.onnx')
     },
     features: [
         'profit_usd',
@@ -212,23 +288,95 @@ export const ML_CONFIG = {
     ]
 };
 
+// Safety and Execution Parameters
 export const SAFETY_CONFIG = {
-    minProfitUSD: parseFloat(process.env.MIN_PROFIT_USD) || 5,
-    maxGasPriceGwei: parseFloat(process.env.MAX_GAS_PRICE_GWEI) || 100,
-    slippageBps: parseFloat(process.env.SLIPPAGE_BPS) || 50,
-    // Maximum daily loss allowed, in USD
-    maxDailyLossUSD: parseFloat(process.env.MAX_DAILY_LOSS_USD) || 50,
-    maxConsecutiveFailures: parseInt(process.env.MAX_CONSECUTIVE_FAILURES) || 5,
-    minTimeBetweenTrades: parseInt(process.env.MIN_TIME_BETWEEN_TRADES) || 30000
+    minProfitUSD: getFloatEnv('MIN_PROFIT_USD', 5),
+    maxGasPriceGwei: getFloatEnv('MAX_GAS_PRICE_GWEI', 100),
+    slippageBps: getFloatEnv('SLIPPAGE_BPS', 50),
+    maxDailyLossUSD: getFloatEnv('MAX_DAILY_LOSS_USD', 50),
+    maxConsecutiveFailures: getIntEnv('MAX_CONSECUTIVE_FAILURES', 5),
+    minTimeBetweenTrades: getIntEnv('MIN_TIME_BETWEEN_TRADES', 30000)
 };
 
+// System Configuration
 export const SYSTEM_CONFIG = {
-    scanInterval: parseInt(process.env.SCAN_INTERVAL) || 60000,
-    enableCrossChain: process.env.ENABLE_CROSS_CHAIN === 'true',
-    enableMempoolMonitoring: process.env.ENABLE_MEMPOOL_MONITORING === 'true',
-    enableMicroRaptorBots: process.env.ENABLE_MICRO_RAPTOR_BOTS === 'true',
-    raptorBotCount: parseInt(process.env.RAPTOR_BOT_COUNT) || 4,
-    rustEngineEnabled: process.env.RUST_ENGINE_ENABLED !== 'false'
+    scanInterval: getIntEnv('SCAN_INTERVAL', 60000),
+    enableCrossChain: getBoolEnv('ENABLE_CROSS_CHAIN', true),
+    enableMempoolMonitoring: getBoolEnv('ENABLE_MEMPOOL_MONITORING', true),
+    enableMicroRaptorBots: getBoolEnv('ENABLE_MICRO_RAPTOR_BOTS', true),
+    raptorBotCount: getIntEnv('RAPTOR_BOT_COUNT', 4),
+    rustEngineEnabled: getBoolEnv('RUST_ENGINE_ENABLED', true)
+};
+
+// Private Key Configuration (for wallet/transaction signing)
+export const WALLET_CONFIG = {
+    privateKey: getEnv('PRIVATE_KEY', '')
+};
+
+// Hybrid AI Engine Configuration
+export const AI_ENGINE_CONFIG = {
+    liveTrading: getBoolEnv('LIVE_TRADING', false),
+    modelPath: getEnv('AI_MODEL_PATH', './data/models/lstm_omni.onnx'),
+    threshold: getFloatEnv('AI_THRESHOLD', 0.78),
+    enginePort: getIntEnv('AI_ENGINE_PORT', 8001),
+    rustEngineUrl: getEnv('RUST_ENGINE_URL', 'http://localhost:7000')
+};
+
+// BloXroute Configuration
+export const BLOXROUTE_CONFIG = {
+    authToken: getEnv('BLOXROUTE_AUTH_TOKEN', ''),
+    gatewayUrl: getEnv('BLOXROUTE_GATEWAY_URL', 'https://api.blxrbdn.com'),
+    enabled: getBoolEnv('ENABLE_BLOXROUTE', false)
+};
+
+// Merkle Tree Batch Processing Configuration
+export const BATCH_PROCESSING_CONFIG = {
+    processorAddress: getEnv('BATCH_PROCESSOR_ADDRESS', '0x0000000000000000000000000000000000000000'),
+    enabled: getBoolEnv('ENABLE_BATCH_PROCESSING', false),
+    minBatchSize: getIntEnv('MIN_BATCH_SIZE', 5),
+    maxBatchSize: getIntEnv('MAX_BATCH_SIZE', 50)
+};
+
+// Redis Configuration
+export const REDIS_CONFIG = {
+    host: getEnv('REDIS_HOST', '127.0.0.1'),
+    port: getIntEnv('REDIS_PORT', 6379)
+};
+
+// Prometheus Metrics Configuration
+export const PROMETHEUS_CONFIG = {
+    port: getIntEnv('PROMETHEUS_PORT', 9090)
+};
+
+// Multi-Chain Bridge Configuration
+export const BRIDGE_CONFIG = {
+    enableLayerZero: getBoolEnv('ENABLE_LAYER_ZERO_BRIDGE', true),
+    enableAcross: getBoolEnv('ENABLE_ACROSS_BRIDGE', true)
+};
+
+// Telegram Monitoring & Alerts Configuration
+export const TELEGRAM_CONFIG = {
+    botToken: getEnv('TELEGRAM_BOT_TOKEN', ''),
+    chatId: getEnv('TELEGRAM_CHAT_ID', ''),
+    enabled: getBoolEnv('ENABLE_TELEGRAM_ALERTS', false)
+};
+
+// MEV Protection Configuration
+export const MEV_CONFIG = {
+    usePrivateRelay: getBoolEnv('USE_PRIVATE_RELAY', true),
+    flashbotsRelayUrl: getEnv('FLASHBOTS_RELAY_URL', 'https://relay.flashbots.net'),
+    edenRelayUrl: getEnv('EDEN_RELAY_URL', 'https://api.edennetwork.io/v1/rpc')
+};
+
+// Database Configuration
+export const DATABASE_CONFIG = {
+    path: getEnv('DB_PATH', 'data/apex.db')
+};
+
+// Logging Configuration
+export const LOGGING_CONFIG = {
+    level: getEnv('LOG_LEVEL', 'info'),
+    directory: getEnv('LOG_DIR', 'logs')
 };
 
 // Mode-aware execution configuration
@@ -270,3 +418,129 @@ export function getModeDisplay() {
     };
     return `${emoji[CURRENT_MODE]} ${CURRENT_MODE} MODE - ${MODE_DESCRIPTIONS[CURRENT_MODE]}`;
 }
+
+/**
+ * Validate that all required configuration is present
+ * @throws {Error} If required configuration is missing
+ */
+export function validateConfig() {
+    const errors = [];
+    
+    // Check RPC URLs for critical chains
+    if (!CHAINS.POLYGON.rpcUrl) {
+        errors.push('POLYGON_RPC_URL is required');
+    }
+    if (!CHAINS.ETHEREUM.rpcUrl) {
+        errors.push('ETHEREUM_RPC_URL is required');
+    }
+    
+    // Validate MODE
+    if (!Object.values(MODE).includes(CURRENT_MODE)) {
+        errors.push(`Invalid MODE: ${CURRENT_MODE}. Must be one of: ${Object.values(MODE).join(', ')}`);
+    }
+    
+    // Validate private key in LIVE mode
+    if (CURRENT_MODE === MODE.LIVE && !WALLET_CONFIG.privateKey) {
+        errors.push('PRIVATE_KEY is required in LIVE mode');
+    }
+    
+    // Validate safety parameters
+    if (SAFETY_CONFIG.minProfitUSD < 0) {
+        errors.push('MIN_PROFIT_USD must be non-negative');
+    }
+    if (SAFETY_CONFIG.maxGasPriceGwei <= 0) {
+        errors.push('MAX_GAS_PRICE_GWEI must be positive');
+    }
+    
+    if (errors.length > 0) {
+        throw new Error(`Configuration validation failed:\n${errors.map(e => `  - ${e}`).join('\n')}`);
+    }
+    
+    return true;
+}
+
+/**
+ * Get all configuration as a single object (for logging/debugging)
+ * Note: Sensitive values are redacted
+ * @returns {object} Complete configuration object with sensitive values redacted
+ */
+export function getConfig() {
+    return {
+        mode: CURRENT_MODE,
+        chains: Object.keys(CHAINS).reduce((acc, key) => {
+            acc[key] = {
+                ...CHAINS[key],
+                rpcUrl: CHAINS[key].rpcUrl ? '***' : undefined,
+                wssUrl: CHAINS[key].wssUrl ? '***' : undefined
+            };
+            return acc;
+        }, {}),
+        dexes: DEXES,
+        tokens: TOKENS,
+        ml: ML_CONFIG,
+        safety: SAFETY_CONFIG,
+        system: SYSTEM_CONFIG,
+        ai: {
+            ...AI_ENGINE_CONFIG,
+            modelPath: AI_ENGINE_CONFIG.modelPath
+        },
+        bloxroute: {
+            ...BLOXROUTE_CONFIG,
+            authToken: BLOXROUTE_CONFIG.authToken ? '***' : undefined
+        },
+        batchProcessing: BATCH_PROCESSING_CONFIG,
+        redis: REDIS_CONFIG,
+        prometheus: PROMETHEUS_CONFIG,
+        bridge: BRIDGE_CONFIG,
+        telegram: {
+            ...TELEGRAM_CONFIG,
+            botToken: TELEGRAM_CONFIG.botToken ? '***' : undefined,
+            chatId: TELEGRAM_CONFIG.chatId ? '***' : undefined
+        },
+        mev: MEV_CONFIG,
+        database: DATABASE_CONFIG,
+        logging: LOGGING_CONFIG,
+        execution: EXECUTION_CONFIG,
+        wallet: {
+            privateKey: WALLET_CONFIG.privateKey ? '***' : undefined
+        }
+    };
+}
+
+/**
+ * Export all configuration modules for easy access
+ */
+export const CONFIG = {
+    MODE,
+    CURRENT_MODE,
+    MODE_DESCRIPTIONS,
+    CHAINS,
+    DEXES,
+    TOKENS,
+    BALANCER_VAULT,
+    ARBITRAGE_ROUTES,
+    ML_CONFIG,
+    SAFETY_CONFIG,
+    SYSTEM_CONFIG,
+    WALLET_CONFIG,
+    AI_ENGINE_CONFIG,
+    BLOXROUTE_CONFIG,
+    BATCH_PROCESSING_CONFIG,
+    REDIS_CONFIG,
+    PROMETHEUS_CONFIG,
+    BRIDGE_CONFIG,
+    TELEGRAM_CONFIG,
+    MEV_CONFIG,
+    DATABASE_CONFIG,
+    LOGGING_CONFIG,
+    EXECUTION_CONFIG
+};
+
+// Export helper functions
+export {
+    getEnv,
+    getRequiredEnv,
+    getBoolEnv,
+    getIntEnv,
+    getFloatEnv
+};

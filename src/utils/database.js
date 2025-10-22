@@ -1,12 +1,13 @@
 import Database from 'better-sqlite3';
 import { mkdirSync, existsSync } from 'fs';
 import { dirname } from 'path';
+import { DATABASE_CONFIG } from './config.js';
 
 /**
  * Database utility for storing execution history and metrics
  */
 
-const DB_PATH = process.env.DB_PATH || 'data/apex.db';
+const DB_PATH = DATABASE_CONFIG.path;
 
 // Ensure data directory exists
 const dbDir = dirname(DB_PATH);

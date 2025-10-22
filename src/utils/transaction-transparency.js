@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import Database from 'better-sqlite3';
 import { mkdirSync, existsSync } from 'fs';
 import { dirname } from 'path';
+import { DATABASE_CONFIG } from './config.js';
 
 /**
  * Transaction Transparency Module
@@ -9,7 +10,8 @@ import { dirname } from 'path';
  * for complete transparency and auditability
  */
 
-const TRANSPARENCY_DB_PATH = process.env.TRANSPARENCY_DB_PATH || 'data/transparency.db';
+// Use a separate database for transparency tracking
+const TRANSPARENCY_DB_PATH = DATABASE_CONFIG.path.replace('apex.db', 'transparency.db');
 
 // Ensure data directory exists
 const dbDir = dirname(TRANSPARENCY_DB_PATH);

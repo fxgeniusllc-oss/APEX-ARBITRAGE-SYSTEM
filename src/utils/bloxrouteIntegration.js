@@ -7,11 +7,12 @@
 import axios from 'axios';
 import { ethers } from 'ethers';
 import chalk from 'chalk';
+import { BLOXROUTE_CONFIG } from './config.js';
 
 export class BloxrouteGateway {
     constructor(authToken) {
-        this.authToken = authToken || process.env.BLOXROUTE_AUTH_TOKEN;
-        this.baseUrl = process.env.BLOXROUTE_GATEWAY_URL || 'https://api.blxrbdn.com';
+        this.authToken = authToken || BLOXROUTE_CONFIG.authToken;
+        this.baseUrl = BLOXROUTE_CONFIG.gatewayUrl;
         
         // BloXroute endpoints by chain
         this.endpoints = {

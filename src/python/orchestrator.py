@@ -6,31 +6,25 @@ Supports LIVE/DEV/SIM execution modes
 
 import asyncio
 import json
-import os
 import numpy as np
 from typing import List, Dict, Optional
 from dataclasses import dataclass
-from enum import Enum
 # Required ML libraries: install via pip and add to requirements.txt
 # pip install xgboost==1.7.6 onnxruntime==1.16.3
 import xgboost as xgb
 import onnxruntime as ort
 
-
-class ExecutionMode(Enum):
-    """Execution mode configuration"""
-    LIVE = "LIVE"  # Execute real transactions
-    DEV = "DEV"    # Dry-run with real data
-    SIM = "SIM"    # Simulation/backtesting mode
-
-
-class ChainType(Enum):
-    POLYGON = "polygon"
-    ETHEREUM = "ethereum"
-    ARBITRUM = "arbitrum"
-    OPTIMISM = "optimism"
-    BASE = "base"
-    BSC = "bsc"
+# Import centralized configuration
+from config import (
+    ExecutionMode,
+    ChainType,
+    CURRENT_MODE,
+    MLConfig,
+    SafetyConfig,
+    SystemConfig,
+    get_mode_display,
+    should_execute_real_transactions
+)
 
 
 @dataclass
