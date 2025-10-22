@@ -302,183 +302,27 @@ class MicroRaptorBot:
 
 
 class MempoolWatchdog:
-    """
-    Mempool monitoring for MEV opportunity detection
-    Supports: front-running, back-running, and sandwich attacks
-    """
+    """Mempool monitoring for frontrun protection and opportunity detection"""
     
     def __init__(self):
         self.pending_txs = []
         self.monitored_addresses = set()
-        self.monitored_pools = set()
     
     async def monitor_mempool(self, chain: ChainType):
         """Monitor mempool for pending transactions"""
         while True:
             # Would connect to WebSocket RPC for mempool monitoring
-            # Real implementation would use:
-            # - Alchemy/Infura WebSocket for pending txs
-            # - BloXroute for high-speed mempool access
             await asyncio.sleep(0.1)
     
     def analyze_transaction(self, tx: Dict) -> Optional[Dict]:
-        """
-        Analyze pending transaction for MEV opportunities
-        Returns strategy recommendation: frontrun, backrun, or sandwich
-        """
+        """Analyze pending transaction for arbitrage impact"""
         # Check if transaction affects our routes
         # Calculate if we should frontrun/backrun
-        
-        # Extract transaction details
-        target_token = tx.get('token_in')
-        amount = tx.get('amount', 0)
-        gas_price = tx.get('gas_price', 0)
-        
-        # Check for large swaps that create arbitrage opportunities
-        if amount > 10000:  # Large swap threshold
-            return {
-                'strategy': 'sandwich',
-                'target_tx': tx,
-                'estimated_profit': amount * 0.001  # Conservative estimate
-            }
-        
         return None
-    
-    def detect_frontrun_opportunity(self, tx: Dict) -> Optional[Dict]:
-        """
-        Detect front-running opportunities
-        Submit transaction with higher gas before target transaction
-        """
-        if not tx.get('affects_price'):
-            return None
-            
-        # Calculate if front-running is profitable
-        estimated_profit = self._calculate_frontrun_profit(tx)
-        
-        if estimated_profit > 5.0:
-            return {
-                'type': 'frontrun',
-                'target_tx_hash': tx.get('hash'),
-                'estimated_profit': estimated_profit,
-                'recommended_gas_price': tx.get('gas_price', 0) * 1.15  # 15% higher
-            }
-        
-        return None
-    
-    def detect_backrun_opportunity(self, tx: Dict) -> Optional[Dict]:
-        """
-        Detect back-running opportunities
-        Submit arbitrage transaction immediately after target transaction
-        """
-        # Check if transaction creates price inefficiency
-        if tx.get('creates_arbitrage'):
-            estimated_profit = self._calculate_backrun_profit(tx)
-            
-            if estimated_profit > 5.0:
-                return {
-                    'type': 'backrun',
-                    'target_tx_hash': tx.get('hash'),
-                    'estimated_profit': estimated_profit,
-                    'wait_for_confirmation': True
-                }
-        
-        return None
-    
-    def detect_sandwich_opportunity(self, tx: Dict) -> Optional[Dict]:
-        """
-        Detect sandwich attack opportunities
-        Execute buy before target tx, then sell after target tx executes
-        This captures slippage from the target transaction
-        """
-        # Analyze transaction for sandwich potential
-        if not self._is_sandwichable(tx):
-            return None
-        
-        token_in = tx.get('token_in')
-        token_out = tx.get('token_out')
-        amount = tx.get('amount', 0)
-        
-        # Calculate sandwich profit
-        # Front-run: Buy token_out to increase price
-        # Victim tx: Executes at worse price
-        # Back-run: Sell token_out for profit
-        
-        front_run_amount = amount * 0.5  # Use half the victim's amount
-        estimated_profit = self._calculate_sandwich_profit(tx, front_run_amount)
-        
-        if estimated_profit > 10.0:  # Higher threshold for sandwich
-            return {
-                'type': 'sandwich',
-                'target_tx_hash': tx.get('hash'),
-                'estimated_profit': estimated_profit,
-                'front_run': {
-                    'token_in': token_in,
-                    'token_out': token_out,
-                    'amount': front_run_amount,
-                    'gas_price': tx.get('gas_price', 0) * 1.2  # 20% higher
-                },
-                'back_run': {
-                    'token_in': token_out,
-                    'token_out': token_in,
-                    'amount': 'calculated_after_frontrun',
-                    'gas_price': tx.get('gas_price', 0) * 1.05  # 5% higher than victim
-                }
-            }
-        
-        return None
-    
-    def _is_sandwichable(self, tx: Dict) -> bool:
-        """
-        Determine if transaction is suitable for sandwich attack
-        Checks: sufficient size, high slippage tolerance, liquid pool
-        """
-        amount = tx.get('amount', 0)
-        slippage = tx.get('slippage_tolerance', 0)
-        pool_liquidity = tx.get('pool_liquidity', 0)
-        
-        # Sandwichable if:
-        # - Large enough transaction
-        # - High slippage tolerance
-        # - Sufficient pool liquidity
-        return (
-            amount > 5000 and  # Minimum $5k swap
-            slippage > 0.01 and  # > 1% slippage tolerance
-            pool_liquidity > 100000  # > $100k liquidity
-        )
-    
-    def _calculate_frontrun_profit(self, tx: Dict) -> float:
-        """Calculate estimated profit from front-running"""
-        # Simplified calculation
-        # Real implementation would simulate exact swap amounts and prices
-        return tx.get('amount', 0) * 0.0005  # 0.05% of transaction
-    
-    def _calculate_backrun_profit(self, tx: Dict) -> float:
-        """Calculate estimated profit from back-running"""
-        # Simplified calculation
-        return tx.get('amount', 0) * 0.001  # 0.1% of transaction
-    
-    def _calculate_sandwich_profit(self, tx: Dict, front_run_amount: float) -> float:
-        """Calculate estimated profit from sandwich attack"""
-        # Simplified calculation
-        # Real implementation would simulate:
-        # 1. Price impact of our front-run
-        # 2. Price impact of victim's transaction
-        # 3. Our exit price and profit
-        victim_amount = tx.get('amount', 0)
-        slippage = tx.get('slippage_tolerance', 0.05)
-        
-        # Profit comes from capturing victim's slippage
-        estimated_profit = victim_amount * slippage * 0.5
-        
-        # Subtract gas costs (rough estimate)
-        gas_cost = 0.003 * 2  # Two transactions
-        
-        return max(0, estimated_profit - gas_cost)
     
     def should_submit_private(self, opportunity: Opportunity) -> bool:
         """Determine if should use private relay (Flashbots/Eden)"""
         # Use private relay for high-value opportunities
-        # This protects against being front-run ourselves
         return opportunity.profit_usd > 50.0
 
 

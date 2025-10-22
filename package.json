@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "Production-ready multi-DEX flash loan arbitrage system with Rust engine, AI/ML models, and multi-chain support",
   "main": "src/apex-production-runner.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "setup": "yarn install --network-timeout 600000 && echo ✅ Dependencies installed successfully.",
     "build": "yarn run format && yarn run lint",

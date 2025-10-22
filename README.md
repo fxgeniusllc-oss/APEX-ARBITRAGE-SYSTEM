@@ -122,8 +122,9 @@ If you used the one-click installer (`install-and-run.sh`), you're already set u
 
 2. **Verify setup:**
    ```bash
-   # Quick verification
-   npm run verify
+   node scripts/comprehensive-validation.js
+   # Or use the npm script:
+   yarn run verify
    
    # Complete wiring validation (recommended)
    yarn run verify:wiring
@@ -185,13 +186,13 @@ The APEX system includes comprehensive validation tools to ensure all components
 yarn run verify:wiring
 
 # WebSocket real-time connection validation
-npm run verify:websocket
+yarn run verify:websocket
 
 # End-to-end integration test (100% success rate)
-npm run test:integration
+yarn run test:integration
 
 # Run all validation checks
-npm run verify:all
+yarn run verify:all
 ```
 
 ### What Gets Validated
