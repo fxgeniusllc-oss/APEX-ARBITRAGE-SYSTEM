@@ -85,7 +85,8 @@ echo -e "${GREEN}✅ yarn $(yarn -v)${NC}"
 # Check yarn (should already be installed if Node.js v20+ is present)
 if ! command -v yarn &> /dev/null; then
     echo -e "${YELLOW}⚠️  yarn not found. Installing...${NC}"
-    npm install -g yarn
+    corepack enable
+    corepack prepare yarn@stable --activate
 fi
 echo -e "${GREEN}✅ yarn $(yarn -v)${NC}"
 

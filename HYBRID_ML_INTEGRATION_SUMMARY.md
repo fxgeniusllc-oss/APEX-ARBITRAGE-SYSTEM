@@ -86,7 +86,7 @@ Tests covering:
 **Files**:
 - Updated `.env.example` with AI engine variables
 - Updated `requirements.txt` with ML dependencies
-- Updated `package.json` with npm scripts
+- Updated `package.json` with yarn scripts
 
 New dependencies:
 - `torch==2.1.2` - PyTorch for LSTM
@@ -160,7 +160,7 @@ New dependencies:
 # Option 1: Automated (Recommended)
 ./scripts/start-ai-system.sh
 
-# Option 2: Using npm
+# Option 2: Using yarn
 yarn run ai:start
 
 # Option 3: Manual
@@ -298,7 +298,7 @@ Note: 1 pre-existing failure in Rust engine (unrelated)
 ### Modified Files (4)
 1. `requirements.txt` - Added ML dependencies
 2. `.env.example` - Added AI configuration
-3. `package.json` - Added npm scripts
+3. `package.json` - Added yarn scripts
 4. `README.md` - Updated with AI features
 
 ## Next Steps

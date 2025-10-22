@@ -23,7 +23,7 @@ Successfully implemented a professional pre-operation checklist system for the A
 
 ### 3. Configuration Updates
 - **File**: `package.json`
-- **Changes**: Added two npm scripts
+- **Changes**: Added two yarn scripts
   - `precheck`: Main command for pre-operation checklist
   - `preflight`: Alias for the same functionality
 
@@ -82,11 +82,11 @@ Generates professional reports with:
 
 ### Command Line
 ```bash
-# Using npm script (recommended)
-npm run precheck
+# Using yarn script (recommended)
+yarn run precheck
 
 # Using alias
-npm run preflight
+yarn run preflight
 
 # Direct execution
 node scripts/pre-operation-checklist.js
@@ -100,13 +100,13 @@ node scripts/pre-operation-checklist.js
 ### Integration Example
 ```bash
 # Safe startup
-npm run precheck && npm start
+yarn run precheck && yarn start
 
 # In shell script
 #!/bin/bash
-npm run precheck
+yarn run precheck
 if [ $? -eq 0 ]; then
-    npm start
+    yarn start
 else
     echo "Pre-checks failed!"
     exit 1
@@ -266,7 +266,7 @@ The system is production-ready and fully tested.
 
 ### Run Checklist
 ```bash
-npm run precheck
+yarn run precheck
 ```
 
 ### View Documentation

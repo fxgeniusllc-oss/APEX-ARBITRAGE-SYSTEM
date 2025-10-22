@@ -21,7 +21,7 @@ A comprehensive, fully automated installation script that:
 - Automatically installs Node.js if missing (Linux/macOS)
 - Automatically installs Python 3 if missing (Linux/macOS)
 - Automatically installs Rust if missing (all platforms)
-- Installs npm/yarn package managers
+- Installs yarn package manager
 - Installs pip3 Python package manager
 
 ✅ **Creates Complete Directory Structure**
@@ -159,7 +159,7 @@ The script can run completely unattended if you skip optional prompts:
 
 ### **Intelligent Error Handling**
 - Checks prerequisites before attempting install
-- Retries with alternative methods (npm → yarn)
+- Uses yarn for all dependency management
 - Continues on non-critical failures
 - Clear error messages with suggestions
 - Exit on critical failures only

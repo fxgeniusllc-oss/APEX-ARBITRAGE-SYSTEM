@@ -20,11 +20,11 @@ This script ensures that:
 ### Quick Start
 
 ```bash
-# Using npm script (recommended)
-npm run precheck
+# Using yarn script (recommended)
+yarn run precheck
 
 # Or using the alias
-npm run preflight
+yarn run preflight
 
 # Or directly
 node scripts/pre-operation-checklist.js
@@ -171,7 +171,7 @@ Operational Summary:
   • Warnings: 0
 
 You can now start the system with:
-  npm start
+  yarn start
 ```
 
 ### Failed Check (Missing Configuration)
@@ -247,10 +247,10 @@ The pre-operation checklist can be integrated into your startup workflow:
 
 ```bash
 # Run checklist before starting
-npm run precheck && npm start
+yarn run precheck && yarn start
 
 # Or create a custom script in package.json
-"start:safe": "npm run precheck && npm start"
+"start:safe": "yarn run precheck && yarn start"
 ```
 
 ## Security Considerations
@@ -292,7 +292,7 @@ If you encounter issues:
 1. Review this documentation
 2. Check the detailed error messages
 3. Verify your `.env` configuration against `.env.example`
-4. Ensure dependencies are installed: `npm install`
+4. Ensure dependencies are installed: `yarn install`
 
 ## Related Documentation
 

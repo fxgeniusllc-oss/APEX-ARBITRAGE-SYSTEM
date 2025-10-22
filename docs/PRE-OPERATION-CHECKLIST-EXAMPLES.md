@@ -3,7 +3,7 @@
 ## Example 1: First Time Setup (No Configuration)
 
 ```bash
-$ npm run precheck
+$ yarn run precheck
 
 STEP 1: Environment Variables Verification
 ❌ MODE environment variable is not set
@@ -22,7 +22,7 @@ OPERATIONAL READINESS ASSESSMENT
 ## Example 2: DEV Mode with Valid Configuration
 
 ```bash
-$ npm run precheck
+$ yarn run precheck
 
 STEP 1: Environment Variables Verification
 ✅ Mode: DEV
@@ -70,7 +70,7 @@ Operational Summary:
   • Warnings: 0
 
 You can now start the system with:
-  npm start
+  yarn start
 ```
 
 ---
@@ -78,7 +78,7 @@ You can now start the system with:
 ## Example 3: LIVE Mode Warning
 
 ```bash
-$ npm run precheck
+$ yarn run precheck
 
 EXECUTION MODE
   🔴 LIVE MODE - REAL TRANSACTIONS WILL BE EXECUTED
@@ -97,7 +97,7 @@ Ensure you have:
   • Set appropriate risk limits
 
 You can now start the system with:
-  npm start
+  yarn start
 ```
 
 ---
@@ -105,7 +105,7 @@ You can now start the system with:
 ## Example 4: Insufficient Gas Balance
 
 ```bash
-$ npm run precheck
+$ yarn run precheck
 
 STEP 3: Chain Connectivity & Native Gas Balance Check
 ⚠️  Polygon: INACTIVE - Insufficient gas balance
@@ -134,7 +134,7 @@ Please:
 ## Example 5: RPC Connection Issues
 
 ```bash
-$ npm run precheck
+$ yarn run precheck
 
 STEP 3: Chain Connectivity & Native Gas Balance Check
 ❌ Polygon: Connection failed
@@ -159,12 +159,12 @@ Create a safe startup script:
 # safe-start.sh
 
 echo "Running pre-operation checklist..."
-npm run precheck
+yarn run precheck
 
 if [ $? -eq 0 ]; then
     echo ""
     echo "✅ Pre-checks passed! Starting system..."
-    npm start
+    yarn start
 else
     echo ""
     echo "❌ Pre-checks failed! Please fix errors before starting."
@@ -207,14 +207,14 @@ chmod +x safe-start.sh
 
 2. **Validate Configuration**
    ```bash
-   npm run precheck
+   yarn run precheck
    ```
 
 3. **Fix any issues** and rerun checklist
 
 4. **Start System**
    ```bash
-   npm start
+   yarn start
    ```
 
 5. **Before Switching to LIVE**
@@ -222,10 +222,10 @@ chmod +x safe-start.sh
    # 1. Test thoroughly in DEV mode first
    # 2. Update MODE=LIVE in .env
    # 3. Run final checklist
-   npm run precheck
+   yarn run precheck
    # 4. Review all warnings carefully
    # 5. Start system
-   npm start
+   yarn start
    ```
 
 ---
@@ -237,7 +237,7 @@ chmod +x safe-start.sh
 
 Use exit codes in scripts:
 ```bash
-npm run precheck && npm start || echo "Pre-checks failed!"
+yarn run precheck && yarn start || echo "Pre-checks failed!"
 ```
 
 ---

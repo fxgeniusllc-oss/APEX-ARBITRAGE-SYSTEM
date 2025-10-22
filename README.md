@@ -298,13 +298,13 @@ python scripts/train_ml_models.py      # Train ML models
 
 ```bash
 # Run final deployment audit
-npm run audit:deployment
+yarn run audit:deployment
 
 # Run benchmark analysis
-npm run benchmark:analysis
+yarn run benchmark:analysis
 
 # Run both audit and benchmark
-npm run audit:full
+yarn run audit:full
 ```
 
 **What gets evaluated:**
@@ -326,7 +326,7 @@ npm run audit:full
 
 ```bash
 # Run comprehensive pre-flight check
-npm run precheck
+yarn run precheck
 ```
 
 This critical checklist verifies:

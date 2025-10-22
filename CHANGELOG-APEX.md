@@ -79,7 +79,7 @@ Complete refactoring and configuration of the APEX Arbitrage System setup proces
    - Added reference to `setup-apex.sh`
    - Added support for both legacy and APEX Rust engines
    - Enhanced error messages and guidance
-   - Added new npm scripts support
+   - Added new yarn scripts support
    - Improved user experience with better prompts
 
 4. **`README.md`** - Enhanced with setup instructions
@@ -97,7 +97,7 @@ Complete refactoring and configuration of the APEX Arbitrage System setup proces
 
 #### Step 1: Prerequisites Check
 - ✅ Validates Node.js v18+
-- ✅ Validates npm
+- ✅ Validates yarn
 - ✅ Validates Python 3
 - ✅ Auto-installs Rust via rustup if missing
 
@@ -131,7 +131,7 @@ docs/
 #### Step 3: Node.js Initialization
 - Creates APEX-specific `package.json`
 - Installs all Node.js dependencies
-- Sets up 13 npm scripts
+- Sets up 13 yarn scripts
 - Configures both production and development environments
 
 #### Step 4: Python Environment Setup
@@ -254,7 +254,7 @@ Creates `src/apex-production-runner.js`:
 | **Entry Point** | src/index.js | src/apex-production-runner.js |
 | **Node Type** | ES modules | CommonJS (better compatibility) |
 | **Dependencies** | 7 core | 11 core + dev dependencies |
-| **Scripts** | 6 npm scripts | 13 npm scripts |
+| **Scripts** | 6 yarn scripts | 13 yarn scripts |
 | **Build Time** | 3-7 minutes | 5-15 minutes |
 | **Features** | Basic | Production-grade |
 

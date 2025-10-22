@@ -15,7 +15,7 @@ The `setup-apex.sh` script performs a comprehensive 10-step build process:
 
 1. **Prerequisites Check**
    - Validates Node.js v18+
-   - Validates npm
+   - Validates yarn
    - Validates Python 3
    - Installs Rust if not present
 

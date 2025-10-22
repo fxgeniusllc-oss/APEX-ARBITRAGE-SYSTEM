@@ -54,7 +54,7 @@ This checklist ensures all requirements are met before deploying the APEX Arbitr
 
 - [ ] **Dependencies installed**
   ```bash
-  npm install
+  yarn install
   # or
   yarn install
   ```
@@ -66,7 +66,7 @@ This checklist ensures all requirements are met before deploying the APEX Arbitr
 
 - [ ] **Rust engine built** (optional but recommended)
   ```bash
-  npm run build:rust
+  yarn run build:rust
   ```
 
 - [ ] **Data directories created**
@@ -152,43 +152,43 @@ Ensure wallet has sufficient native gas tokens on all active chains:
 - [ ] **DEV mode testing completed** (minimum 24 hours)
   ```bash
   # Set MODE=DEV in .env
-  npm start
+  yarn start
   # Monitor for at least 24 hours
   ```
 
 - [ ] **Pre-operation checklist passed**
   ```bash
-  npm run precheck
+  yarn run precheck
   # All critical checks must pass
   ```
 
 - [ ] **Comprehensive validation passed**
   ```bash
-  npm run validate
+  yarn run validate
   # Review and resolve any issues
   ```
 
 - [ ] **Final deployment audit passed**
   ```bash
-  npm run audit:deployment
+  yarn run audit:deployment
   # Score should be 90%+
   ```
 
 - [ ] **Benchmark analysis reviewed**
   ```bash
-  npm run benchmark:analysis
+  yarn run benchmark:analysis
   # Review performance metrics
   ```
 
 - [ ] **Test suite passed** (optional)
   ```bash
-  npm run test
+  yarn run test
   # Review test results
   ```
 
 - [ ] **Performance validation passed** (optional)
   ```bash
-  npm run validate:performance
+  yarn run validate:performance
   # Verify ML performance
   ```
 
@@ -280,7 +280,7 @@ Ensure wallet has sufficient native gas tokens on all active chains:
 
 ```bash
 # Run final pre-operation checklist
-npm run precheck
+yarn run precheck
 
 # Should show: ✅ SYSTEM FULLY OPERATIONAL
 ```
@@ -292,7 +292,7 @@ npm run precheck
 cat .env | grep MODE
 
 # Start the system
-npm start
+yarn start
 ```
 
 ### Step 3: Initial Monitoring (First Hour)
@@ -384,13 +384,13 @@ Stop and investigate if you see:
 2. **Review logs**
    ```bash
    tail -100 logs/system.log
-   npm run logs
+   yarn run logs
    ```
 
 3. **Check system status**
    ```bash
-   npm run precheck
-   npm run verify
+   yarn run precheck
+   yarn run verify
    ```
 
 4. **Investigate and fix**
@@ -403,7 +403,7 @@ Stop and investigate if you see:
 5. **Test in DEV mode**
    ```bash
    # Set MODE=DEV in .env
-   npm start
+   yarn start
    # Verify issue is resolved
    ```
 
@@ -413,7 +413,7 @@ Stop and investigate if you see:
    rm EMERGENCY_STOP
    
    # Set MODE=LIVE in .env
-   npm start
+   yarn start
    ```
 
 ---
@@ -432,18 +432,18 @@ Stop and investigate if you see:
 
 ```bash
 # Validation
-npm run precheck           # Pre-operation checklist
-npm run validate           # Comprehensive validation
-npm run audit:deployment   # Final deployment audit
-npm run benchmark:analysis # Benchmark analysis
+yarn run precheck           # Pre-operation checklist
+yarn run validate           # Comprehensive validation
+yarn run audit:deployment   # Final deployment audit
+yarn run benchmark:analysis # Benchmark analysis
 
 # Operation
-npm start                  # Start system
-npm run dev                # Development mode
-npm run logs               # View logs
+yarn start                  # Start system
+yarn run dev                # Development mode
+yarn run logs               # View logs
 
 # Maintenance
-npm run build:rust         # Build Rust engine
+yarn run build:rust         # Build Rust engine
 python scripts/train_ml_models.py  # Train ML models
 ```
 

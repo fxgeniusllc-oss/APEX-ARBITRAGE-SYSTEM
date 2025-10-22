@@ -102,7 +102,7 @@ cat > package.json << 'EOF'
     "start": "node src/apex-production-runner.js",
     "dev": "NODE_ENV=development node src/apex-production-runner.js",
     "test": "node test/integration/full-cycle.test.js",
-    "deploy": "npx hardhat run scripts/deploy.js --network polygon",
+    "deploy": "yarn dlx hardhat run scripts/deploy.js --network polygon",
     "verify": "node scripts/verify-setup.js",
     "monitor": "node scripts/monitor.js",
     "benchmark": "node scripts/benchmark.js",
