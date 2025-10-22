@@ -49,7 +49,7 @@ load_dotenv()
 
 LIVE_MODE = os.getenv("LIVE_TRADING", "false").lower() == "true"
 AI_MODEL_PATH = os.getenv("AI_MODEL_PATH", "./data/models/lstm_omni.onnx")
-AI_THRESHOLD = float(os.getenv("AI_THRESHOLD", "0.78"))
+AI_THRESHOLD = float(os.getenv("AI_THRESHOLD", "0.88"))
 REDIS_HOST = os.getenv("REDIS_HOST", "127.0.0.1")
 REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
 PROMETHEUS_PORT = int(os.getenv("PROMETHEUS_PORT", "9090"))

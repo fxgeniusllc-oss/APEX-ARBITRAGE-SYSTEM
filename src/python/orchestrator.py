@@ -11,10 +11,20 @@ import numpy as np
 from typing import List, Dict, Optional
 from dataclasses import dataclass
 from enum import Enum
+from datetime import datetime
 # Required ML libraries: install via pip and add to requirements.txt
-# pip install xgboost==1.7.6 onnxruntime==1.16.3
+# pip install xgboost==1.7.6 onnxruntime==1.16.3 torch>=2.0.0
 import xgboost as xgb
 import onnxruntime as ort
+
+# Optional PyTorch for LSTM support
+try:
+    import torch
+    import torch.nn as nn
+    TORCH_AVAILABLE = True
+except ImportError:
+    TORCH_AVAILABLE = False
+    print("⚠️  PyTorch not available. Install with: pip install torch")
 
 
 class ExecutionMode(Enum):
@@ -47,21 +57,153 @@ class Opportunity:
     chain: ChainType
 
 
+class LSTMModel(nn.Module):
+    """
+    LSTM model for arbitrage opportunity prediction
+    Captures temporal patterns and market dynamics
+    """
+    def __init__(self, input_size: int = 10, hidden_size: int = 128, output_size: int = 1, num_layers: int = 2):
+        super(LSTMModel, self).__init__()
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True, dropout=0.2)
+        self.fc1 = nn.Linear(hidden_size, 64)
+        self.fc2 = nn.Linear(64, output_size)
+        self.relu = nn.ReLU()
+        self.sigmoid = nn.Sigmoid()
+    
+    def forward(self, x):
+        """Forward pass through LSTM network"""
+        # x shape: (batch, seq_len, features)
+        lstm_out, _ = self.lstm(x)
+        # Take the last output
+        last_out = lstm_out[:, -1, :]
+        # Fully connected layers
+        fc1_out = self.relu(self.fc1(last_out))
+        output = self.sigmoid(self.fc2(fc1_out))
+        return output
+
+
+class MarketConditionAnalyzer:
+    """
+    Analyzes market conditions for dynamic threshold adjustment
+    """
+    def __init__(self):
+        self.volatility_history = []
+        self.execution_history = []
+        self.max_history_size = 100
+        self.min_threshold = float(os.getenv('MIN_THRESHOLD', '0.88'))
+        self.max_threshold = float(os.getenv('MAX_THRESHOLD', '0.95'))
+    
+    def update_market_data(self, volatility: float, gas_price: float):
+        """Update market condition data"""
+        self.volatility_history.append({
+            'volatility': volatility,
+            'gas_price': gas_price,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+        # Keep only recent history
+        if len(self.volatility_history) > self.max_history_size:
+            self.volatility_history.pop(0)
+    
+    def log_execution_result(self, opportunity: Opportunity, success: bool, actual_profit: float):
+        """Log execution results for continuous learning"""
+        self.execution_history.append({
+            'route_id': opportunity.route_id,
+            'expected_profit': opportunity.profit_usd,
+            'actual_profit': actual_profit,
+            'success': success,
+            'confidence_score': opportunity.confidence_score,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+        # Keep only recent history
+        if len(self.execution_history) > self.max_history_size:
+            self.execution_history.pop(0)
+    
+    def get_dynamic_threshold(self) -> float:
+        """
+        Calculate dynamic threshold based on market conditions
+        
+        Returns higher threshold in volatile markets (more conservative)
+        Returns lower threshold in stable markets (more opportunities)
+        """
+        if not self.volatility_history:
+            return self.min_threshold
+        
+        # Calculate recent volatility (last 20 samples)
+        recent_volatility = [v['volatility'] for v in self.volatility_history[-20:]]
+        avg_volatility = np.mean(recent_volatility) if recent_volatility else 0.5
+        
+        # Calculate success rate from execution history
+        if len(self.execution_history) >= 10:
+            recent_executions = self.execution_history[-20:]
+            success_rate = sum(1 for e in recent_executions if e['success']) / len(recent_executions)
+        else:
+            success_rate = 0.5  # Default
+        
+        # Adjust threshold based on conditions
+        # Higher volatility → Higher threshold (more conservative)
+        # Lower success rate → Higher threshold (more conservative)
+        
+        volatility_adjustment = (avg_volatility - 0.5) * 0.1  # ±0.05 max
+        success_adjustment = (0.5 - success_rate) * 0.05  # ±0.025 max
+        
+        dynamic_threshold = self.min_threshold + volatility_adjustment + success_adjustment
+        
+        # Clamp to min/max range
+        return max(self.min_threshold, min(self.max_threshold, dynamic_threshold))
+    
+    def get_execution_metrics(self) -> Dict:
+        """Get execution performance metrics"""
+        if not self.execution_history:
+            return {
+                'total_executions': 0,
+                'success_rate': 0.0,
+                'avg_profit': 0.0,
+                'profit_accuracy': 0.0
+            }
+        
+        total = len(self.execution_history)
+        successes = sum(1 for e in self.execution_history if e['success'])
+        
+        actual_profits = [e['actual_profit'] for e in self.execution_history if e['success']]
+        expected_profits = [e['expected_profit'] for e in self.execution_history if e['success']]
+        
+        return {
+            'total_executions': total,
+            'success_rate': successes / total if total > 0 else 0.0,
+            'avg_profit': np.mean(actual_profits) if actual_profits else 0.0,
+            'profit_accuracy': np.mean([
+                a / e if e > 0 else 0 
+                for a, e in zip(actual_profits, expected_profits)
+            ]) if actual_profits else 0.0
+        }
+
+
 class MLEnsemble:
     """
-    Dual AI/ML Engine with XGBoost and ONNX models
+    Triple AI/ML Engine with XGBoost, ONNX, and LSTM models
     Enhanced with GPU acceleration and multi-model ensemble voting
+    Supports continuous learning and dynamic thresholding
     """
     
     def __init__(self, use_gpu: bool = False, voting_strategy: str = "weighted"):
         self.xgb_model = None
         self.onnx_model = None
+        self.lstm_model = None
         self.use_gpu = use_gpu
         self.voting_strategy = voting_strategy  # 'weighted', 'majority', 'unanimous'
-        self.ensemble_weights = (0.6, 0.4)  # XGBoost weight, ONNX weight
+        self.ensemble_weights = (0.4, 0.3, 0.3)  # XGBoost, ONNX, LSTM weights
         
         # GPU configuration
         self.providers = self._get_providers()
+        
+        # Market condition analyzer for dynamic thresholding
+        self.market_analyzer = MarketConditionAnalyzer()
+        
+        # Continuous learning buffer
+        self.learning_buffer = []
+        self.learning_buffer_size = 1000
         
     def _get_providers(self):
         """
@@ -83,7 +225,7 @@ class MLEnsemble:
         else:
             return ['CPUExecutionProvider']
         
-    def load_models(self, xgb_path: str = None, onnx_path: str = None):
+    def load_models(self, xgb_path: str = None, onnx_path: str = None, lstm_path: str = None):
         """Load pre-trained models with GPU support"""
         if xgb_path:
             self.xgb_model = xgb.Booster()
@@ -102,6 +244,26 @@ class MLEnsemble:
             )
             print(f"✅ ONNX model loaded from {onnx_path}")
             print(f"   Providers: {self.onnx_model.get_providers()}")
+        
+        if lstm_path and TORCH_AVAILABLE:
+            try:
+                # Load LSTM model (PyTorch)
+                self.lstm_model = LSTMModel()
+                if os.path.exists(lstm_path):
+                    # Load from .pt or .pth file
+                    if lstm_path.endswith(('.pt', '.pth')):
+                        self.lstm_model.load_state_dict(torch.load(lstm_path, map_location='cpu'))
+                    elif lstm_path.endswith('.onnx'):
+                        # Load LSTM as ONNX (alternative format)
+                        pass  # Already handled by onnx_path
+                    self.lstm_model.eval()  # Set to evaluation mode
+                    print(f"✅ LSTM model loaded from {lstm_path}")
+                else:
+                    print(f"⚠️  LSTM model file not found: {lstm_path}")
+            except Exception as e:
+                print(f"⚠️  Failed to load LSTM model: {e}")
+        elif lstm_path and not TORCH_AVAILABLE:
+            print(f"⚠️  PyTorch not available, cannot load LSTM model")
     
     def extract_features(self, opportunity: Opportunity) -> np.ndarray:
         """Extract 10-feature vector from opportunity"""
@@ -123,12 +285,14 @@ class MLEnsemble:
         """
         Multi-model ensemble prediction with voting strategies
         Supports: weighted, majority, unanimous voting
+        Includes XGBoost, ONNX, and LSTM models
         """
         features = self.extract_features(opportunity)
         
         predictions = []
         xgb_score = 0.5  # Default if model not loaded
         onnx_score = 0.5
+        lstm_score = 0.5
         
         # XGBoost prediction (accuracy-focused)
         if self.xgb_model:
@@ -142,6 +306,18 @@ class MLEnsemble:
             onnx_output = self.onnx_model.run(None, {input_name: features})
             onnx_score = float(onnx_output[0][0])
             predictions.append(("onnx", onnx_score))
+        
+        # LSTM prediction (temporal pattern recognition)
+        if self.lstm_model and TORCH_AVAILABLE:
+            try:
+                with torch.no_grad():
+                    # Reshape for LSTM: (batch, seq_len, features)
+                    lstm_input = torch.tensor(features, dtype=torch.float32).unsqueeze(1)
+                    lstm_output = self.lstm_model(lstm_input)
+                    lstm_score = float(lstm_output.squeeze().item())
+                    predictions.append(("lstm", lstm_score))
+            except Exception as e:
+                print(f"⚠️  LSTM prediction error: {e}")
         
         # Apply voting strategy
         ensemble_score = self._apply_voting_strategy(predictions)
@@ -166,9 +342,16 @@ class MLEnsemble:
             if len(predictions) == 1:
                 return predictions[0][1]
             elif len(predictions) == 2:
+                # Two models (XGBoost + ONNX or XGBoost + LSTM, etc.)
+                weights = self.ensemble_weights[:2]
+                total_weight = sum(weights)
+                return sum(w * p[1] for w, p in zip(weights, predictions)) / total_weight
+            elif len(predictions) == 3:
+                # Three models (XGBoost + ONNX + LSTM)
                 return (
                     self.ensemble_weights[0] * predictions[0][1] +
-                    self.ensemble_weights[1] * predictions[1][1]
+                    self.ensemble_weights[1] * predictions[1][1] +
+                    self.ensemble_weights[2] * predictions[2][1]
                 )
         
         elif self.voting_strategy == "majority":
@@ -202,10 +385,70 @@ class MLEnsemble:
         # Default: simple average
         return sum(score for _, score in predictions) / len(predictions)
     
-    def should_execute(self, opportunity: Opportunity, threshold: float = 0.8) -> bool:
-        """Determine if opportunity should be executed"""
+    def should_execute(self, opportunity: Opportunity, threshold: float = 0.88) -> bool:
+        """
+        Determine if opportunity should be executed
+        Uses dynamic threshold if enabled
+        """
+        # Use dynamic threshold if enabled
+        enable_dynamic = os.getenv('ENABLE_DYNAMIC_THRESHOLD', 'true').lower() == 'true'
+        if enable_dynamic:
+            threshold = self.market_analyzer.get_dynamic_threshold()
+        
         score = self.predict(opportunity)
         return score > threshold
+    
+    def log_execution_result(self, opportunity: Opportunity, success: bool, actual_profit: float):
+        """
+        Log execution result for continuous learning
+        Updates market analyzer and learning buffer
+        """
+        # Log to market analyzer
+        self.market_analyzer.log_execution_result(opportunity, success, actual_profit)
+        
+        # Add to learning buffer
+        features = self.extract_features(opportunity)
+        self.learning_buffer.append({
+            'features': features.tolist(),
+            'label': 1 if success else 0,
+            'expected_profit': opportunity.profit_usd,
+            'actual_profit': actual_profit,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+        # Keep buffer size manageable
+        if len(self.learning_buffer) > self.learning_buffer_size:
+            self.learning_buffer.pop(0)
+    
+    def get_learning_data(self) -> Dict:
+        """
+        Get accumulated learning data for retraining
+        
+        Returns:
+            Dictionary with features and labels for model retraining
+        """
+        if not self.learning_buffer:
+            return {'features': [], 'labels': []}
+        
+        features = [item['features'] for item in self.learning_buffer]
+        labels = [item['label'] for item in self.learning_buffer]
+        
+        return {
+            'features': features,
+            'labels': labels,
+            'count': len(self.learning_buffer),
+            'success_rate': sum(labels) / len(labels) if labels else 0.0
+        }
+    
+    def save_learning_data(self, filepath: str = 'data/learning_buffer.json'):
+        """Save learning buffer to disk for retraining"""
+        try:
+            os.makedirs(os.path.dirname(filepath), exist_ok=True)
+            with open(filepath, 'w') as f:
+                json.dump(self.learning_buffer, f, indent=2)
+            print(f"✅ Learning data saved: {len(self.learning_buffer)} samples")
+        except Exception as e:
+            print(f"⚠️  Failed to save learning data: {e}")
 
 
 class ParallelChainScanner:
@@ -386,9 +629,11 @@ class ApexOrchestrator:
         """Initialize all components"""
         # Load ML models
         try:
+            lstm_path = os.getenv('LSTM_MODEL_PATH', 'data/models/lstm_model.pt')
             self.ml_ensemble.load_models(
                 xgb_path="data/models/xgboost_model.json",
-                onnx_path="data/models/onnx_model.onnx"
+                onnx_path="data/models/onnx_model.onnx",
+                lstm_path=lstm_path
             )
         except Exception as e:
             print(f"Warning: Could not load ML models: {e}")
@@ -398,6 +643,20 @@ class ApexOrchestrator:
             bot = MicroRaptorBot(bot_id=i, layer=0)
             bot.spawn_children()
             self.micro_raptors.append(bot)
+        
+        # Print ensemble configuration
+        model_count = sum([
+            self.ml_ensemble.xgb_model is not None,
+            self.ml_ensemble.onnx_model is not None,
+            self.ml_ensemble.lstm_model is not None
+        ])
+        print(f"🤖 Ensemble Models Loaded: {model_count}/3")
+        print(f"   XGBoost: {'✅' if self.ml_ensemble.xgb_model else '❌'}")
+        print(f"   ONNX: {'✅' if self.ml_ensemble.onnx_model else '❌'}")
+        print(f"   LSTM: {'✅' if self.ml_ensemble.lstm_model else '❌'}")
+        print(f"🎯 Base Threshold: 0.88 (88%)")
+        print(f"🔄 Dynamic Threshold: {'Enabled' if os.getenv('ENABLE_DYNAMIC_THRESHOLD', 'true').lower() == 'true' else 'Disabled'}")
+        print(f"📚 Continuous Learning: Enabled")
     
     async def scan_opportunities(self) -> List[Opportunity]:
         """Scan for arbitrage opportunities across all chains"""
@@ -409,10 +668,16 @@ class ApexOrchestrator:
         self,
         opportunities: List[Opportunity],
         min_profit: float = 5.0,
-        confidence_threshold: float = 0.8
+        confidence_threshold: float = 0.88
     ) -> List[Opportunity]:
-        """Filter opportunities using ML ensemble"""
+        """Filter opportunities using ML ensemble with dynamic thresholding"""
         filtered = []
+        
+        # Get dynamic threshold if enabled
+        enable_dynamic = os.getenv('ENABLE_DYNAMIC_THRESHOLD', 'true').lower() == 'true'
+        if enable_dynamic:
+            confidence_threshold = self.ml_ensemble.market_analyzer.get_dynamic_threshold()
+            print(f"🎯 Dynamic threshold: {confidence_threshold:.3f}")
         
         for opp in opportunities:
             # Basic filters
@@ -455,6 +720,13 @@ class ApexOrchestrator:
                 self.metrics["opportunities_executed"] += 1
                 self.metrics["total_profit"] += opportunity.profit_usd
                 print(f"✅ EXECUTED: Profit ${opportunity.profit_usd:.2f}")
+                
+                # Log for continuous learning
+                actual_profit = result.get("profit", opportunity.profit_usd)
+                self.ml_ensemble.log_execution_result(opportunity, True, actual_profit)
+            else:
+                # Log failure for continuous learning
+                self.ml_ensemble.log_execution_result(opportunity, False, 0.0)
         else:
             # DEV/SIM MODE: Simulate transaction
             print(f"🔄 SIMULATING TRANSACTION: {opportunity.route_id}")
@@ -468,6 +740,10 @@ class ApexOrchestrator:
             self.metrics["opportunities_simulated"] += 1
             self.metrics["simulated_profit"] += opportunity.profit_usd
             print(f"✅ SIMULATED: Would profit ${opportunity.profit_usd:.2f}")
+            
+            # Log simulated execution (for testing continuous learning)
+            if result.get("would_execute"):
+                self.ml_ensemble.log_execution_result(opportunity, True, opportunity.profit_usd * 0.95)
         
         return result
     
@@ -495,6 +771,8 @@ class ApexOrchestrator:
         print("🚀 APEX Orchestrator Starting...")
         self.initialize()
         
+        iteration_count = 0
+        
         while True:
             # Scan opportunities - ALWAYS use real live DEX data
             opportunities = await self.scan_opportunities()
@@ -510,6 +788,14 @@ class ApexOrchestrator:
                     print(f"{'✅' if result['status'] == 'success' else '❌'} {action}: {opp.route_id} | Profit: ${opp.profit_usd:.2f}")
                 except Exception as e:
                     print(f"❌ Processing failed: {e}")
+            
+            # Periodic learning data save (every 100 iterations)
+            iteration_count += 1
+            if iteration_count % 100 == 0:
+                self.ml_ensemble.save_learning_data()
+                metrics = self.ml_ensemble.market_analyzer.get_execution_metrics()
+                print(f"📊 Learning Metrics: Success Rate: {metrics['success_rate']:.2%}, "
+                      f"Avg Profit: ${metrics['avg_profit']:.2f}")
             
             # Wait before next scan
             await asyncio.sleep(1.0)

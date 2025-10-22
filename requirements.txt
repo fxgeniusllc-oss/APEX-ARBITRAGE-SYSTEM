@@ -12,6 +12,7 @@ python-dotenv>=1.0.0
 
 # ML Model Training
 lightgbm>=4.1.0
+torch>=2.0.0
 
 # Monitoring & Logging
 prometheus-client==0.19.0
