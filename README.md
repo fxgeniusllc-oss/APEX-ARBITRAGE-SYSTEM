@@ -151,6 +151,7 @@ If you used the one-click installer (`install-and-run.sh`), you're already set u
 # System Operation
 yarn start                             # Start production system
 yarn run dev                           # Development mode
+yarn run precheck                      # Pre-operation checklist (REQUIRED before LIVE!) (NEW!)
 yarn run verify                        # Verify setup (quick check)
 yarn run validate:performance          # Validate ML performance (NEW!)
 yarn scripts/comprehensive-validation.js  # Complete validation
@@ -178,6 +179,29 @@ python scripts/train_ml_models.py    # Train ML models (NEW!)
 ---
 
 ## ✅ System Validation & Readiness
+
+### Pre-Operation Checklist (CRITICAL!)
+
+**🚨 ALWAYS run the pre-operation checklist before starting the system, especially in LIVE mode:**
+
+```bash
+# Run comprehensive pre-flight check
+npm run precheck
+```
+
+This critical checklist verifies:
+- ✅ **Required Variables** - All environment variables configured
+- ✅ **System Wallet** - Valid wallet with proper access
+- ✅ **Native Gas Balances** - Sufficient gas on all chains
+- ✅ **Chain Activation** - Only chains with gas are activated
+- ✅ **RPC Connectivity** - All endpoints accessible
+- ✅ **Safety Parameters** - Risk limits properly set
+
+**Only chains with sufficient native gas tokens will be activated!**
+
+See [Pre-Operation Checklist Documentation](docs/PRE-OPERATION-CHECKLIST.md) for detailed information.
+
+---
 
 ### Complete System Validation
 

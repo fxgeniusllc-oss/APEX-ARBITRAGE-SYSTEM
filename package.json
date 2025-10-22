@@ -20,6 +20,8 @@
     "verify": "python scripts/system_integrity_audit.py",
     "validate": "node scripts/comprehensive-validation.js",
     "validate:full": "node scripts/comprehensive-validation.js",
+    "precheck": "node scripts/pre-operation-checklist.js",
+    "preflight": "node scripts/pre-operation-checklist.js",
     "logs": "tail -f logs/system.log",
     "clean": "rimraf node_modules && echo 🧹 Cleaned node_modules directory.",
     "rebuild": "yarn clean && yarn install",
