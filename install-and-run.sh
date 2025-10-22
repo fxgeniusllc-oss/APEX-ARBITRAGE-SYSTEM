@@ -75,14 +75,14 @@ if [ "$NODE_VERSION" -lt 18 ]; then
 fi
 echo -e "${GREEN}✅ Node.js $(node -v)${NC}"
 
-# Check npm/yarn
-if ! command -v npm &> /dev/null; then
-    echo -e "${RED}❌ npm not found${NC}"
+# Check yarn
+if ! command -v yarn &> /dev/null; then
+    echo -e "${RED}❌ yarn not found${NC}"
     exit 1
 fi
-echo -e "${GREEN}✅ npm $(npm -v)${NC}"
+echo -e "${GREEN}✅ yarn $(yarn -v)${NC}"
 
-# Install yarn if not present
+# Check yarn (should already be installed if Node.js v20+ is present)
 if ! command -v yarn &> /dev/null; then
     echo -e "${YELLOW}⚠️  yarn not found. Installing...${NC}"
     npm install -g yarn
@@ -160,11 +160,11 @@ echo -e "${BLUE}[3/9]${NC} Installing Node.js dependencies..."
 echo -e "${YELLOW}This may take a few minutes...${NC}"
 echo ""
 
-# Use npm install with increased timeout
-npm install --loglevel=error --no-audit --no-fund 2>&1 | grep -v "deprecated" || true
+# Use yarn install with increased timeout
+yarn install --network-timeout 600000 --silent 2>&1 | grep -v "deprecated" || true
 
 if [ $? -ne 0 ]; then
-    echo -e "${YELLOW}⚠️  npm install had some warnings, trying with yarn...${NC}"
+    echo -e "${YELLOW}⚠️  yarn install had some warnings, retrying...${NC}"
     yarn install --silent 2>&1 | grep -v "deprecated" || true
 fi
 
@@ -317,7 +317,7 @@ echo ""
 
 if [[ $RUN_TESTS =~ ^[Yy]$ ]]; then
     echo -e "${CYAN}Running tests...${NC}"
-    npm test || echo -e "${YELLOW}⚠️  Some tests failed (may be expected in development)${NC}"
+    yarn test || echo -e "${YELLOW}⚠️  Some tests failed (may be expected in development)${NC}"
 else
     echo -e "${YELLOW}⏭️  Skipping tests${NC}"
 fi
@@ -344,19 +344,19 @@ echo -e "${CYAN}1️⃣  Configure your environment (REQUIRED):${NC}"
 echo "   nano .env  # Add your RPC URLs and private key"
 echo ""
 echo -e "${CYAN}2️⃣  Start the system:${NC}"
-echo "   npm start                    # Start the arbitrage system"
-echo "   npm run ai:start            # Start AI engine (optional)"
-echo "   npm run start:all           # Start everything (Node + Python)"
+echo "   yarn start                    # Start the arbitrage system"
+echo "   yarn run ai:start            # Start AI engine (optional)"
+echo "   yarn run start:all           # Start everything (Node + Python)"
 echo ""
 echo -e "${CYAN}3️⃣  Monitor performance:${NC}"
-echo "   npm run verify              # Verify setup"
-echo "   npm run health              # Health check"
-echo "   npm run logs                # View logs"
+echo "   yarn run verify              # Verify setup"
+echo "   yarn run health              # Health check"
+echo "   yarn run logs                # View logs"
 echo ""
 echo -e "${CYAN}4️⃣  Additional commands:${NC}"
-echo "   npm run deploy              # Deploy smart contracts"
-echo "   npm run dryrun              # Test without execution"
-echo "   npm test                    # Run tests"
+echo "   yarn run deploy              # Deploy smart contracts"
+echo "   yarn run dryrun              # Test without execution"
+echo "   yarn test                    # Run tests"
 echo ""
 echo -e "${YELLOW}⚠️  IMPORTANT REMINDERS:${NC}"
 echo "   • Configure .env before production use"
@@ -385,9 +385,9 @@ if [[ $START_NOW =~ ^[Yy]$ ]]; then
         sleep 5
     fi
     
-    npm start
+    yarn start
 else
     echo -e "${GREEN}✅ Installation complete!${NC}"
-    echo -e "${CYAN}Run 'npm start' when you're ready.${NC}"
+    echo -e "${CYAN}Run 'yarn start' when you're ready.${NC}"
     echo ""
 fi
