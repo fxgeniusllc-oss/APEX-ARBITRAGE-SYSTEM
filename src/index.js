@@ -5,8 +5,12 @@ import { spawn } from 'child_process';
 import { performance } from 'perf_hooks';
 import { executionController } from './utils/executionController.js';
 import { CURRENT_MODE, MODE, getModeDisplay } from './utils/config.js';
+import { createRequire } from 'module';
 
 dotenv.config();
+
+const require = createRequire(import.meta.url);
+const { TerminalDisplay } = require('./utils/terminalDisplay.js');
 
 /**
  * APEX ARBITRAGE SYSTEM
@@ -30,14 +34,39 @@ class ApexSystem {
             totalExecutions: 0,
             simulatedExecutions: 0,
             successfulExecutions: 0,
+            failedExecutions: 0,
             totalProfit: 0,
             simulatedProfit: 0,
+            totalLoss: 0,
+            totalGasCost: 0,
+            consecutiveFailures: 0,
+            lastExecutionTime: null,
             startTime: Date.now()
         };
         
         this.pythonProcess = null;
         this.isRunning = false;
         this.executionController = executionController;
+        
+        // Initialize terminal display
+        this.terminalDisplay = new TerminalDisplay({
+            refreshInterval: 5000, // Refresh every 5 seconds
+            maxRecentActivities: 10,
+            maxRouteDisplay: 5,
+            showDetailedMetrics: true
+        });
+        
+        // Initialize terminal display data
+        this.terminalDisplay.updateSystemStatus({
+            mode: CURRENT_MODE,
+            componentsStatus: {
+                rustEngine: false,
+                pythonOrchestrator: false,
+                nodeCoordinator: true,
+                mlEngine: false,
+                websocket: false
+            }
+        });
     }
 
     /**
@@ -69,13 +98,38 @@ class ApexSystem {
             bsc: new ethers.JsonRpcProvider(process.env.BSC_RPC_URL)
         };
         
-        // Test connections
+        // Test connections and update display
         for (const [chain, provider] of Object.entries(this.providers)) {
             try {
                 const network = await provider.getNetwork();
                 console.log(chalk.green(`✅ ${chain.toUpperCase()}: Connected (Chain ID: ${network.chainId})`));
+                
+                // Update chain status in terminal display
+                this.terminalDisplay.updateChainStatus(chain, {
+                    connected: true,
+                    blockNumber: null,
+                    opportunities: 0
+                });
+                
+                this.terminalDisplay.addActivity({
+                    type: 'success',
+                    message: `${chain.toUpperCase()} connected`,
+                    details: `Chain ID: ${network.chainId}`
+                });
             } catch (error) {
                 console.log(chalk.yellow(`⚠️  ${chain.toUpperCase()}: Connection failed`));
+                
+                this.terminalDisplay.updateChainStatus(chain, {
+                    connected: false,
+                    blockNumber: null,
+                    opportunities: 0
+                });
+                
+                this.terminalDisplay.addActivity({
+                    type: 'warning',
+                    message: `${chain.toUpperCase()} connection failed`,
+                    details: error.message
+                });
             }
         }
     }
@@ -93,15 +147,56 @@ class ApexSystem {
         });
 
         this.pythonProcess.stdout.on('data', (data) => {
-            console.log(chalk.magenta('[Python] ') + data.toString().trim());
+            const message = data.toString().trim();
+            console.log(chalk.magenta('[Python] ') + message);
+            
+            this.terminalDisplay.addActivity({
+                type: 'info',
+                message: 'Python Orchestrator',
+                details: message.substring(0, 50)
+            });
         });
 
         this.pythonProcess.stderr.on('data', (data) => {
-            console.error(chalk.red('[Python Error] ') + data.toString().trim());
+            const message = data.toString().trim();
+            console.error(chalk.red('[Python Error] ') + message);
+            
+            this.terminalDisplay.addActivity({
+                type: 'error',
+                message: 'Python Error',
+                details: message.substring(0, 50)
+            });
         });
 
         this.pythonProcess.on('close', (code) => {
             console.log(chalk.yellow(`Python orchestrator exited with code ${code}`));
+            
+            this.terminalDisplay.updateSystemStatus({
+                componentsStatus: {
+                    ...this.terminalDisplay.data.systemStatus.componentsStatus,
+                    pythonOrchestrator: false
+                }
+            });
+            
+            this.terminalDisplay.addActivity({
+                type: 'warning',
+                message: 'Python Orchestrator stopped',
+                details: `Exit code: ${code}`
+            });
+        });
+        
+        // Update status
+        this.terminalDisplay.updateSystemStatus({
+            componentsStatus: {
+                ...this.terminalDisplay.data.systemStatus.componentsStatus,
+                pythonOrchestrator: true
+            }
+        });
+        
+        this.terminalDisplay.addActivity({
+            type: 'success',
+            message: 'Python Orchestrator started',
+            details: 'ML/AI engine initializing'
         });
     }
 
@@ -119,6 +214,18 @@ class ApexSystem {
         this.stats.totalScans++;
         
         console.log(chalk.cyan(`⚡ Scanned 2000+ opportunities in ${scanTime.toFixed(2)}ms`));
+        
+        // Update terminal display
+        this.terminalDisplay.updateExecutionStats({
+            totalScans: this.stats.totalScans,
+            ...this.stats
+        });
+        
+        this.terminalDisplay.addActivity({
+            type: 'scan',
+            message: `Scan completed in ${scanTime.toFixed(2)}ms`,
+            details: `${opportunities.length} opportunities found`
+        });
         
         return opportunities;
     }
@@ -150,65 +257,36 @@ class ApexSystem {
      * Display live dashboard
      */
     displayDashboard() {
-        console.clear();
+        // Update terminal display data before rendering
+        this.terminalDisplay.updateSystemStatus({
+            mode: CURRENT_MODE,
+            componentsStatus: {
+                rustEngine: true,
+                pythonOrchestrator: this.pythonProcess !== null,
+                nodeCoordinator: true,
+                mlEngine: false,
+                websocket: false
+            }
+        });
         
-        const uptime = (Date.now() - this.stats.startTime) / 1000;
-        const totalExecs = this.stats.totalExecutions + this.stats.simulatedExecutions;
-        const successRate = totalExecs > 0
-            ? ((this.stats.successfulExecutions / totalExecs) * 100).toFixed(1)
-            : 0;
-
-        console.log(chalk.cyan('═'.repeat(70)));
-        console.log(chalk.bold.cyan('           APEX ARBITRAGE SYSTEM - LIVE STATUS'));
-        console.log(chalk.cyan('═'.repeat(70)));
-        console.log();
+        this.terminalDisplay.updateExecutionStats({
+            ...this.stats
+        });
         
-        // Display mode prominently
-        console.log(chalk.bold('🎛️  EXECUTION MODE'));
-        console.log(`   ${getModeDisplay()}`);
-        console.log();
+        // Update market conditions
+        this.terminalDisplay.updateMarketConditions({
+            gasPrice: Math.random() * 80 + 20, // Simulated gas price
+            maxGasPrice: this.config.maxGasPriceGwei,
+            networkCongestion: 'low',
+            prices: {
+                MATIC: 0.847,
+                ETH: 2450.32,
+                USDC: 1.0
+            }
+        });
         
-        console.log(chalk.bold('📊 EXECUTION STATS'));
-        console.log(`   Total Scans: ${chalk.green(this.stats.totalScans)}`);
-        
-        if (this.executionController.isLiveMode()) {
-            console.log(`   Real Executions: ${chalk.green(this.stats.totalExecutions)}`);
-            console.log(`   Successful: ${chalk.green(this.stats.successfulExecutions)}`);
-        } else {
-            console.log(`   Simulated Executions: ${chalk.yellow(this.stats.simulatedExecutions)}`);
-            console.log(`   Real Executions: ${chalk.gray('0 (Mode: ' + CURRENT_MODE + ')')}`);
-        }
-        console.log(`   Success Rate: ${chalk.green(successRate + '%')}`);
-        console.log();
-        
-        console.log(chalk.bold('💰 PROFIT/LOSS'));
-        if (this.executionController.isLiveMode()) {
-            console.log(`   Real Profit: ${chalk.green('$' + this.stats.totalProfit.toFixed(2))}`);
-            console.log(`   Avg Per Trade: ${chalk.green('$' + (this.stats.totalExecutions > 0 ? (this.stats.totalProfit / this.stats.totalExecutions).toFixed(2) : '0.00'))}`);
-        } else {
-            console.log(`   Simulated Profit: ${chalk.yellow('$' + this.stats.simulatedProfit.toFixed(2))}`);
-            console.log(`   Avg Per Simulation: ${chalk.yellow('$' + (this.stats.simulatedExecutions > 0 ? (this.stats.simulatedProfit / this.stats.simulatedExecutions).toFixed(2) : '0.00'))}`);
-            console.log(chalk.dim(`   (No real funds at risk in ${CURRENT_MODE} mode)`));
-        }
-        console.log();
-        
-        console.log(chalk.bold('⚙️  SYSTEM STATUS'));
-        console.log(`   Uptime: ${chalk.green(Math.floor(uptime) + 's')}`);
-        console.log(`   Active Chains: ${chalk.green(this.config.chains.length)}`);
-        console.log(`   Min Profit Threshold: ${chalk.green('$' + this.config.minProfitUSD)}`);
-        console.log(`   Max Gas Price: ${chalk.green(this.config.maxGasPriceGwei + ' Gwei')}`);
-        console.log();
-        
-        console.log(chalk.bold('🔥 COMPONENTS STATUS'));
-        console.log(`   ${chalk.green('●')} Rust Engine: Active (100x speed)`);
-        console.log(`   ${chalk.green('●')} Python Orchestrator: Active (ML enabled)`);
-        console.log(`   ${chalk.green('●')} Node.js Coordinator: Active`);
-        console.log(`   ${chalk.green('●')} Multi-Chain Scanners: ${this.config.chains.length} chains`);
-        console.log();
-        
-        console.log(chalk.cyan('═'.repeat(70)));
-        console.log(chalk.dim(`⏰ Last update: ${new Date().toLocaleTimeString()}`));
-        console.log();
+        // Render the comprehensive terminal display
+        this.terminalDisplay.render();
     }
 
     /**
@@ -226,6 +304,23 @@ class ApexSystem {
         console.log(chalk.green('✅ All systems initialized'));
         console.log(chalk.cyan('⚡ Entering main execution loop...'));
         console.log();
+        
+        // Wait a moment before starting terminal display
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Update Rust engine status
+        this.terminalDisplay.updateSystemStatus({
+            componentsStatus: {
+                ...this.terminalDisplay.data.systemStatus.componentsStatus,
+                rustEngine: true
+            }
+        });
+        
+        this.terminalDisplay.addActivity({
+            type: 'success',
+            message: 'APEX System initialized',
+            details: 'All components online'
+        });
         
         this.isRunning = true;
         
@@ -245,6 +340,23 @@ class ApexSystem {
                 
                 if (profitable.length > 0) {
                     console.log(chalk.yellow(`🎯 Found ${profitable.length} profitable opportunities`));
+                    
+                    // Add opportunities to terminal display
+                    for (const opp of profitable) {
+                        this.terminalDisplay.addOpportunity({
+                            id: opp.routeId,
+                            routeId: opp.routeId,
+                            profitUsd: opp.profitUsd,
+                            confidenceScore: opp.confidenceScore,
+                            chain: opp.chain
+                        });
+                    }
+                    
+                    this.terminalDisplay.addActivity({
+                        type: 'opportunity',
+                        message: `${profitable.length} profitable opportunities`,
+                        details: `Min profit: $${this.config.minProfitUSD}`
+                    });
                     
                     for (const opp of profitable.slice(0, 3)) { // Process top 3
                         console.log(chalk.blue(`   → ${opp.routeId}: $${opp.profitUsd.toFixed(2)} profit`));
@@ -278,19 +390,65 @@ class ApexSystem {
                             }
                         );
                         
-                        // Update stats based on mode
+                        // Update stats based on mode and result
                         if (result.simulated) {
                             this.stats.simulatedExecutions++;
                             if (result.success) {
                                 this.stats.simulatedProfit += opp.profitUsd;
+                                this.stats.successfulExecutions++;
+                                this.stats.consecutiveFailures = 0;
+                                
+                                this.terminalDisplay.addActivity({
+                                    type: 'success',
+                                    message: `Simulated execution success`,
+                                    details: `Profit: $${opp.profitUsd.toFixed(2)}`
+                                });
+                            } else {
+                                this.stats.failedExecutions++;
+                                this.stats.consecutiveFailures++;
+                                
+                                this.terminalDisplay.addActivity({
+                                    type: 'failure',
+                                    message: `Simulated execution failed`,
+                                    details: opp.routeId
+                                });
                             }
                         } else {
                             this.stats.totalExecutions++;
                             if (result.success) {
                                 this.stats.successfulExecutions++;
                                 this.stats.totalProfit += opp.profitUsd;
+                                this.stats.consecutiveFailures = 0;
+                                this.stats.lastExecutionTime = Date.now();
+                                
+                                this.terminalDisplay.addActivity({
+                                    type: 'success',
+                                    message: `Execution successful`,
+                                    details: `Profit: $${opp.profitUsd.toFixed(2)} | TX: ${result.txHash?.substring(0, 10)}...`
+                                });
+                            } else {
+                                this.stats.failedExecutions++;
+                                this.stats.consecutiveFailures++;
+                                this.stats.lastExecutionTime = Date.now();
+                                
+                                this.terminalDisplay.addActivity({
+                                    type: 'failure',
+                                    message: `Execution failed`,
+                                    details: opp.routeId
+                                });
                             }
                         }
+                        
+                        // Update route performance
+                        this.terminalDisplay.updateRoutePerformance(opp.routeId, {
+                            attempts: 1,
+                            success: result.success,
+                            profit: result.success ? opp.profitUsd : 0,
+                            description: `${opp.tokens.join(' → ')}`
+                        });
+                        
+                        // Remove processed opportunity from display
+                        this.terminalDisplay.removeOpportunity(opp.routeId);
                     }
                 }
                 
@@ -299,6 +457,13 @@ class ApexSystem {
                 
             } catch (error) {
                 console.error(chalk.red('Error in main loop:'), error.message);
+                
+                this.terminalDisplay.addActivity({
+                    type: 'error',
+                    message: 'Main loop error',
+                    details: error.message.substring(0, 50)
+                });
+                
                 await new Promise(resolve => setTimeout(resolve, 5000));
             }
         }
@@ -310,6 +475,12 @@ class ApexSystem {
     async shutdown() {
         console.log(chalk.yellow('\n🛑 Shutting down APEX system...'));
         this.isRunning = false;
+        
+        this.terminalDisplay.addActivity({
+            type: 'warning',
+            message: 'System shutdown initiated',
+            details: 'Stopping all components'
+        });
         
         if (this.pythonProcess) {
             this.pythonProcess.kill();
