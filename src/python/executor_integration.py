@@ -232,5 +232,4 @@ async def run_integrated_demo():
 
 
 if __name__ == "__main__":
-    import time
     asyncio.run(run_integrated_demo())
