@@ -2,9 +2,9 @@
  * Tests for DEX Adapters
  */
 
-const { test, describe } = require('node:test');
-const assert = require('node:assert');
-const {
+import { test, describe } from 'node:test';
+import assert from 'node:assert';
+import {
     UniswapAdapter,
     SushiSwapAdapter,
     QuickSwapAdapter,
@@ -18,7 +18,7 @@ const {
     CURVE_POOL_ABI,
     BALANCER_VAULT_ABI,
     AAVE_V3_POOL_ABI
-} = require('../src/adapters/index');
+} from '../src/adapters/index.js';
 
 describe('Adapter ABIs', () => {
     test('Uniswap V2 Router ABI should be defined', () => {
