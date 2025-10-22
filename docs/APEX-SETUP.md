@@ -132,7 +132,7 @@ Required configuration:
 ### 2. Verify Setup
 
 ```bash
-npm run verify
+yarn run verify
 ```
 
 This will check:
@@ -145,23 +145,23 @@ This will check:
 ### 3. Run Tests
 
 ```bash
-npm test
+yarn test
 ```
 
 ### 4. Deploy Contracts (Optional)
 
 ```bash
-npm run deploy
+yarn run deploy
 ```
 
 ### 5. Start the System
 
 ```bash
 # Production mode
-npm start
+yarn start
 
 # Development mode
-npm run dev
+yarn run dev
 ```
 
 ## Available Commands
@@ -169,18 +169,18 @@ npm run dev
 After setup, you have access to:
 
 ```bash
-npm start           # Start production system
-npm run dev         # Start development mode
-npm run legacy      # Run legacy system
-npm test            # Run integration tests
-npm run deploy      # Deploy smart contracts
-npm run verify      # Verify setup
-npm run monitor     # Live monitoring dashboard
-npm run benchmark   # Performance benchmarks
-npm run build:rust  # Build APEX Rust engine
-npm run build:all   # Build all components
-npm run lint        # Lint code
-npm run format      # Format code
+yarn start           # Start production system
+yarn run dev         # Start development mode
+yarn run legacy      # Run legacy system
+yarn test            # Run integration tests
+yarn run deploy      # Deploy smart contracts
+yarn run verify      # Verify setup
+yarn run monitor     # Live monitoring dashboard
+yarn run benchmark   # Performance benchmarks
+yarn run build:rust  # Build APEX Rust engine
+yarn run build:all   # Build all components
+yarn run lint        # Lint code
+yarn run format      # Format code
 ```
 
 ## Directory Structure
@@ -259,7 +259,7 @@ The APEX Rust engine provides ultra-fast calculations:
 ### Live Dashboard
 
 ```bash
-npm run monitor
+yarn run monitor
 ```
 
 Displays:
@@ -307,7 +307,7 @@ python3 -m pip install -r python/requirements.txt --force-reinstall
 ```bash
 # Clear cache and reinstall
 rm -rf node_modules package-lock.json
-npm install
+yarn install
 ```
 
 ### Permission Denied
@@ -378,7 +378,7 @@ Recommended:
 
 For issues or questions:
 1. Check logs in `logs/` directory
-2. Run `npm run verify` to check setup
+2. Run `yarn run verify` to check setup
 3. Review troubleshooting section
 4. Check GitHub issues
 

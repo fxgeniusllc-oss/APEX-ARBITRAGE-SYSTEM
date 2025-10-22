@@ -552,7 +552,7 @@ RETRAIN_MIN_DAYS=7
     "ml:api": "python3 src/python/ml_api_server.py",
     "ml:websocket": "python3 src/python/websocket_server.py",
     "ml:demo": "python3 src/python/demo_enhancements.py",
-    "ml:all": "npm run ml:api & npm run ml:websocket",
+    "ml:all": "yarn run ml:api & yarn run ml:websocket",
     "test:ml": "python3 tests/test_ml_enhancements.py"
   }
 }

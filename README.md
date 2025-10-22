@@ -124,7 +124,7 @@ If you used the one-click installer (`install-and-run.sh`), you're already set u
 2. **Verify setup:**
    ```bash
    node scripts/comprehensive-validation.js
-   # Or use the npm script:
+   # Or use the yarn script:
    yarn run verify
    
    # Complete wiring validation (recommended)
@@ -226,10 +226,10 @@ For MEV strategies documentation, see [docs/MEV-STRATEGIES.md](docs/MEV-STRATEGI
 
 ```bash
 # Run comprehensive regression tests (JavaScript + Python)
-npm run test:regression
+yarn run test:regression
 
 # Run JavaScript tests only
-npm test
+yarn test
 
 # Run Python ML tests
 python tests/test_ml_enhancements.py
@@ -769,9 +769,9 @@ pip install -r requirements.txt
 
 2. **Start the AI Engine:**
 ```bash
-npm run ai:start
+yarn run ai:start
 # Or in development mode with auto-reload:
-npm run ai:dev
+yarn run ai:dev
 ```
 
 3. **Make predictions:**

@@ -29,11 +29,11 @@ PRIVATE_KEY=your_private_key_here
 
 ```bash
 # Install dependencies (first time only)
-npm install
+yarn install
 pip install -r requirements.txt
 
 # Start the system
-npm start
+yarn start
 
 # Or run Python orchestrator
 python src/python/integrated_orchestrator.py
@@ -43,9 +43,9 @@ python src/python/integrated_orchestrator.py
 
 | Need to... | Use Mode | Risk | Command |
 |------------|----------|------|---------|
-| Test safely | `DEV` | None ✅ | `MODE=DEV npm start` |
-| Backtest strategy | `SIM` | None ✅ | `MODE=SIM npm start` |
-| Trade for real | `LIVE` | High 🔴 | `MODE=LIVE npm start` |
+| Test safely | `DEV` | None ✅ | `MODE=DEV yarn start` |
+| Backtest strategy | `SIM` | None ✅ | `MODE=SIM yarn start` |
+| Trade for real | `LIVE` | High 🔴 | `MODE=LIVE yarn start` |
 
 ## 📋 Pre-Launch Checklist
 
@@ -71,14 +71,14 @@ python src/python/integrated_orchestrator.py
 → Check `.env` file has correct spelling
 
 ### "Want to test safely"
-→ Use: `MODE=DEV npm start`
+→ Use: `MODE=DEV yarn start`
 → This is the DEFAULT and safest option
 
 ## 🎓 Learning Path
 
 ### Day 1-3: Learn in DEV Mode
 ```bash
-MODE=DEV npm start
+MODE=DEV yarn start
 ```
 - Observe opportunities
 - Watch simulation logs
@@ -87,7 +87,7 @@ MODE=DEV npm start
 
 ### Day 4-7: Validate in SIM Mode
 ```bash
-MODE=SIM npm start
+MODE=SIM yarn start
 ```
 - Backtest your strategies
 - Analyze performance metrics
@@ -96,7 +96,7 @@ MODE=SIM npm start
 
 ### Day 8+: Deploy to LIVE (if ready)
 ```bash
-MODE=LIVE MIN_PROFIT_USD=10 npm start
+MODE=LIVE MIN_PROFIT_USD=10 yarn start
 ```
 - Start with high profit threshold
 - Monitor very closely
@@ -146,16 +146,16 @@ MODE=LIVE MIN_PROFIT_USD=10 npm start
 
 ```bash
 # Quick DEV test
-MODE=DEV npm start
+MODE=DEV yarn start
 
 # Check current mode
 echo $MODE
 
 # Override mode temporarily
-MODE=SIM npm run verify
+MODE=SIM yarn run verify
 
 # See all opportunities (DEV mode)
-MODE=DEV npm start | grep "Opportunity"
+MODE=DEV yarn start | grep "Opportunity"
 
 # Monitor logs
 tail -f logs/system.log | grep -i "mode\|profit\|execute"
@@ -173,7 +173,7 @@ tail -f logs/system.log | grep -i "mode\|profit\|execute"
 
 Start with:
 ```bash
-MODE=DEV npm start
+MODE=DEV yarn start
 ```
 
 Watch it run, learn the system, then decide when to go LIVE.

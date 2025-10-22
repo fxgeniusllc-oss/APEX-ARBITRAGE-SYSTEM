@@ -68,12 +68,12 @@ After installation completes, you'll need to:
 
 2. **Verify the installation**:
    ```bash
-   npm run validate
+   yarn run validate
    ```
 
 3. **Start the system**:
    ```bash
-   npm start
+   yarn start
    ```
 
 ---
@@ -109,20 +109,21 @@ For advanced users who want complete control:
 ```bash
 # Ubuntu/Debian
 sudo apt-get update
-sudo apt-get install -y nodejs npm python3 python3-pip curl build-essential
+sudo apt-get install -y nodejs python3 python3-pip curl build-essential
 
 # macOS
 brew install node python3
 
 # Install Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# Install yarn globally
+npm install -g yarn
 ```
 
 #### Step 2: Install Node Dependencies
 
 ```bash
-npm install
-# or
 yarn install
 ```
 
@@ -164,7 +165,7 @@ Run a complete validation of your installation:
 ```bash
 node scripts/comprehensive-validation.js
 # or
-npm run validate
+yarn run validate
 ```
 
 This checks:
@@ -183,7 +184,7 @@ This checks:
 For a faster check:
 
 ```bash
-npm run verify
+yarn run verify
 ```
 
 ### Test Installer Components
@@ -216,14 +217,11 @@ To test the installer without running it:
 
 **Solution**:
 ```bash
-# Clear npm cache
-npm cache clean --force
+# Clear yarn cache
+yarn cache clean
 
 # Try with increased timeout
-npm install --network-timeout 600000
-
-# Or use yarn
-yarn install
+yarn install --network-timeout 600000
 ```
 
 ### Python Dependencies Fail to Install

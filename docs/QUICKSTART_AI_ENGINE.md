@@ -70,10 +70,10 @@ python3 src/python/integration_example.py
 
 ```bash
 # Start AI engine
-npm run ai:start
+yarn run ai:start
 
 # Or in development mode with auto-reload
-npm run ai:dev
+yarn run ai:dev
 ```
 
 ## Verify Installation

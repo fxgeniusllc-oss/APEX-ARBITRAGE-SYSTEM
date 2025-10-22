@@ -341,7 +341,7 @@ APEX-ARBITRAGE-SYSTEM/
 
 ### Run the Main System
 ```bash
-npm start
+yarn start
 ```
 
 ### Run the Demo

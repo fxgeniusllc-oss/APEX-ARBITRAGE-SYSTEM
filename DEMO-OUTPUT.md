@@ -19,8 +19,6 @@ components, configure the system, and start it running.
 Checking Node.js...
 ✅ Node.js v20.19.5
 
-✅ npm 10.8.2
-
 ✅ yarn 1.22.22
 
 Checking Python...
@@ -85,7 +83,7 @@ Running validation script...
 
 ━━━ Prerequisites ━━━
 ✅ Node.js installed
-✅ npm installed
+✅ yarn installed
 ✅ Python 3 installed
 ✅ pip3 installed
 ✅ Rust/Cargo installed
@@ -160,7 +158,7 @@ Warnings:         2
 System should work but review warnings before production use.
 
 You can start the system with:
-  npm start
+  yarn start
 
 
 ✅ Installation validated
@@ -188,19 +186,19 @@ Would you like to run tests now? (y/N)
    nano .env
 
 2️⃣  Start the system:
-   npm start                    # Start the arbitrage system
-   npm run ai:start            # Start AI engine (optional)
-   npm run start:all           # Start everything (Node + Python)
+   yarn start                    # Start the arbitrage system
+   yarn run ai:start            # Start AI engine (optional)
+   yarn run start:all           # Start everything (Node + Python)
 
 3️⃣  Monitor performance:
-   npm run verify              # Verify setup
-   npm run health              # Health check
-   npm run logs                # View logs
+   yarn run verify              # Verify setup
+   yarn run health              # Health check
+   yarn run logs                # View logs
 
 4️⃣  Additional commands:
-   npm run deploy              # Deploy smart contracts
-   npm run dryrun              # Test without execution
-   npm test                    # Run tests
+   yarn run deploy              # Deploy smart contracts
+   yarn run dryrun              # Test without execution
+   yarn test                    # Run tests
 
 ⚠️  IMPORTANT REMINDERS:
    • Configure .env before production use
@@ -212,16 +210,16 @@ Would you like to run tests now? (y/N)
 Would you like to start the system now? (y/N) n
 
 ✅ Installation complete!
-Run 'npm start' when you're ready.
+Run 'yarn start' when you're ready.
 
 ```
 
 ## Validation Output
 
-When running `npm run validate`:
+When running `yarn run validate`:
 
 ```bash
-$ npm run validate
+$ yarn run validate
 
 ╔═══════════════════════════════════════════════════════════╗
 ║    APEX ARBITRAGE SYSTEM - COMPREHENSIVE VALIDATION       ║
@@ -230,7 +228,7 @@ $ npm run validate
 
 ━━━ Prerequisites ━━━
 ✅ Node.js installed
-✅ npm installed
+✅ yarn installed
 ✅ Python 3 installed
 ✅ pip3 installed
 ✅ Rust/Cargo installed
@@ -259,7 +257,7 @@ Warnings:         2
 System should work but review warnings before production use.
 
 You can start the system with:
-  npm start
+  yarn start
 ```
 
 ## Test Installer Output
@@ -309,7 +307,7 @@ To install and run the system:
 To validate an existing installation:
   node scripts/comprehensive-validation.js
   # or
-  npm run validate
+  yarn run validate
 ```
 
 ## Starting the System
@@ -317,7 +315,7 @@ To validate an existing installation:
 After successful installation, starting the system:
 
 ```bash
-$ npm start
+$ yarn start
 
 ╔═══════════════════════════════════════════════════════════╗
 ║          APEX ARBITRAGE SYSTEM - PRODUCTION MODE          ║
@@ -368,7 +366,7 @@ Press Ctrl+C to stop
 | Run installer | 5-15min | Execute `./install-and-run.sh` |
 | Answer prompts | 10s | Optional: y/n to tests and start |
 | Configure .env | 2min | Edit RPC URLs and keys |
-| Start system | 1s | Run `npm start` |
+| Start system | 1s | Run `yarn start` |
 | **Total** | **10-20min** | **Minimal interaction** |
 
 ## Success Indicators
@@ -384,6 +382,6 @@ After installation completes, users will see:
 
 Users know they're successful when:
 - No red ❌ errors in validation
-- `npm run validate` shows mostly green ✅
+- `yarn run validate` shows mostly green ✅
 - System starts without errors
 - Dashboard displays properly

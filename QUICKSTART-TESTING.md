@@ -6,7 +6,7 @@ Run these commands to verify the complete system:
 
 ### 1. Run All Tests (Recommended)
 ```bash
-npm test
+yarn test
 ```
 
 **Expected Result:**
@@ -160,7 +160,7 @@ test result: ok. 2 passed; 0 failed
 ```bash
 # Tests should complete in under 1 second
 # If they take longer, check system resources
-npm test
+yarn test
 # Expected: ~680ms
 ```
 
@@ -175,7 +175,7 @@ cargo build --release
 ### Tests Fail
 ```bash
 # Run tests with verbose output
-npm test -- --reporter=spec
+yarn test -- --reporter=spec
 
 # Check specific test file
 node --test tests/comprehensive-rust-tests.test.js

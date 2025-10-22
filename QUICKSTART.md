@@ -69,7 +69,7 @@ SLIPPAGE_BPS=50                     # 0.5% slippage tolerance
 ### Step 4: Verify Installation (30 seconds)
 
 ```bash
-npm run validate
+yarn run validate
 ```
 
 Expected output:
@@ -80,7 +80,7 @@ Expected output:
 ### Step 5: Start Trading (1 second)
 
 ```bash
-npm start
+yarn start
 ```
 
 The system will begin monitoring for arbitrage opportunities!
@@ -138,31 +138,31 @@ After installation, use these commands:
 
 ```bash
 # Start the system
-npm start
+yarn start
 
 # Start with AI engine
-npm run start:all
+yarn run start:all
 
 # Run in development mode
-npm run dev
+yarn run dev
 
 # Verify installation
-npm run validate
+yarn run validate
 
 # Check system health
-npm run health
+yarn run health
 
 # View logs
-npm run logs
+yarn run logs
 
 # Run tests
-npm test
+yarn test
 
 # Deploy contracts
-npm run deploy
+yarn run deploy
 
 # Dry run (no execution)
-npm run dryrun
+yarn run dryrun
 ```
 
 ---
@@ -182,7 +182,7 @@ cp .env.example .env && \
 nano .env
 
 # Validate and start
-npm run validate && npm start
+yarn run validate && yarn start
 ```
 
 ---
@@ -207,14 +207,14 @@ touch EMERGENCY_STOP
 ### Real-time Monitoring
 
 ```bash
-npm run monitor
+yarn run monitor
 ```
 
 ### View Logs
 
 ```bash
 # Follow live logs
-npm run logs
+yarn run logs
 
 # View specific log file
 tail -f logs/$(date +%Y-%m-%d).log
@@ -224,10 +224,10 @@ tail -f logs/$(date +%Y-%m-%d).log
 
 ```bash
 # Run benchmarks
-npm run benchmark
+yarn run benchmark
 
 # System health check
-npm run health
+yarn run health
 ```
 
 ---
@@ -252,7 +252,7 @@ If installation fails, try:
 
 ```bash
 # Run validation to see what's wrong
-npm run validate
+yarn run validate
 
 # Check test script
 ./test-installer.sh
@@ -270,7 +270,7 @@ Common fixes:
 cat .env
 
 # Verify all dependencies
-npm run validate
+yarn run validate
 
 # Check for missing directories
 ls -la data logs
@@ -310,7 +310,7 @@ You'll know the system is working when you see:
 - ✅ Gas price monitoring active
 - ✅ Route scanning in progress
 - ✅ No error messages in logs
-- ✅ Validation passes (`npm run validate`)
+- ✅ Validation passes (`yarn run validate`)
 
 ---
 

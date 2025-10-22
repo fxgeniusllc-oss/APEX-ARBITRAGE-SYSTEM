@@ -48,7 +48,7 @@ This document compares the two setup approaches for the APEX Arbitrage System.
 - ✅ Rust presence (optional)
 
 **Installs:**
-- ✅ Node.js dependencies (npm install)
+- ✅ Node.js dependencies (yarn install)
 - ✅ Python dependencies (from root requirements.txt)
 
 **Builds:**
@@ -61,10 +61,10 @@ This document compares the two setup approaches for the APEX Arbitrage System.
 - ✅ .env from .env.example if missing
 
 **Scripts Available After:**
-- `npm start` - Uses existing entry point
-- `npm run dev` - Development mode
-- `npm run deploy` - Deploy contracts
-- `npm run verify` - Verify (if script exists)
+- `yarn start` - Uses existing entry point
+- `yarn run dev` - Development mode
+- `yarn run deploy` - Deploy contracts
+- `yarn run verify` - Verify (if script exists)
 
 ### `setup-apex.sh` Features
 
@@ -140,17 +140,17 @@ This document compares the two setup approaches for the APEX Arbitrage System.
 - ✅ Confirms readiness for deployment
 
 **Scripts Available After:**
-- `npm start` - Production runner
-- `npm run dev` - Development mode
-- `npm test` - Integration tests
-- `npm run deploy` - Deploy contracts
-- `npm run verify` - System verification
-- `npm run monitor` - Live monitoring
-- `npm run benchmark` - Performance tests
-- `npm run build:rust` - Build Rust engine
-- `npm run build:all` - Build all components
-- `npm run lint` - ESLint
-- `npm run format` - Prettier
+- `yarn start` - Production runner
+- `yarn run dev` - Development mode
+- `yarn test` - Integration tests
+- `yarn run deploy` - Deploy contracts
+- `yarn run verify` - System verification
+- `yarn run monitor` - Live monitoring
+- `yarn run benchmark` - Performance tests
+- `yarn run build:rust` - Build Rust engine
+- `yarn run build:all` - Build all components
+- `yarn run lint` - ESLint
+- `yarn run format` - Prettier
 
 ## Technical Differences
 
@@ -230,7 +230,7 @@ If you've been using `quickstart.sh` and want to migrate to full APEX:
 
 5. **Verify everything works:**
    ```bash
-   npm run verify
+   yarn run verify
    ```
 
 ### Coexistence
@@ -240,8 +240,8 @@ Both scripts can coexist:
 - `setup-apex.sh` - For complete rebuilds
 
 The APEX setup doesn't remove legacy components, so you can still:
-- Run legacy system: `npm run legacy`
-- Build legacy Rust: `npm run build:rust-legacy`
+- Run legacy system: `yarn run legacy`
+- Build legacy Rust: `yarn run build:rust-legacy`
 - Use existing contracts and scripts
 
 ## Recommendations
@@ -258,7 +258,7 @@ The APEX setup doesn't remove legacy components, so you can still:
 ### For CI/CD:
 - Use `setup-apex.sh` in Docker builds
 - Use `quickstart.sh` for dependency updates
-- Run `npm run verify` after either script
+- Run `yarn run verify` after either script
 
 ## Performance Impact
 

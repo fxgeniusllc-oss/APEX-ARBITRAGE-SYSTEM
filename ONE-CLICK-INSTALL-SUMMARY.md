@@ -34,7 +34,7 @@ A comprehensive, fully automated installation script that:
 - Node.js packages (ethers, web3, dotenv, axios, etc.)
 - Python packages (numpy, pandas, fastapi, xgboost, etc.)
 - Handles network timeouts and retries
-- Uses both npm and yarn for reliability
+- Uses yarn for package management
 
 ✅ **Builds Rust Components**
 - Compiles src/rust engine
@@ -69,7 +69,7 @@ A complete system validation tool that checks:
 
 ✅ **Prerequisites**
 - Node.js 18+ installed
-- npm installed  
+- yarn installed  
 - Python 3+ installed
 - pip3 installed
 - Rust/Cargo installed (optional)
@@ -208,7 +208,7 @@ Works on:
 2. Check if Python installed (manually)
 3. Check if Rust installed (manually)
 4. Install each missing tool (manually)
-5. Run npm install (manually)
+5. Run yarn install (manually)
 6. Run pip install (manually)
 7. Build Rust (manually)
 8. Create .env (manually)
@@ -252,7 +252,7 @@ install-and-run.sh
 │   └── Rust detection & installation
 ├── Step 2: Create Directory Structure
 ├── Step 3: Install Node.js Dependencies
-│   ├── npm install (primary)
+│   ├── yarn install (primary)
 │   └── yarn install (fallback)
 ├── Step 4: Install Python Dependencies
 │   └── pip3 install -r requirements.txt
@@ -264,9 +264,9 @@ install-and-run.sh
 ├── Step 7: Validate Installation
 │   └── Run comprehensive checks
 ├── Step 8: Optional Tests
-│   └── npm test (if user confirms)
+│   └── yarn test (if user confirms)
 └── Step 9: Optional Start
-    └── npm start (if user confirms)
+    └── yarn start (if user confirms)
 ```
 
 ### **Validation Architecture**
@@ -294,7 +294,7 @@ comprehensive-validation.js
 
 ## 📈 Validation Results
 
-Running `npm run validate` on a fresh installation:
+Running `yarn run validate` on a fresh installation:
 
 ```
 ╔═══════════════════════════════════════════════════════════╗
@@ -303,7 +303,7 @@ Running `npm run validate` on a fresh installation:
 
 ━━━ Prerequisites ━━━
 ✅ Node.js installed
-✅ npm installed
+✅ yarn installed
 ✅ Python 3 installed
 ✅ pip3 installed
 ✅ Rust/Cargo installed
@@ -332,7 +332,7 @@ Warnings:         2
 System should work but review warnings before production use.
 
 You can start the system with:
-  npm start
+  yarn start
 ```
 
 ---
@@ -353,7 +353,7 @@ echo -e "n\nn" | ./install-and-run.sh
 
 ### **Validation Only**
 ```bash
-npm run validate
+yarn run validate
 # or
 node scripts/comprehensive-validation.js
 ```

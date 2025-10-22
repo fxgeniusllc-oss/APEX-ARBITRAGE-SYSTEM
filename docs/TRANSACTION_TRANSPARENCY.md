@@ -362,7 +362,7 @@ This will demonstrate:
 Run the comprehensive test suite:
 
 ```bash
-npm test tests/transaction-transparency.test.js
+yarn test tests/transaction-transparency.test.js
 ```
 
 Tests cover:
