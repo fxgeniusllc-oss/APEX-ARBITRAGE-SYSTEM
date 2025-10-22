@@ -198,7 +198,7 @@ export class OpportunityScorer {
         if (tvl < 10000) {
             tvlScore = 0;
         } else if (tvl < 100000) {
-            tvlScore = 30 + (tvl - 10000) / 900; // 30-100k = 30-100
+            tvlScore = 30 + (tvl - 10000) / 1285.71; // 30-100k = 30-100
         } else if (tvl < 1000000) {
             tvlScore = 60 + Math.log10(tvl / 100000) * 20;
         } else {
