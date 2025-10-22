@@ -1,50 +1,210 @@
 /**
- * SushiSwap Adapter
- * SushiSwap uses Uniswap V2 compatible contracts
+ * SushiSwap DEX Adapter
+ * Provides unified interface for interacting with SushiSwap protocol
+ * SushiSwap is a fork of Uniswap V2 with similar interfaces
  */
 
 const { ethers } = require('ethers');
 const chalk = require('chalk');
-const { UNISWAP_V2_ROUTER_ABI } = require('./uniswap_adapter');
+
+/**
+ * SushiSwap Factory ABI (same as Uniswap V2)
+ */
+const SUSHISWAP_FACTORY_ABI = [
+    'function allPairsLength() external view returns (uint)',
+    'function allPairs(uint) external view returns (address)',
+    'function getPair(address tokenA, address tokenB) external view returns (address pair)',
+    'function createPair(address tokenA, address tokenB) external returns (address pair)',
+    'function feeTo() external view returns (address)',
+    'function feeToSetter() external view returns (address)',
+    'function migrator() external view returns (address)',
+    'function setFeeTo(address) external',
+    'function setFeeToSetter(address) external',
+    'function setMigrator(address) external',
+    'event PairCreated(address indexed token0, address indexed token1, address pair, uint)'
+];
+
+/**
+ * SushiSwap Pair ABI (same as Uniswap V2)
+ */
+const SUSHISWAP_PAIR_ABI = [
+    'function name() external pure returns (string)',
+    'function symbol() external pure returns (string)',
+    'function decimals() external pure returns (uint8)',
+    'function totalSupply() external view returns (uint)',
+    'function balanceOf(address owner) external view returns (uint)',
+    'function factory() external view returns (address)',
+    'function token0() external view returns (address)',
+    'function token1() external view returns (address)',
+    'function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast)',
+    'function price0CumulativeLast() external view returns (uint)',
+    'function price1CumulativeLast() external view returns (uint)',
+    'function kLast() external view returns (uint)',
+    'function mint(address to) external returns (uint liquidity)',
+    'function burn(address to) external returns (uint amount0, uint amount1)',
+    'function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external',
+    'function skim(address to) external',
+    'function sync() external',
+    'event Mint(address indexed sender, uint amount0, uint amount1)',
+    'event Burn(address indexed sender, uint amount0, uint amount1, address indexed to)',
+    'event Swap(address indexed sender, uint amount0In, uint amount1In, uint amount0Out, uint amount1Out, address indexed to)',
+    'event Sync(uint112 reserve0, uint112 reserve1)'
+];
+
+/**
+ * SushiSwap Router ABI
+ */
+const SUSHISWAP_ROUTER_ABI = [
+    'function factory() external pure returns (address)',
+    'function WETH() external pure returns (address)',
+    'function addLiquidity(address tokenA, address tokenB, uint amountADesired, uint amountBDesired, uint amountAMin, uint amountBMin, address to, uint deadline) external returns (uint amountA, uint amountB, uint liquidity)',
+    'function removeLiquidity(address tokenA, address tokenB, uint liquidity, uint amountAMin, uint amountBMin, address to, uint deadline) external returns (uint amountA, uint amountB)',
+    'function swapExactTokensForTokens(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external returns (uint[] memory amounts)',
+    'function swapTokensForExactTokens(uint amountOut, uint amountInMax, address[] calldata path, address to, uint deadline) external returns (uint[] memory amounts)',
+    'function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable returns (uint[] memory amounts)',
+    'function swapTokensForExactETH(uint amountOut, uint amountInMax, address[] calldata path, address to, uint deadline) external returns (uint[] memory amounts)',
+    'function swapExactTokensForETH(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external returns (uint[] memory amounts)',
+    'function swapETHForExactTokens(uint amountOut, address[] calldata path, address to, uint deadline) external payable returns (uint[] memory amounts)',
+    'function getAmountsOut(uint amountIn, address[] calldata path) external view returns (uint[] memory amounts)',
+    'function getAmountsIn(uint amountOut, address[] calldata path) external view returns (uint[] memory amounts)',
+    'function quote(uint amountA, uint reserveA, uint reserveB) external pure returns (uint amountB)',
+    'function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut) external pure returns (uint amountOut)',
+    'function getAmountIn(uint amountOut, uint reserveIn, uint reserveOut) external pure returns (uint amountIn)',
+    'function swapExactTokensForTokensSupportingFeeOnTransferTokens(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external'
+];
 
 class SushiSwapAdapter {
     constructor(provider, config) {
         this.provider = provider;
         this.config = config;
-        this.router = new ethers.Contract(config.router, UNISWAP_V2_ROUTER_ABI, provider);
+        this.factoryContract = null;
+        this.routerContract = null;
+        this.initialized = false;
     }
 
     /**
-     * Get quote for swap
+     * Initialize the adapter with contract instances
      */
-    async getAmountsOut(amountIn, path) {
+    async initialize() {
         try {
-            return await this.router.getAmountsOut(amountIn, path);
+            this.factoryContract = new ethers.Contract(
+                this.config.factory,
+                SUSHISWAP_FACTORY_ABI,
+                this.provider
+            );
+            
+            this.routerContract = new ethers.Contract(
+                this.config.router,
+                SUSHISWAP_ROUTER_ABI,
+                this.provider
+            );
+
+            this.initialized = true;
+            console.log(chalk.green('✅ SushiSwap adapter initialized'));
         } catch (error) {
-            console.log(chalk.red(`SushiSwap: Error getting amounts out: ${error.message}`));
+            console.log(chalk.red(`❌ Failed to initialize SushiSwap adapter: ${error.message}`));
             throw error;
         }
     }
 
     /**
-     * Get amounts in for desired output
+     * Get pair address for two tokens
      */
-    async getAmountsIn(amountOut, path) {
+    async getPair(token0, token1) {
+        if (!this.initialized) {
+            await this.initialize();
+        }
+
         try {
-            return await this.router.getAmountsIn(amountOut, path);
+            return await this.factoryContract.getPair(token0, token1);
         } catch (error) {
-            console.log(chalk.red(`SushiSwap: Error getting amounts in: ${error.message}`));
-            throw error;
+            console.log(chalk.yellow(`⚠️  Failed to get pair: ${error.message}`));
+            return null;
         }
     }
 
     /**
-     * Execute swap
+     * Get all pairs
      */
-    async swapExactTokensForTokens(amountIn, amountOutMin, path, to, deadline, signer) {
+    async getAllPairs(limit = 100) {
+        if (!this.initialized) {
+            await this.initialize();
+        }
+
+        const pairs = [];
+
         try {
-            const routerWithSigner = this.router.connect(signer);
-            const tx = await routerWithSigner.swapExactTokensForTokens(
+            const pairCount = await this.factoryContract.allPairsLength();
+            const totalPairs = Number(pairCount);
+            const startIndex = Math.max(0, totalPairs - limit);
+
+            for (let i = startIndex; i < Math.min(startIndex + limit, totalPairs); i++) {
+                const pairAddress = await this.factoryContract.allPairs(i);
+                const pair = new ethers.Contract(pairAddress, SUSHISWAP_PAIR_ABI, this.provider);
+
+                const [token0, token1, reserves] = await Promise.all([
+                    pair.token0(),
+                    pair.token1(),
+                    pair.getReserves()
+                ]);
+
+                pairs.push({
+                    address: pairAddress,
+                    token0,
+                    token1,
+                    reserve0: reserves[0].toString(),
+                    reserve1: reserves[1].toString(),
+                    dex: 'sushiswap',
+                    type: 'uniswap-v2'
+                });
+            }
+        } catch (error) {
+            console.log(chalk.red(`❌ Error fetching pairs: ${error.message}`));
+        }
+
+        return pairs;
+    }
+
+    /**
+     * Get reserves for a pair
+     */
+    async getReserves(pairAddress) {
+        const pair = new ethers.Contract(pairAddress, SUSHISWAP_PAIR_ABI, this.provider);
+        const reserves = await pair.getReserves();
+        return {
+            reserve0: reserves[0].toString(),
+            reserve1: reserves[1].toString(),
+            blockTimestampLast: reserves[2]
+        };
+    }
+
+    /**
+     * Get quote for a swap
+     */
+    async getAmountOut(amountIn, path) {
+        if (!this.initialized) {
+            await this.initialize();
+        }
+
+        try {
+            const amounts = await this.routerContract.getAmountsOut(amountIn, path);
+            return amounts[amounts.length - 1];
+        } catch (error) {
+            console.log(chalk.yellow(`⚠️  Failed to get quote: ${error.message}`));
+            return null;
+        }
+    }
+
+    /**
+     * Execute a swap
+     */
+    async swap(amountIn, amountOutMin, path, to, deadline) {
+        if (!this.initialized) {
+            await this.initialize();
+        }
+
+        try {
+            const tx = await this.routerContract.swapExactTokensForTokens(
                 amountIn,
                 amountOutMin,
                 path,
@@ -53,91 +213,71 @@ class SushiSwapAdapter {
             );
             return await tx.wait();
         } catch (error) {
-            console.log(chalk.red(`SushiSwap: Error executing swap: ${error.message}`));
+            console.log(chalk.red(`❌ Swap failed: ${error.message}`));
             throw error;
         }
     }
 
     /**
-     * Execute reverse swap (exact output)
+     * Get pair info
      */
-    async swapTokensForExactTokens(amountOut, amountInMax, path, to, deadline, signer) {
+    async getPairInfo(pairAddress) {
         try {
-            const routerWithSigner = this.router.connect(signer);
-            const tx = await routerWithSigner.swapTokensForExactTokens(
-                amountOut,
-                amountInMax,
-                path,
-                to,
-                deadline
-            );
-            return await tx.wait();
+            const pair = new ethers.Contract(pairAddress, SUSHISWAP_PAIR_ABI, this.provider);
+            const [token0, token1, reserves, totalSupply] = await Promise.all([
+                pair.token0(),
+                pair.token1(),
+                pair.getReserves(),
+                pair.totalSupply()
+            ]);
+
+            return {
+                address: pairAddress,
+                token0,
+                token1,
+                reserve0: reserves[0].toString(),
+                reserve1: reserves[1].toString(),
+                totalSupply: totalSupply.toString(),
+                dex: 'sushiswap',
+                type: 'uniswap-v2'
+            };
         } catch (error) {
-            console.log(chalk.red(`SushiSwap: Error executing reverse swap: ${error.message}`));
-            throw error;
+            console.log(chalk.red(`❌ Failed to get pair info: ${error.message}`));
+            return null;
         }
     }
 
     /**
-     * Get factory address
+     * Calculate price from reserves
      */
-    async getFactory() {
-        return await this.router.factory();
-    }
-
-    /**
-     * Get WETH address
-     */
-    async getWETH() {
-        return await this.router.WETH();
-    }
-
-    /**
-     * Add liquidity
-     */
-    async addLiquidity(tokenA, tokenB, amountADesired, amountBDesired, amountAMin, amountBMin, to, deadline, signer) {
-        try {
-            const routerWithSigner = this.router.connect(signer);
-            const tx = await routerWithSigner.addLiquidity(
-                tokenA,
-                tokenB,
-                amountADesired,
-                amountBDesired,
-                amountAMin,
-                amountBMin,
-                to,
-                deadline
-            );
-            return await tx.wait();
-        } catch (error) {
-            console.log(chalk.red(`SushiSwap: Error adding liquidity: ${error.message}`));
-            throw error;
+    calculatePrice(reserve0, reserve1, decimals0 = 18, decimals1 = 18) {
+        const r0 = BigInt(reserve0);
+        const r1 = BigInt(reserve1);
+        
+        if (r0 === 0n || r1 === 0n) {
+            return 0;
         }
+
+        const price = Number(r1) / Number(r0) * Math.pow(10, decimals0 - decimals1);
+        return price;
     }
 
     /**
-     * Remove liquidity
+     * Get token info from pair
      */
-    async removeLiquidity(tokenA, tokenB, liquidity, amountAMin, amountBMin, to, deadline, signer) {
+    async getTokensFromPair(pairAddress) {
         try {
-            const routerWithSigner = this.router.connect(signer);
-            const tx = await routerWithSigner.removeLiquidity(
-                tokenA,
-                tokenB,
-                liquidity,
-                amountAMin,
-                amountBMin,
-                to,
-                deadline
-            );
-            return await tx.wait();
+            const pair = new ethers.Contract(pairAddress, SUSHISWAP_PAIR_ABI, this.provider);
+            const [token0, token1] = await Promise.all([
+                pair.token0(),
+                pair.token1()
+            ]);
+            return { token0, token1 };
         } catch (error) {
-            console.log(chalk.red(`SushiSwap: Error removing liquidity: ${error.message}`));
-            throw error;
+            console.log(chalk.red(`❌ Failed to get tokens: ${error.message}`));
+            return null;
         }
     }
 }
 
-module.exports = {
-    SushiSwapAdapter
-};
+module.exports = { SushiSwapAdapter };

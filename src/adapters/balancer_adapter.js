@@ -83,13 +83,27 @@ class BalancerAdapter {
     }
 
     /**
-     * Execute batch swap
+     * Execute a batch swap across multiple pools
      */
-    async batchSwap(kind, swaps, assets, funds, limits, deadline, signer) {
+    async batchSwap(swaps, assets, limits, deadline, recipient) {
+        if (!this.initialized) {
+            await this.initialize();
+        }
+
+        if (!this.vaultContract) {
+            throw new Error('Vault contract not initialized');
+        }
+
         try {
-            const vaultWithSigner = this.vault.connect(signer);
-            const tx = await vaultWithSigner.batchSwap(
-                kind,
+            const funds = {
+                sender: recipient,
+                fromInternalBalance: false,
+                recipient,
+                toInternalBalance: false
+            };
+
+            const tx = await this.vaultContract.batchSwap(
+                0, // GIVEN_IN
                 swaps,
                 assets,
                 funds,
@@ -104,115 +118,119 @@ class BalancerAdapter {
     }
 
     /**
-     * Join pool (add liquidity)
+     * Request a flash loan from Balancer
      */
-    async joinPool(poolId, sender, recipient, request, signer) {
-        try {
-            const vaultWithSigner = this.vault.connect(signer);
-            const tx = await vaultWithSigner.joinPool(
-                poolId,
-                sender,
-                recipient,
-                request
-            );
-            return await tx.wait();
-        } catch (error) {
-            console.log(chalk.red(`Balancer: Error joining pool: ${error.message}`));
-            throw error;
+    async flashLoan(recipient, tokens, amounts, userData) {
+        if (!this.initialized) {
+            await this.initialize();
         }
-    }
 
-    /**
-     * Exit pool (remove liquidity)
-     */
-    async exitPool(poolId, sender, recipient, request, signer) {
-        try {
-            const vaultWithSigner = this.vault.connect(signer);
-            const tx = await vaultWithSigner.exitPool(
-                poolId,
-                sender,
-                recipient,
-                request
-            );
-            return await tx.wait();
-        } catch (error) {
-            console.log(chalk.red(`Balancer: Error exiting pool: ${error.message}`));
-            throw error;
+        if (!this.vaultContract) {
+            throw new Error('Vault contract not initialized');
         }
-    }
 
-    /**
-     * Execute flash loan
-     */
-    async flashLoan(recipient, tokens, amounts, userData, signer) {
         try {
-            const vaultWithSigner = this.vault.connect(signer);
-            const tx = await vaultWithSigner.flashLoan(
+            const tx = await this.vaultContract.flashLoan(
                 recipient,
                 tokens,
                 amounts,
                 userData
             );
+
             return await tx.wait();
         } catch (error) {
-            console.log(chalk.red(`Balancer: Error executing flash loan: ${error.message}`));
+            console.log(chalk.red(`❌ Flash loan failed: ${error.message}`));
             throw error;
         }
     }
 
     /**
-     * Get internal balance
+     * Join a pool (add liquidity)
      */
-    async getInternalBalance(user, tokens) {
+    async joinPool(poolId, sender, recipient, assets, maxAmountsIn, userData) {
+        if (!this.initialized) {
+            await this.initialize();
+        }
+
+        if (!this.vaultContract) {
+            throw new Error('Vault contract not initialized');
+        }
+
         try {
-            return await this.vault.getInternalBalance(user, tokens);
+            const request = {
+                assets,
+                maxAmountsIn,
+                userData,
+                fromInternalBalance: false
+            };
+
+            const tx = await this.vaultContract.joinPool(
+                poolId,
+                sender,
+                recipient,
+                request
+            );
+
+            return await tx.wait();
         } catch (error) {
-            console.log(chalk.red(`Balancer: Error getting internal balance: ${error.message}`));
+            console.log(chalk.red(`❌ Join pool failed: ${error.message}`));
             throw error;
         }
     }
 
     /**
-     * Get WETH address
+     * Exit a pool (remove liquidity)
+     */
+    async exitPool(poolId, sender, recipient, assets, minAmountsOut, userData) {
+        if (!this.initialized) {
+            await this.initialize();
+        }
+
+        if (!this.vaultContract) {
+            throw new Error('Vault contract not initialized');
+        }
+
+        try {
+            const request = {
+                assets,
+                minAmountsOut,
+                userData,
+                toInternalBalance: false
+            };
+
+            const tx = await this.vaultContract.exitPool(
+                poolId,
+                sender,
+                recipient,
+                request
+            );
+
+            return await tx.wait();
+        } catch (error) {
+            console.log(chalk.red(`❌ Exit pool failed: ${error.message}`));
+            throw error;
+        }
+    }
+
+    /**
+     * Get WETH address from vault
      */
     async getWETH() {
-        try {
-            return await this.vault.WETH();
-        } catch (error) {
-            console.log(chalk.red(`Balancer: Error getting WETH: ${error.message}`));
-            throw error;
+        if (!this.initialized) {
+            await this.initialize();
         }
-    }
 
-    /**
-     * Get pool swap fee
-     */
-    async getSwapFee(poolAddress) {
-        try {
-            const pool = new ethers.Contract(poolAddress, BALANCER_POOL_ABI, this.provider);
-            return await pool.getSwapFeePercentage();
-        } catch (error) {
-            console.log(chalk.red(`Balancer: Error getting swap fee: ${error.message}`));
-            throw error;
+        if (!this.vaultContract) {
+            throw new Error('Vault contract not initialized');
         }
-    }
 
-    /**
-     * Get pool ID from pool address
-     */
-    async getPoolId(poolAddress) {
         try {
-            const pool = new ethers.Contract(poolAddress, BALANCER_POOL_ABI, this.provider);
-            return await pool.getPoolId();
+            return await this.vaultContract.WETH();
         } catch (error) {
-            console.log(chalk.red(`Balancer: Error getting pool ID: ${error.message}`));
-            throw error;
+            console.log(chalk.yellow(`⚠️  Failed to get WETH: ${error.message}`));
+            return null;
         }
     }
 }
 
-module.exports = {
-    BalancerAdapter,
-    BALANCER_VAULT_ABI,
-    BALANCER_POOL_ABI
-};
+module.exports = { BalancerAdapter };
