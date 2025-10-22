@@ -354,9 +354,13 @@ class ApexSystem {
                             gas_estimate: opp.gasEstimate,
                             confidence_score: opp.confidenceScore,
                             chain: opp.chain,
-                            gas_price: 50, // Would be real in production
+                            // TODO: Replace with actual gas price from chain data provider in production
+                            gas_price: 50,
+                            // TODO: Replace with real TVL (Total Value Locked) from analytics API in production
                             tvl_usd: 500000,
+                            // TODO: Replace with real 24h volume from analytics API in production
                             volume_24h: 100000,
+                            // TODO: Replace with real historical success rate from execution logs in production
                             historical_success_rate: 0.75,
                             hop_count: opp.tokens.length - 1
                         };
