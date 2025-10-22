@@ -23,6 +23,7 @@ A complete, battle-tested arbitrage system BUILT WITH DUAL RUST SUPER SONIC TURB
 - 🎯 **Proven Routes** - Pre-configured 2-hop, 3-hop, and 4-hop arbitrage paths
 - 🛡️ **Production Safety** - Emergency stops, rate limits, loss limits
 - 📊 **Real-Time Monitoring** - Live dashboard, Telegram notifications, database logging
+- 🖥️ **Advanced Terminal Display** - Comprehensive real-time activity monitoring with organized data presentation (NEW!)
 - ⚙️ **Gas Optimized** - Smart gas price monitoring and execution optimization
 - 🔐 **Secure** - Best practices for private key management and contract security
 - 🤖 **Hybrid ML Controller** - LSTM + ONNX AI engine for real-time prediction (NEW!)
@@ -166,6 +167,7 @@ python scripts/train_ml_models.py    # Train ML models (NEW!)
 - ⚡ [Quick Start Guide](QUICKSTART.md) - Get running in 15 minutes
 - 📥 [Installation Guide](INSTALLATION-GUIDE.md) - Complete installation instructions
 - 📊 [Setup Comparison](docs/SETUP-COMPARISON.md) - Choose the right setup method
+- 🖥️ [Terminal Display Guide](docs/TERMINAL-DISPLAY.md) - Real-time monitoring dashboard (NEW!)
 
 #### Advanced
 - 📖 [Complete Setup Guide](docs/APEX-SETUP.md) - Detailed installation and configuration
@@ -447,39 +449,80 @@ echo "1" > EMERGENCY_STOP
 
 ### Live Dashboard
 
-The bot displays a real-time dashboard:
+The bot displays a comprehensive real-time terminal dashboard with detailed monitoring:
 
 ```
 ═══════════════════════════════════════════════════════════════
-         APEX ARBITRAGE SYSTEM - LIVE STATUS
+         APEX ARBITRAGE SYSTEM - REAL-TIME DASHBOARD
 ═══════════════════════════════════════════════════════════════
 
-📊 EXECUTION STATS
-   Total Executions: 47
-   Successful: 38
-   Success Rate: 80.9%
-   Consecutive Failures: 0
+🎛️  SYSTEM STATUS
+   ┌─────────────────────────┬───────────────┬──────────────────┐
+   │ Component               │ Status        │ Details          │
+   ├─────────────────────────┼───────────────┼──────────────────┤
+   │ Execution Mode          │ 🟡 DEV        │ Uptime: 1h 23m   │
+   │ Rust Engine             │ ● Online      │ 100x speed       │
+   │ Python Orchestrator     │ ● Online      │ ML-powered       │
+   │ Node.js Coordinator     │ ● Online      │ Multi-chain      │
+   │ ML/AI Engine            │ ● Online      │ ONNX ensemble    │
+   └─────────────────────────┴───────────────┴──────────────────┘
 
-💰 PROFIT/LOSS (24h)
-   Total Profit: $284.50
-   Total Loss: $12.30
+📊 EXECUTION STATISTICS
+   Total Scans: 1,247
+   Simulated Executions: 38
+   Success Rate: 92.1%
+   Total Profit: $284.50 (simulated)
    Net P/L: $272.20
 
+🎯 ACTIVE OPPORTUNITIES
+   • quickswap_sushiswap: $12.50 profit (85% confidence)
+   • uniswapv3_balancer: $18.30 profit (82% confidence)
+
+🏆 TOP PERFORMING ROUTES
+   1. USDC/USDT spread: 93% success | $112.40 profit
+   2. WMATIC/USDC arb: 75% success | $98.60 profit
+
+📝 RECENT ACTIVITY LOG
+   23:42:15 | ✅ Success  | Execution successful
+   23:41:58 | 🎯 Opportunity | New opportunity detected
+   23:41:45 | 🔍 Scan | Scan #1247 completed
+
 ⛽ MARKET CONDITIONS
-   Gas Price: 45.2 Gwei
-   MATIC Price: $0.847
-   Max Gas: 100 Gwei
+   Gas Price: 45.2 Gwei (Optimal ✓)
+   Network: Low congestion
+   MATIC: $0.847 | ETH: $2,450.32
 
-🎯 ROUTE PERFORMANCE
-   USDC/USDT spread
-      Attempts: 15 | Success: 93% | Profit: $112.40
-   WMATIC/USDC arbitrage
-      Attempts: 12 | Success: 75% | Profit: $98.60
+🤖 ML/AI ENGINE STATUS
+   Model: ONNX | Inference: 15.2ms | Accuracy: 88.5%
 
-⏰ LAST SCAN: 14:23:45
-💾 Next scan in: 60s
+⛓️  MULTI-CHAIN STATUS
+   POLYGON: ● Online | Block #45,123,456 | 15 opportunities
+   ETHEREUM: ● Online | Block #18,234,567 | 8 opportunities
+   ARBITRUM: ● Online | Block #135,234,567 | 12 opportunities
+
+═══════════════════════════════════════════════════════════════
+⏰ Last Update: 2024-01-15 23:42:30 | Refresh Rate: 5s
+💾 Press Ctrl+C to stop system
 ═══════════════════════════════════════════════════════════════
 ```
+
+**Features:**
+- 🎯 Real-time opportunity tracking with confidence scores
+- 📊 Comprehensive execution statistics and success rates
+- 🏆 Route performance metrics and historical data
+- 📝 Chronological activity log with timestamps
+- ⛽ Live market conditions and gas price monitoring
+- 🤖 ML engine status and performance metrics
+- ⛓️ Multi-chain status and block synchronization
+- 🎨 Color-coded display for quick visual comprehension
+- 📋 Organized table layouts for easy data scanning
+
+**Try the Demo:**
+```bash
+node demo-terminal-display.js
+```
+
+See [Terminal Display Documentation](docs/TERMINAL-DISPLAY.md) for detailed usage guide.
 
 ### Telegram Notifications
 
