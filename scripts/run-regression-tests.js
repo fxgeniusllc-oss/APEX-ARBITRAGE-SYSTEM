@@ -196,8 +196,12 @@ function generateRegressionReport() {
     if (performanceData && performanceData.metrics) {
         results.regression_metrics.performance_baseline = {
             total_opportunities: performanceData.metrics.totalOpportunities || 0,
-            execution_rate: performanceData.metrics.executedOpportunities / performanceData.metrics.totalOpportunities || 0,
-            success_rate: performanceData.metrics.successfulExecutions / performanceData.metrics.executedOpportunities || 0,
+            execution_rate: performanceData.metrics.totalOpportunities > 0
+                ? performanceData.metrics.executedOpportunities / performanceData.metrics.totalOpportunities
+                : 0,
+            success_rate: performanceData.metrics.executedOpportunities > 0
+                ? performanceData.metrics.successfulExecutions / performanceData.metrics.executedOpportunities
+                : 0,
             avg_profit_per_trade: performanceData.metrics.avgProfitPerTrade || 0,
             avg_execution_time_ms: performanceData.metrics.avgExecutionTime || 0,
             avg_opportunity_score: performanceData.metrics.avgOpportunityScore || 0,
