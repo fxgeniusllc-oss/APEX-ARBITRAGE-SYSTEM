@@ -1,6 +1,6 @@
 /**
  * Comprehensive Tests for OpportunityScorer
- * Tests ML-enhanced scoring system for 95-99.9% success rate validation
+ * Tests ML-powered scoring system for 95-99.9% success rate validation
  * 
  * Test Coverage:
  * 1. Scoring algorithm accuracy
