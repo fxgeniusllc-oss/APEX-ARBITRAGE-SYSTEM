@@ -240,15 +240,25 @@ If you used the one-click installer (`install-and-run.sh`), you're already set u
 # System Operation
 yarn start                             # Start production system
 yarn run dev                           # Development mode
-yarn run precheck                      # Pre-operation checklist (REQUIRED before LIVE!) (NEW!)
+yarn run precheck                      # Pre-operation checklist (REQUIRED before LIVE!)
 yarn run verify                        # Verify setup (quick check)
-yarn run validate:performance          # Validate ML performance (NEW!)
+yarn run validate:performance          # Validate ML performance
+
+# Deployment & Audit
+yarn run audit:deployment              # Final deployment audit (NEW!)
+yarn run benchmark:analysis            # Comprehensive benchmark analysis (NEW!)
+yarn run audit:full                    # Run both audit and benchmark (NEW!)
+
+# Validation & Testing
 yarn scripts/comprehensive-validation.js  # Complete validation
 yarn run monitor                       # Live monitoring dashboard
-yarn run benchmark                     # Performance benchmarks
+yarn run test                          # Run test suite
+yarn run test:regression               # Regression tests
 yarn run deploy                        # Deploy smart contracts
 yarn run start:all                     # Start everything (Node + Python)
-python scripts/train_ml_models.py    # Train ML models (NEW!)
+
+# ML Training
+python scripts/train_ml_models.py      # Train ML models
 ```
 
 ### Documentation
@@ -268,6 +278,34 @@ python scripts/train_ml_models.py    # Train ML models (NEW!)
 ---
 
 ## ✅ System Validation & Readiness
+
+### Final Deployment Audit & Benchmark Analysis (NEW!)
+
+**🚀 Before deploying to live production, run the comprehensive audit and benchmark analysis:**
+
+```bash
+# Run final deployment audit
+npm run audit:deployment
+
+# Run benchmark analysis
+npm run benchmark:analysis
+
+# Run both audit and benchmark
+npm run audit:full
+```
+
+**What gets evaluated:**
+- ✅ **System Configuration** - All components and dependencies
+- ✅ **Code Quality** - Critical files and test coverage
+- ✅ **Security Controls** - Safety limits and emergency mechanisms
+- ✅ **Performance Benchmarks** - Speed, success rate, profitability
+- ✅ **Production Readiness** - Documentation and deployment procedures
+- ✅ **Industry Comparison** - APEX vs competitors
+
+**Reports Generated:**
+- 📄 `FINAL-DEPLOYMENT-AUDIT.md` - Comprehensive audit report
+- 📄 `BENCHMARK-ANALYSIS-REPORT.md` - Performance benchmark report
+- 📄 `PRODUCTION-READINESS-EVALUATION.md` - Production readiness evaluation
 
 ### Pre-Operation Checklist (CRITICAL!)
 
