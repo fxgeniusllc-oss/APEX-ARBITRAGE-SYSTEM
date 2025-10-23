@@ -69,13 +69,29 @@ echo -e "${GREEN}✅ Node.js dependencies installed${NC}"
 echo ""
 
 # Install Python dependencies
-echo -e "${CYAN}Installing Python dependencies...${NC}"
+echo -e "${CYAN}Setting up Python virtual environment...${NC}"
+if [ ! -d ".venv" ]; then
+    python3 -m venv .venv
+    echo -e "${GREEN}✅ Virtual environment created${NC}"
+else
+    echo -e "${GREEN}✅ Virtual environment already exists${NC}"
+fi
+
+# Activate virtual environment
+source .venv/bin/activate
+
+echo -e "${CYAN}Installing Python dependencies in virtual environment...${NC}"
+python3 -m pip install --upgrade pip --quiet
 python3 -m pip install -r requirements.txt
 if [ $? -ne 0 ]; then
     echo -e "${RED}❌ Failed to install Python dependencies${NC}"
+    deactivate
     exit 1
 fi
-echo -e "${GREEN}✅ Python dependencies installed${NC}"
+echo -e "${GREEN}✅ Python dependencies installed in virtual environment${NC}"
+
+# Deactivate for now
+deactivate
 echo ""
 
 # Build Rust engines (if Rust is installed)
