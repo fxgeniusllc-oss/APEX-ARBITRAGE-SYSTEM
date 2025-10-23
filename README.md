@@ -293,6 +293,7 @@ python scripts/train_ml_models.py      # Train ML models
 - 📥 [Installation Guide](INSTALLATION-GUIDE.md) - Complete installation instructions
 - 📊 [Setup Comparison](docs/SETUP-COMPARISON.md) - Choose the right setup method
 - 🖥️ [Terminal Display Guide](docs/TERMINAL-DISPLAY.md) - Real-time monitoring dashboard (NEW!)
+- 🐍 [Virtual Environment Guide](VIRTUALENV.md) - Python virtual environment setup and usage (NEW!)
 
 #### Advanced
 - 📖 [Complete Setup Guide](docs/APEX-SETUP.md) - Detailed installation and configuration
