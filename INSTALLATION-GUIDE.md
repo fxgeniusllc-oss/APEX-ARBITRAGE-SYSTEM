@@ -52,6 +52,25 @@ The installer will automatically install these if missing:
 - **yarn** (package managers)
 - **pip3** (Python package manager)
 
+### Python Virtual Environment
+
+The installation scripts automatically create a Python virtual environment in `.venv/` directory. This ensures:
+- Isolated Python dependencies
+- Compatibility with tools like maturin (if needed for Rust-Python bindings)
+- No conflicts with system Python packages
+
+To manually activate the virtual environment:
+```bash
+source .venv/bin/activate
+# or
+source activate-venv.sh
+```
+
+To deactivate:
+```bash
+deactivate
+```
+
 ### Post-Installation
 
 After installation completes, you'll need to:

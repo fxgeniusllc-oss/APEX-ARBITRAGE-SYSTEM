@@ -180,16 +180,32 @@ echo -e "${BLUE}[4/9]${NC} Installing Python dependencies..."
 echo -e "${YELLOW}This may take a few minutes...${NC}"
 echo ""
 
+# Create Python virtual environment
+if [ ! -d ".venv" ]; then
+    echo -e "${CYAN}Creating Python virtual environment...${NC}"
+    python3 -m venv .venv
+    echo -e "${GREEN}✅ Virtual environment created${NC}"
+else
+    echo -e "${GREEN}✅ Virtual environment already exists${NC}"
+fi
+
+# Activate virtual environment
+echo -e "${CYAN}Activating virtual environment...${NC}"
+source .venv/bin/activate
+
 # Upgrade pip first
 python3 -m pip install --upgrade pip --quiet
 
 # Install dependencies
 if [ -f requirements.txt ]; then
     python3 -m pip install -r requirements.txt --quiet
-    echo -e "${GREEN}✅ Python dependencies installed${NC}"
+    echo -e "${GREEN}✅ Python dependencies installed in virtual environment${NC}"
 else
     echo -e "${YELLOW}⚠️  requirements.txt not found, skipping Python dependencies${NC}"
 fi
+
+# Deactivate for now (will be activated when needed)
+deactivate
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════

@@ -167,12 +167,28 @@ web3>=6.11.0
 python-dotenv>=1.0.0
 EOF
 
+# Create Python virtual environment
+if [ ! -d ".venv" ]; then
+    echo -e "${CYAN}Creating Python virtual environment...${NC}"
+    python3 -m venv .venv
+    echo -e "${GREEN}✅ Virtual environment created${NC}"
+else
+    echo -e "${GREEN}✅ Virtual environment already exists${NC}"
+fi
+
+# Activate virtual environment
+echo -e "${CYAN}Activating virtual environment...${NC}"
+source .venv/bin/activate
+
 # Install Python dependencies
 echo -e "${YELLOW}Installing Python dependencies...${NC}"
 python3 -m pip install --quiet --upgrade pip
 python3 -m pip install --quiet -r python/requirements.txt
 
-echo -e "${GREEN}✅ Python dependencies installed${NC}"
+# Deactivate for now
+deactivate
+
+echo -e "${GREEN}✅ Python dependencies installed in virtual environment${NC}"
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════

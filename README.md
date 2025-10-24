@@ -175,6 +175,7 @@ install-and-run.bat
 
 This automated script will:
 - ✅ **Auto-install** all prerequisites (Node.js 18+, Python 3, Rust)
+- ✅ **Create** Python virtual environment (.venv) for isolated dependencies
 - ✅ **Install** all Node.js and Python dependencies
 - ✅ **Build** Rust calculation engine
 - ✅ **Setup** configuration files (.env)
@@ -184,6 +185,8 @@ This automated script will:
 
 **Time:** 5-15 minutes (depending on connection speed)  
 **User Interaction:** Minimal (only for optional tests and final start confirmation)
+
+> 💡 **Note:** All Python dependencies are installed in an isolated virtual environment (`.venv/`), ensuring compatibility with tools like maturin and preventing conflicts with system packages.
 
 ---
 
@@ -223,7 +226,16 @@ If you used the one-click installer (`install-and-run.sh`), you're already set u
    nano .env  # Add your RPC URLs and private key
    ```
 
-2. **Verify setup:**
+2. **Activate Python virtual environment (if needed for manual Python commands):**
+   ```bash
+   source .venv/bin/activate
+   # or
+   source activate-venv.sh
+   ```
+   
+   > 💡 **Note:** Yarn scripts automatically activate the virtual environment. Manual activation is only needed for direct Python commands.
+
+3. **Verify setup:**
    ```bash
    node scripts/comprehensive-validation.js
    # Or use the yarn script:
@@ -242,7 +254,7 @@ If you used the one-click installer (`install-and-run.sh`), you're already set u
    yarn run test:integration
    ```
 
-3. **Start the system:**
+4. **Start the system:**
    ```bash
    yarn start
    ```
@@ -281,6 +293,7 @@ python scripts/train_ml_models.py      # Train ML models
 - 📥 [Installation Guide](INSTALLATION-GUIDE.md) - Complete installation instructions
 - 📊 [Setup Comparison](docs/SETUP-COMPARISON.md) - Choose the right setup method
 - 🖥️ [Terminal Display Guide](docs/TERMINAL-DISPLAY.md) - Real-time monitoring dashboard (NEW!)
+- 🐍 [Virtual Environment Guide](VIRTUALENV.md) - Python virtual environment setup and usage (NEW!)
 
 #### Advanced
 - 📖 [Complete Setup Guide](docs/APEX-SETUP.md) - Detailed installation and configuration

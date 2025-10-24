@@ -34,7 +34,7 @@ __pycache__/
 venv/
 env/
 ENV/
-.venv
+.venv/
 
 # ML Models (too large for git)
 data/models/*.json
