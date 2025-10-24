@@ -10,9 +10,11 @@ The APEX Arbitrage System's one-click install and run command has been thoroughl
 
 ## Test Results
 
-- **Total Tests**: 44 comprehensive + 17 quick verification
-- **Pass Rate**: 100% (43/43 critical tests passed)
-- **Warnings**: 1 (non-critical - optional contracts directory)
+- **Comprehensive Tests**: 44 (43 passed, 1 warned)
+- **Quick Verification**: 17 (17 passed)
+- **Total Tests**: 61
+- **Critical Pass Rate**: 100% (43/43)
+- **Overall Pass Rate**: 98.4% (60/61 passed, 1 warned)
 - **Failures**: 0
 
 ## What Was Tested
