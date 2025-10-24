@@ -112,7 +112,19 @@ class PoolRegistry:
         
         # Update stats
         self.stats['total_pools'] = len(self.pools)
-        self.stats['active_pools'] = sum(1 for p in self.pools.values() if p.is_active)
+        
+        # Update active_pools count incrementally for efficiency
+        if is_new_pool:
+            # New pool: add to count if active
+            if pool.is_active:
+                self.stats['active_pools'] = self.stats.get('active_pools', 0) + 1
+        else:
+            # Existing pool: handle status change
+            if existing_pool.is_active != pool.is_active:
+                if pool.is_active:
+                    self.stats['active_pools'] = self.stats.get('active_pools', 0) + 1
+                else:
+                    self.stats['active_pools'] = self.stats.get('active_pools', 0) - 1
         
         # Handle pool_type statistics
         if is_new_pool:
