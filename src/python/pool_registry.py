@@ -379,9 +379,14 @@ class PoolRegistry:
         """Update active status for a specific pool"""
         pool_key = f"{chain}:{dex}:{address}"
         if pool_key in self.pools:
+            old_status = self.pools[pool_key].is_active
             self.pools[pool_key].is_active = is_active
-            # Update active pools count in stats
-            self.stats['active_pools'] = sum(1 for p in self.pools.values() if p.is_active)
+            # Update active pools count incrementally
+            if old_status != is_active:
+                if is_active:
+                    self.stats['active_pools'] += 1
+                else:
+                    self.stats['active_pools'] -= 1
     
     def print_stats(self):
         """Print registry statistics"""
