@@ -295,7 +295,9 @@ export const SAFETY_CONFIG = {
     slippageBps: getFloatEnv('SLIPPAGE_BPS', 50),
     maxDailyLossUSD: getFloatEnv('MAX_DAILY_LOSS_USD', 50),
     maxConsecutiveFailures: getIntEnv('MAX_CONSECUTIVE_FAILURES', 5),
-    minTimeBetweenTrades: getIntEnv('MIN_TIME_BETWEEN_TRADES', 30000)
+    minTimeBetweenTrades: getIntEnv('MIN_TIME_BETWEEN_TRADES', 30000),
+    minFlashloanPercent: getFloatEnv('MIN_FLASHLOAN_PERCENT', 5), // 5% minimum
+    maxFlashloanPercent: getFloatEnv('MAX_FLASHLOAN_PERCENT', 25) // 25% maximum
 };
 
 // System Configuration

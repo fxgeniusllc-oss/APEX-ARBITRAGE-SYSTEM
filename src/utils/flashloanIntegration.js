@@ -261,7 +261,7 @@ export class FlashloanIntegrator {
     /**
      * Calculate optimal flashloan amount for arbitrage
      */
-    calculateOptimalAmount(reserves, targetProfit, gasEstimate, gasPriceGwei) {
+    calculateOptimalAmount(reserves, targetProfit, gasEstimate, gasPriceGwei, minPercent = 5, maxPercent = 25) {
         // Simplified Kelly Criterion for optimal bet sizing
         // amount = (edge * bankroll) / odds
         // For flashloan arbitrage, we optimize for max profit minus costs
@@ -269,10 +269,15 @@ export class FlashloanIntegrator {
         const gasCost = (gasEstimate * gasPriceGwei * 1e9) / 1e18; // in native token
         const minAmount = (targetProfit + gasCost) * 1.1; // Add 10% buffer
         
-        // Calculate max safe amount based on liquidity
-        const maxSafeAmount = Math.min(...reserves) * 0.3; // Don't use more than 30% of smallest pool
+        // Calculate max safe amount based on liquidity with configurable percentage limits
+        const minReserve = Math.min(...reserves);
+        const minSafeAmount = minReserve * (minPercent / 100); // Minimum based on minPercent
+        const maxSafeAmount = minReserve * (maxPercent / 100); // Maximum based on maxPercent
         
-        return Math.min(minAmount, maxSafeAmount);
+        // Ensure amount is within the configured range
+        const optimalAmount = Math.max(minSafeAmount, Math.min(minAmount, maxSafeAmount));
+        
+        return optimalAmount;
     }
 
     /**
