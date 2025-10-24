@@ -3,8 +3,8 @@
  * Provides interface for executing flash loans on Aave V3
  */
 
-const { ethers } = require('ethers');
-const chalk = require('chalk');
+import { ethers } from 'ethers';
+import chalk from 'chalk';
 
 /**
  * Aave V3 Pool ABI (from dex_pool_fetcher)
@@ -212,7 +212,7 @@ class AaveFlashLoanAdapter {
     }
 }
 
-module.exports = {
+export {
     AaveFlashLoanAdapter,
     AAVE_V3_POOL_ABI,
     AAVE_FLASHLOAN_RECEIVER_ABI

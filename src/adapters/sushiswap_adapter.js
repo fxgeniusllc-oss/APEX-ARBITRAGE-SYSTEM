@@ -4,8 +4,8 @@
  * SushiSwap is a fork of Uniswap V2 with similar interfaces
  */
 
-const { ethers } = require('ethers');
-const chalk = require('chalk');
+import { ethers } from 'ethers';
+import chalk from 'chalk';
 
 /**
  * SushiSwap Factory ABI (same as Uniswap V2)
@@ -280,4 +280,4 @@ class SushiSwapAdapter {
     }
 }
 
-module.exports = { SushiSwapAdapter };
+export { SushiSwapAdapter };

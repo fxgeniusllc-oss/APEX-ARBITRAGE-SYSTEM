@@ -11,9 +11,14 @@
  * - Critical files
  */
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Colors
 const colors = {
@@ -131,8 +136,8 @@ function validateNodeDependencies() {
     criticalPackages.forEach(pkg => {
         check(`Package '${pkg}' installed`, () => {
             try {
-                require.resolve(pkg);
-                return true;
+                const pkgPath = path.join(process.cwd(), 'node_modules', pkg);
+                return fs.existsSync(pkgPath);
             } catch {
                 return false;
             }
@@ -352,8 +357,9 @@ function main() {
     process.exit(exitCode);
 }
 
-if (require.main === module) {
+// Run if executed directly
+if (import.meta.url === `file://${process.argv[1]}`) {
     main();
 }
 
-module.exports = { main };
+export { main };

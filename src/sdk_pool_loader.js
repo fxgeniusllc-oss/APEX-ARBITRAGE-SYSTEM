@@ -4,8 +4,8 @@
  * This provides more accurate data than direct contract calls
  */
 
-const { ethers } = require('ethers');
-const chalk = require('chalk');
+import { ethers } from 'ethers';
+import chalk from 'chalk';
 
 /**
  * Uniswap V3 Factory ABI (comprehensive)
@@ -277,7 +277,7 @@ function sortByLiquidity(pools, descending = true) {
     });
 }
 
-module.exports = {
+export {
     loadPoolsFromSDK,
     loadUniswapV3Pools,
     getTokenSymbol,

@@ -4,8 +4,8 @@
  * Displays: system status, executions, opportunities, routes, market conditions, ML status
  */
 
-const Table = require('cli-table3');
-const moment = require('moment');
+import Table from 'cli-table3';
+import moment from 'moment';
 
 // Chalk 5.x is ESM-only, so we'll use a dynamic import wrapper
 let chalk;
@@ -698,4 +698,4 @@ class TerminalDisplay {
     }
 }
 
-module.exports = { TerminalDisplay };
+export { TerminalDisplay };
