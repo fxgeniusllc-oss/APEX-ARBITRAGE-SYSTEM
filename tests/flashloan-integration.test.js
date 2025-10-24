@@ -203,7 +203,36 @@ describe('FlashloanIntegrator - Optimal Amount Calculation', () => {
         );
         
         assert.ok(optimalAmount > 0);
-        assert.ok(optimalAmount <= reserves[0] * 0.3); // Should not exceed 30% of smallest pool
+        assert.ok(optimalAmount <= reserves[0] * 0.25); // Should not exceed 25% of smallest pool (new default max)
+    });
+
+    test('should respect configurable min/max percentage limits', () => {
+        const mockProvider = {};
+        const mockWallet = {};
+        const integrator = new FlashloanIntegrator(mockProvider, mockWallet);
+        
+        const reserves = [1000000, 2000000, 3000000];
+        const targetProfit = 100;
+        const gasEstimate = 300000;
+        const gasPriceGwei = 50;
+        const minPercent = 5;  // 5% minimum
+        const maxPercent = 25; // 25% maximum
+        
+        const optimalAmount = integrator.calculateOptimalAmount(
+            reserves,
+            targetProfit,
+            gasEstimate,
+            gasPriceGwei,
+            minPercent,
+            maxPercent
+        );
+        
+        const minReserve = Math.min(...reserves); // 1000000
+        const minSafeAmount = minReserve * (minPercent / 100); // 50000
+        const maxSafeAmount = minReserve * (maxPercent / 100); // 250000
+        
+        assert.ok(optimalAmount >= minSafeAmount, 'Amount should be at least minimum percentage');
+        assert.ok(optimalAmount <= maxSafeAmount, 'Amount should not exceed maximum percentage');
     });
 
     test('should respect pool liquidity constraints', () => {
@@ -223,8 +252,8 @@ describe('FlashloanIntegrator - Optimal Amount Calculation', () => {
             gasPriceGwei
         );
         
-        // Should not exceed 30% of smallest pool (100000 * 0.3 = 30000)
-        assert.ok(optimalAmount <= 30000);
+        // Should not exceed 25% of smallest pool (100000 * 0.25 = 25000)
+        assert.ok(optimalAmount <= 25000);
     });
 
     test('should account for gas costs in calculation', () => {
@@ -290,8 +319,8 @@ describe('FlashloanIntegrator - Optimal Amount Calculation', () => {
             gasPriceGwei
         );
         
-        // Should respect the small pool size
-        assert.ok(optimalAmount <= 300); // 30% of 1000
+        // Should respect the small pool size (25% max by default)
+        assert.ok(optimalAmount <= 250); // 25% of 1000
     });
 });
 

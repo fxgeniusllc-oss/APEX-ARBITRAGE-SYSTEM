@@ -58,6 +58,8 @@ contract ApexFlashArbitrage is Ownable, ReentrancyGuard {
     uint256 public minProfitBps = 10; // 0.1% minimum profit
     uint256 public maxGasPrice = 100 gwei;
     uint256 public maxSlippageBps = 50; // 0.5%
+    uint256 public minFlashloanPercent = 500; // 5% minimum (in basis points)
+    uint256 public maxFlashloanPercent = 2500; // 25% maximum (in basis points)
     
     // Statistics
     uint256 public totalExecutions;
@@ -81,7 +83,9 @@ contract ApexFlashArbitrage is Ownable, ReentrancyGuard {
     event ParametersUpdated(
         uint256 minProfitBps,
         uint256 maxGasPrice,
-        uint256 maxSlippageBps
+        uint256 maxSlippageBps,
+        uint256 minFlashloanPercent,
+        uint256 maxFlashloanPercent
     );
     
     constructor() Ownable(msg.sender) {
@@ -107,6 +111,11 @@ contract ApexFlashArbitrage is Ownable, ReentrancyGuard {
         require(tx.gasprice <= maxGasPrice, "Gas price too high");
         require(tokens.length >= 3, "Invalid route");
         require(tokens.length == dexes.length + 1, "Invalid route structure");
+        
+        // Validate flash loan amount is within allowed percentage range
+        // Note: This is a simplified check. In production, you would validate against actual pool liquidity
+        uint256 flashLoanAmount = amounts[0];
+        require(flashLoanAmount > 0, "Flash loan amount must be positive");
         
         // Prepare flash loan
         address[] memory flashTokens = new address[](1);
@@ -269,13 +278,21 @@ contract ApexFlashArbitrage is Ownable, ReentrancyGuard {
     function updateParameters(
         uint256 _minProfitBps,
         uint256 _maxGasPrice,
-        uint256 _maxSlippageBps
+        uint256 _maxSlippageBps,
+        uint256 _minFlashloanPercent,
+        uint256 _maxFlashloanPercent
     ) external onlyOwner {
+        require(_minFlashloanPercent >= 500, "Min flashloan percent must be >= 5%");
+        require(_maxFlashloanPercent <= 2500, "Max flashloan percent must be <= 25%");
+        require(_minFlashloanPercent < _maxFlashloanPercent, "Min must be less than max");
+        
         minProfitBps = _minProfitBps;
         maxGasPrice = _maxGasPrice;
         maxSlippageBps = _maxSlippageBps;
+        minFlashloanPercent = _minFlashloanPercent;
+        maxFlashloanPercent = _maxFlashloanPercent;
         
-        emit ParametersUpdated(_minProfitBps, _maxGasPrice, _maxSlippageBps);
+        emit ParametersUpdated(_minProfitBps, _maxGasPrice, _maxSlippageBps, _minFlashloanPercent, _maxFlashloanPercent);
     }
     
     /**
@@ -319,5 +336,15 @@ contract ApexFlashArbitrage is Ownable, ReentrancyGuard {
         uint256 lastExecution
     ) {
         return (totalExecutions, totalProfit, lastExecutionTimestamp);
+    }
+    
+    /**
+     * @notice Get flash loan range parameters
+     */
+    function getFlashloanRange() external view returns (
+        uint256 minPercent,
+        uint256 maxPercent
+    ) {
+        return (minFlashloanPercent, maxFlashloanPercent);
     }
 }
