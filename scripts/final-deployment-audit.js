@@ -429,9 +429,7 @@ async function auditProductionReadiness() {
   // Check documentation
   const criticalDocs = [
     'README.md',
-    'INSTALLATION-GUIDE.md',
-    'docs/DEPLOYMENT.md',
-    'docs/TROUBLESHOOTING.md'
+    'DOCUMENTATION.md'
   ];
   
   for (const doc of criticalDocs) {
@@ -694,8 +692,7 @@ yarn run test:regression
   report += `
 For support and documentation:
 - **README:** [README.md](README.md)
-- **Deployment Guide:** [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
-- **Troubleshooting:** [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
+- **Complete Documentation:** [DOCUMENTATION.md](DOCUMENTATION.md)
 
 ---
 

@@ -1,5 +1,7 @@
 # 🚀 APEX ARBITRAGE SYSTEM
 
+> 📚 **Complete Documentation**: For comprehensive documentation including installation guides, configuration, API reference, troubleshooting, and more, see [DOCUMENTATION.md](DOCUMENTATION.md)
+
 ## Production-Ready Multi-DEX Flash Loan Arbitrage Bot for Polygon
 
 A complete, battle-tested arbitrage system BUILT WITH DUAL RUST SUPER SONIC TURBO ENGINES; CAPABLE OF 2000 + OPPORTUNITIES IN UNDER 50ms that executes profitable trades across 2 DOZEN + dex such as QuickSwap, SushiSwap, and Uniswap V2, V3, kyber, DODO using TOP OF THE INDUSTRY Ai , MULTIPLE ML MODELs, 4X4X4X4 SPAWNING MICRO RAPTOR BOTS; TO ASSIST WITH DATA FETCHING; ; AND MEMPOOL WATCHDOGS. THIS SYSTEM IS DEPLOYED ON POLYGON, BUT ABLE TO EXTENDS ACROSS POLYGON, ETH; BSC; BASE; OPTIMISM; ARBITRUM ; TRON ; SOLANA; AND MORE WITH 25 TOKENS EQUAVELINTY MAPPED ACROSS ALL 6 CHAINS AND ACCESSTO THE BAL V2-V3 VAUKLTS AND CURVES STABLE POOL GOLD MINES THIS APEX SYSTEM IS ABSOLUTELY A DOMINATING FORCE FROM HERE TO COME. WITH STATE OF THE ART METRICS AND DATA TELEMTRY DYNAMICALLY SCORED OPPORTUNIES  Balancer flash loans for **zero-capital trading**.
@@ -101,7 +103,7 @@ $28.50/trade → $34.20/trade → $38.90/trade → $46.33/trade (+62%)
 > cd APEX-ARBITRAGE-SYSTEM
 > ./install-and-run.sh
 > ```
-> See [Quick Start Guide](QUICKSTART.md) for details.
+> See [DOCUMENTATION.md](DOCUMENTATION.md) for complete installation and setup details.
 
 ---
 
@@ -288,18 +290,14 @@ python scripts/train_ml_models.py      # Train ML models
 
 ### Documentation
 
-#### Getting Started
-- ⚡ [Quick Start Guide](QUICKSTART.md) - Get running in 15 minutes
-- 📥 [Installation Guide](INSTALLATION-GUIDE.md) - Complete installation instructions
-- 📊 [Setup Comparison](docs/SETUP-COMPARISON.md) - Choose the right setup method
-- 🖥️ [Terminal Display Guide](docs/TERMINAL-DISPLAY.md) - Real-time monitoring dashboard (NEW!)
-- 🐍 [Virtual Environment Guide](VIRTUALENV.md) - Python virtual environment setup and usage (NEW!)
-
-#### Advanced
-- 📖 [Complete Setup Guide](docs/APEX-SETUP.md) - Detailed installation and configuration
-- 🏗️ [Architecture](docs/ARCHITECTURE.md) - System design and components
-- 🚀 [Deployment Guide](docs/DEPLOYMENT.md) - Production deployment steps
-- 🔧 [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issues and solutions
+📚 **[Complete Documentation](DOCUMENTATION.md)** - Comprehensive guide covering:
+- Installation & Quick Start
+- System Architecture & Configuration
+- Features & ML/AI Integration
+- Deployment & Operations
+- Testing & Performance Benchmarks
+- API Reference & Troubleshooting
+- Advanced Features & Change Log
 
 ---
 
@@ -329,9 +327,10 @@ yarn run audit:full
 - ✅ **Industry Comparison** - APEX vs competitors
 
 **Reports Generated:**
-- 📄 `FINAL-DEPLOYMENT-AUDIT.md` - Comprehensive audit report
-- 📄 `BENCHMARK-ANALYSIS-REPORT.md` - Performance benchmark report
-- 📄 `PRODUCTION-READINESS-EVALUATION.md` - Production readiness evaluation
+- See [DOCUMENTATION.md](DOCUMENTATION.md) for:
+  - Comprehensive audit reports
+  - Performance benchmark analysis
+  - Production readiness evaluation
 
 ### Pre-Operation Checklist (CRITICAL!)
 
@@ -352,7 +351,7 @@ This critical checklist verifies:
 
 **Only chains with sufficient native gas tokens will be activated!**
 
-See [Pre-Operation Checklist Documentation](docs/PRE-OPERATION-CHECKLIST.md) for detailed information.
+See [DOCUMENTATION.md](DOCUMENTATION.md) for detailed pre-operation checklist information.
 
 ---
 
@@ -391,9 +390,7 @@ The validation tools verify:
 
 ### System Readiness Report
 
-For a complete system readiness report, see [SYSTEM-READINESS.md](SYSTEM-READINESS.md)
-
-For MEV strategies documentation, see [docs/MEV-STRATEGIES.md](docs/MEV-STRATEGIES.md)
+For complete system readiness, validation and MEV strategies documentation, see [DOCUMENTATION.md](DOCUMENTATION.md)
 
 ---
 
@@ -427,9 +424,7 @@ The system includes **87 automated test cases** with **100% pass rate**:
 - ✅ Rust Engine: 2000+ opportunities in <50ms
 - ✅ Test Suite Pass Rate: 100%
 
-For detailed regression metrics and test results, see:
-- [TEST-RESULTS-SUMMARY.md](TEST-RESULTS-SUMMARY.md) - Quick overview
-- [docs/REGRESSION-TEST-REPORT.md](docs/REGRESSION-TEST-REPORT.md) - Complete report
+For detailed regression metrics and test results, see [DOCUMENTATION.md](DOCUMENTATION.md)
 
 ---
 
@@ -868,7 +863,7 @@ Score Range   | Opportunities | Success Rate | Avg Profit | Recommendation
 ✅ **256 parallel threads**: 4x4x4x4 Micro Raptor architecture vs single-threaded  
 ✅ **MEV protection**: BloXroute private relay vs vulnerable public mempools  
 
-See [Performance Enhancement Report](docs/PERFORMANCE_ENHANCEMENT_REPORT.md) for complete technical details.
+See [DOCUMENTATION.md](DOCUMENTATION.md) for complete performance enhancement and technical details.
 
 ### 🎪 Optimal Market Conditions - Real-World Performance
 
@@ -1038,7 +1033,7 @@ The bot displays a comprehensive real-time terminal dashboard with detailed moni
 node demo-terminal-display.js
 ```
 
-See [Terminal Display Documentation](docs/TERMINAL-DISPLAY.md) for detailed usage guide.
+See [DOCUMENTATION.md](DOCUMENTATION.md) for detailed terminal display usage guide.
 
 ### Telegram Notifications
 
@@ -1287,7 +1282,7 @@ PROMETHEUS_PORT=9090
 ```
 
 ### Documentation
-For detailed information, see [Hybrid ML Controller Documentation](docs/HYBRID_ML_CONTROLLER.md)
+For detailed information on the Hybrid ML Controller and all other features, see [DOCUMENTATION.md](DOCUMENTATION.md)
 
 ---
 
@@ -1487,7 +1482,7 @@ print(f"Recommendation: {analysis['recommendation']}")
 ```
 
 ### Documentation
-For detailed information, see [Hybrid ML Controller Documentation](docs/HYBRID_ML_CONTROLLER.md)
+For detailed information on DeFi Analytics ML and all other advanced features, see [DOCUMENTATION.md](DOCUMENTATION.md)
 
 ---
 
@@ -1580,10 +1575,7 @@ db.all(`
 ## 🆘 Support
 
 ### Documentation
-- 📖 [Full Deployment Guide](./DEPLOYMENT.md)
-- 🔐 [Security Best Practices](./SECURITY.md)
-- 🐛 [Troubleshooting Guide](./TROUBLESHOOTING.md)
-- 🔄 [Dynamic Pool Fetcher Guide](./docs/POOL-FETCHER.md)
+- 📖 [Complete Documentation](DOCUMENTATION.md) - All guides, troubleshooting, API reference, and more
 
 ## 🎯 Roadmap
 
@@ -1632,9 +1624,7 @@ chmod +x quickstart.sh && ./quickstart.sh
 ```
 
 ### Learn More
-- 📖 [APEX Setup Guide](docs/APEX-SETUP.md)
-- 📊 [Setup Comparison](docs/SETUP-COMPARISON.md)
-- 🔧 [Troubleshooting](docs/TROUBLESHOOTING.md)
+- 📖 [Complete Documentation](DOCUMENTATION.md) - Comprehensive guide to APEX
 
 ---
 
