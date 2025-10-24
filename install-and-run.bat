@@ -125,14 +125,34 @@ if not exist package.json (
     exit /b 1
 )
 
-echo Installing Node.js packages (this may take a few minutes)...
-call yarn install --network-timeout 600000
-if %ERRORLEVEL% NEQ 0 (
-    echo [ERROR] Failed to install Node.js dependencies with yarn
-    pause
-    exit /b 1
-)
+REM Set environment variables to prevent yarn from accessing user's home directory
+REM This fixes EPERM errors on Windows when yarn tries to read ~/.yarnrc
+set YARN_IGNORE_PATH=1
+set npm_config_cache=%CD%\.npm-cache
+set YARN_CACHE_FOLDER=%CD%\.yarn-cache
 
+echo Installing Node.js packages (this may take a few minutes)...
+echo Using isolated yarn configuration to avoid permission issues...
+call yarn install --no-default-rc --network-timeout 600000 --prefer-offline
+if %ERRORLEVEL% NEQ 0 (
+    echo [WARN] yarn install failed, trying with npm as fallback...
+    echo.
+    call npm install --prefer-offline --no-audit
+    if %ERRORLEVEL% NEQ 0 (
+        echo [ERROR] Failed to install Node.js dependencies with both yarn and npm
+        echo.
+        echo Common solutions:
+        echo   1. Run this script as Administrator
+        echo   2. Check your antivirus settings (may block file access)
+        echo   3. Try running: npm cache clean --force
+        echo   4. Delete node_modules folder and try again
+        pause
+        exit /b 1
+    )
+    echo [OK] Dependencies installed with npm
+    goto :deps_installed
+)
+:deps_installed
 echo.
 echo [OK] Node.js dependencies installed successfully!
 echo.
