@@ -267,6 +267,19 @@ To test the installer without running it:
 **Problem**: `yarn install` fails
 
 **Solution**:
+
+**On Windows**: If you get an EPERM error related to `.yarnrc`:
+```batch
+REM The install-and-run.bat script automatically handles this, but if running manually:
+set YARN_IGNORE_PATH=1
+set YARN_CACHE_FOLDER=%CD%\.yarn-cache
+yarn install --no-default-rc --network-timeout 600000 --prefer-offline
+
+REM Or use npm as fallback:
+npm install --prefer-offline --no-audit
+```
+
+**On Linux/Mac**:
 ```bash
 # Clear yarn cache
 yarn cache clean
