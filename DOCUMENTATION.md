@@ -272,6 +272,7 @@ To test the installer without running it:
 ```batch
 REM The install-and-run.bat script automatically handles this, but if running manually:
 set YARN_IGNORE_PATH=1
+set npm_config_cache=%CD%\.npm-cache
 set YARN_CACHE_FOLDER=%CD%\.yarn-cache
 yarn install --no-default-rc --network-timeout 600000 --prefer-offline
 
