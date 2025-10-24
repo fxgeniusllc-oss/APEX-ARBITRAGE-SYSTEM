@@ -172,7 +172,7 @@ class PoolRegistry:
         token: str,
         chain: str,
         max_hops: int = 3,
-        min_tvl: float = 10000
+        min_tvl: float = 0
     ) -> List[List[PoolInfo]]:
         """
         Find potential arbitrage routes starting and ending with the same token
@@ -180,12 +180,16 @@ class PoolRegistry:
         """
         routes = []
         
-        # Get all pools containing the token on the specified chain
-        starting_pools = [
+        # Get all pools on the specified chain
+        all_pools = [
             p for p in self.pools.values()
-            if p.chain == chain and 
-               (p.token0_address == token or p.token1_address == token) and
-               p.tvl_usd >= min_tvl
+            if p.chain == chain and p.tvl_usd >= min_tvl
+        ]
+        
+        # Get all pools containing the token
+        starting_pools = [
+            p for p in all_pools
+            if p.token0_address == token or p.token1_address == token
         ]
         
         # Simple 2-hop routes (A -> B -> A)
@@ -214,11 +218,9 @@ class PoolRegistry:
                 )
                 
                 pools_with_b = [
-                    p for p in self.pools.values()
-                    if p.chain == chain and
-                       (p.token0_address == token_b or p.token1_address == token_b) and
-                       p.address != pool1.address and
-                       p.tvl_usd >= min_tvl
+                    p for p in all_pools
+                    if (p.token0_address == token_b or p.token1_address == token_b) and
+                       p.address != pool1.address
                 ]
                 
                 for pool2 in pools_with_b:
@@ -332,6 +334,54 @@ class PoolRegistry:
     def get_stats(self) -> Dict:
         """Get registry statistics"""
         return self.stats.copy()
+    
+    def get_total_tvl(self) -> float:
+        """Calculate total TVL across all pools"""
+        return sum(pool.tvl_usd for pool in self.pools.values())
+    
+    def get_statistics_by_chain(self) -> Dict[str, Dict]:
+        """Get statistics broken down by chain"""
+        chain_stats = {}
+        
+        for chain, pool_keys in self.pools_by_chain.items():
+            pools = [self.pools[key] for key in pool_keys if key in self.pools]
+            chain_stats[chain] = {
+                'count': len(pools),
+                'active_count': sum(1 for p in pools if p.is_active),
+                'total_tvl': sum(p.tvl_usd for p in pools),
+                'total_volume_24h': sum(p.volume_24h for p in pools)
+            }
+        
+        return chain_stats
+    
+    def get_statistics_by_dex(self) -> Dict[str, Dict]:
+        """Get statistics broken down by DEX"""
+        dex_stats = {}
+        
+        for dex, pool_keys in self.pools_by_dex.items():
+            pools = [self.pools[key] for key in pool_keys if key in self.pools]
+            dex_stats[dex] = {
+                'count': len(pools),
+                'active_count': sum(1 for p in pools if p.is_active),
+                'total_tvl': sum(p.tvl_usd for p in pools),
+                'total_volume_24h': sum(p.volume_24h for p in pools)
+            }
+        
+        return dex_stats
+    
+    def update_pool_tvl(self, chain: str, dex: str, address: str, new_tvl: float):
+        """Update TVL for a specific pool"""
+        pool_key = f"{chain}:{dex}:{address}"
+        if pool_key in self.pools:
+            self.pools[pool_key].tvl_usd = new_tvl
+    
+    def set_pool_status(self, chain: str, dex: str, address: str, is_active: bool):
+        """Update active status for a specific pool"""
+        pool_key = f"{chain}:{dex}:{address}"
+        if pool_key in self.pools:
+            self.pools[pool_key].is_active = is_active
+            # Update active pools count in stats
+            self.stats['active_pools'] = sum(1 for p in self.pools.values() if p.is_active)
     
     def print_stats(self):
         """Print registry statistics"""
