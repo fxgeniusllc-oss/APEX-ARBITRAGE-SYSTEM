@@ -488,7 +488,8 @@ function generateFinalReport() {
   const reportContent = generateMarkdownReport();
   fs.writeFileSync(reportPath, reportContent);
   
-  console.log(chalk.cyan(`  📄 Full report saved to: ${reportPath}\n`));
+  console.log(chalk.cyan(`  📄 Full report saved to: ${reportPath}`));
+  console.log(chalk.cyan(`  📚 This report is also included in: DOCUMENTATION.md\n`));
   console.log(chalk.cyan('═'.repeat(79)) + '\n');
 }
 
