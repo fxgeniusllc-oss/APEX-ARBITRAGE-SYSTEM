@@ -190,6 +190,20 @@ This automated script will:
 
 > 💡 **Note:** All Python dependencies are installed in an isolated virtual environment (`.venv/`), ensuring compatibility with tools like maturin and preventing conflicts with system packages.
 
+#### Verify Installer Before Running
+
+Before running the installer, you can verify it's ready:
+
+```bash
+# Quick verification (17 checks)
+yarn verify
+
+# Comprehensive testing (44 tests)
+yarn verify:installer
+```
+
+Both commands check that all installer components are present and properly configured.
+
 ---
 
 ### Alternative Setup Options
@@ -268,7 +282,8 @@ If you used the one-click installer (`install-and-run.sh`), you're already set u
 yarn start                             # Start production system
 yarn run dev                           # Development mode
 yarn run precheck                      # Pre-operation checklist (REQUIRED before LIVE!)
-yarn run verify                        # Verify setup (quick check)
+yarn run verify                        # Verify installer and setup (quick check)
+yarn run verify:installer              # Comprehensive installer validation (44 tests)
 yarn run validate:performance          # Validate ML performance
 
 # Deployment & Audit
