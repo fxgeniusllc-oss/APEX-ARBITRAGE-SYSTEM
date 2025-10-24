@@ -7,11 +7,9 @@ import { executionController } from './utils/executionController.js';
 import { CURRENT_MODE, MODE, getModeDisplay } from './utils/config.js';
 import { opportunityScorer } from './utils/opportunityScorer.js';
 import { performanceTracker } from './utils/performanceTracker.js';
+import { TerminalDisplay } from './utils/terminalDisplay.js';
 
 dotenv.config();
-
-const require = createRequire(import.meta.url);
-const { TerminalDisplay } = require('./utils/terminalDisplay.js');
 
 /**
  * APEX ARBITRAGE SYSTEM

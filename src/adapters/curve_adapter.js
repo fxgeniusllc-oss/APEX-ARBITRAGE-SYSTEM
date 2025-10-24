@@ -4,8 +4,8 @@
  * Curve specializes in stablecoin swaps with low slippage
  */
 
-const { ethers } = require('ethers');
-const chalk = require('chalk');
+import { ethers } from 'ethers';
+import chalk from 'chalk';
 
 /**
  * Curve Registry ABI
@@ -316,4 +316,4 @@ class CurveAdapter {
     }
 }
 
-module.exports = { CurveAdapter };
+export { CurveAdapter };

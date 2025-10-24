@@ -4,8 +4,8 @@
  * QuickSwap is a fork of Uniswap V2 optimized for Polygon
  */
 
-const { ethers } = require('ethers');
-const chalk = require('chalk');
+import { ethers } from 'ethers';
+import chalk from 'chalk';
 
 /**
  * QuickSwap Factory ABI
@@ -279,4 +279,4 @@ class QuickSwapAdapter {
     }
 }
 
-module.exports = { QuickSwapAdapter };
+export { QuickSwapAdapter };

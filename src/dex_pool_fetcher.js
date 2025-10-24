@@ -4,14 +4,14 @@
  * Supports Uniswap V2/V3, SushiSwap, QuickSwap, Balancer, Curve, and more
  */
 
-const { ethers } = require('ethers');
-const fs = require('fs').promises;
-const path = require('path');
-const chalk = require('chalk');
-require('dotenv').config();
+import { ethers } from 'ethers';
+import fs from 'fs/promises';
+import path from 'path';
+import chalk from 'chalk';
+import dotenv from 'dotenv';
+import { loadPoolsFromSDK } from './sdk_pool_loader.js';
 
-// Import SDK pool loader
-const { loadPoolsFromSDK } = require('./sdk_pool_loader');
+dotenv.config();
 
 /**
  * DEX configurations for supported protocols
@@ -557,4 +557,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { DexPoolFetcher };
+export { DexPoolFetcher };

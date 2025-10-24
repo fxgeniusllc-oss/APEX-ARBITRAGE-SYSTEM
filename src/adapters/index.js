@@ -3,12 +3,24 @@
  * Central export file for all DEX adapters
  */
 
-const { UniswapAdapter } = require('./uniswap_adapter');
-const { SushiSwapAdapter } = require('./sushiswap_adapter');
-const { QuickSwapAdapter } = require('./quickswap_adapter');
-const { CurveAdapter } = require('./curve_adapter');
-const { BalancerAdapter } = require('./balancer_adapter');
-const { AaveFlashLoanAdapter } = require('./aave_flashloan_adapter');
+import { 
+    UniswapAdapter,
+    UNISWAP_V2_FACTORY_ABI,
+    UNISWAP_V2_PAIR_ABI,
+    UNISWAP_V2_ROUTER_ABI,
+    UNISWAP_V3_FACTORY_ABI,
+    UNISWAP_V3_POOL_ABI,
+    UNISWAP_V3_QUOTER_ABI
+} from './uniswap_adapter.js';
+import { SushiSwapAdapter } from './sushiswap_adapter.js';
+import { QuickSwapAdapter } from './quickswap_adapter.js';
+import { CurveAdapter } from './curve_adapter.js';
+import { BalancerAdapter } from './balancer_adapter.js';
+import { 
+    AaveFlashLoanAdapter,
+    AAVE_V3_POOL_ABI,
+    AAVE_FLASHLOAN_RECEIVER_ABI
+} from './aave_flashloan_adapter.js';
 
 /**
  * Adapter Factory - Creates appropriate adapter based on DEX type
@@ -162,7 +174,7 @@ class AdapterManager {
     }
 }
 
-module.exports = {
+export {
     // Individual adapters
     UniswapAdapter,
     SushiSwapAdapter,
@@ -170,6 +182,16 @@ module.exports = {
     CurveAdapter,
     BalancerAdapter,
     AaveFlashLoanAdapter,
+    
+    // ABIs
+    UNISWAP_V2_FACTORY_ABI,
+    UNISWAP_V2_PAIR_ABI,
+    UNISWAP_V2_ROUTER_ABI,
+    UNISWAP_V3_FACTORY_ABI,
+    UNISWAP_V3_POOL_ABI,
+    UNISWAP_V3_QUOTER_ABI,
+    AAVE_V3_POOL_ABI,
+    AAVE_FLASHLOAN_RECEIVER_ABI,
     
     // Utilities
     AdapterFactory,

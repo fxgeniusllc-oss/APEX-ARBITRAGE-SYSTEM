@@ -3,8 +3,8 @@
  * Provides interface for interacting with Balancer V2 Vault
  */
 
-const { ethers } = require('ethers');
-const chalk = require('chalk');
+import { ethers } from 'ethers';
+import chalk from 'chalk';
 
 /**
  * Balancer Vault ABI (from dex_pool_fetcher)
@@ -233,4 +233,4 @@ class BalancerAdapter {
     }
 }
 
-module.exports = { BalancerAdapter };
+export { BalancerAdapter };

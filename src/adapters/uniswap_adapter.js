@@ -3,8 +3,8 @@
  * Provides unified interface for interacting with Uniswap protocols
  */
 
-const { ethers } = require('ethers');
-const chalk = require('chalk');
+import { ethers } from 'ethers';
+import chalk from 'chalk';
 
 /**
  * Uniswap V2 Factory ABI
@@ -343,4 +343,12 @@ class UniswapAdapter {
     }
 }
 
-module.exports = { UniswapAdapter };
+export { 
+    UniswapAdapter,
+    UNISWAP_V2_FACTORY_ABI,
+    UNISWAP_V2_PAIR_ABI,
+    UNISWAP_V2_ROUTER_ABI,
+    UNISWAP_V3_FACTORY_ABI,
+    UNISWAP_V3_POOL_ABI,
+    UNISWAP_V3_QUOTER_ABI
+};
