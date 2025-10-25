@@ -12977,7 +12977,7 @@ This comprehensive audit evaluates the APEX Arbitrage System's readiness for pro
 The following critical issues MUST be resolved before production deployment:
 
 1. [Code] Critical file: src/apex-production-runner.js: 
-2. [Code] Critical file: src/main_deploy_launcher.py: 
+2. [Code] Critical file: src/python/integrated_orchestrator.py: 
 3. [Security] Safety limits configured: Gas price, profit, and loss limits
 
 ## ⚠️ Warnings (1)
