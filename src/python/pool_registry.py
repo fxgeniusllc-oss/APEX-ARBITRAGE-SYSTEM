@@ -38,7 +38,7 @@ class PoolRegistry:
     
     def __init__(self):
         self.pools: Dict[str, PoolInfo] = {}
-        self.pools_by_token_pair: Dict[str, List[str]] = {}
+        self.pools_by_token_pair: Dict[str, Set[str]] = {}
         self.pools_by_chain: Dict[str, Set[str]] = {}
         self.pools_by_dex: Dict[str, Set[str]] = {}
         
@@ -84,17 +84,21 @@ class PoolRegistry:
         }
     
     def add_pool(self, pool: PoolInfo):
-        """Add a pool to the registry"""
+        """Add a pool to the registry (idempotent - updates existing pools)"""
         pool_key = f"{pool.chain}:{pool.dex}:{pool.address}"
         
-        # Store pool
+        # Check if pool already exists
+        existing_pool = self.pools.get(pool_key)
+        is_new_pool = existing_pool is None
+        
+        # Store or update pool
         self.pools[pool_key] = pool
         
-        # Index by token pair
+        # Index by token pair (using set to prevent duplicates)
         pair_key = self._get_token_pair_key(pool.token0_address, pool.token1_address)
         if pair_key not in self.pools_by_token_pair:
-            self.pools_by_token_pair[pair_key] = []
-        self.pools_by_token_pair[pair_key].append(pool_key)
+            self.pools_by_token_pair[pair_key] = set()
+        self.pools_by_token_pair[pair_key].add(pool_key)
         
         # Index by chain
         if pool.chain not in self.pools_by_chain:
@@ -108,12 +112,39 @@ class PoolRegistry:
         
         # Update stats
         self.stats['total_pools'] = len(self.pools)
-        if pool.is_active:
-            self.stats['active_pools'] = sum(1 for p in self.pools.values() if p.is_active)
         
-        if pool.pool_type not in self.stats['pools_by_type']:
-            self.stats['pools_by_type'][pool.pool_type] = 0
-        self.stats['pools_by_type'][pool.pool_type] += 1
+        # Update active_pools count incrementally for efficiency
+        if is_new_pool:
+            # New pool: add to count if active
+            if pool.is_active:
+                self.stats['active_pools'] += 1
+        else:
+            # Existing pool: handle status change
+            if existing_pool.is_active != pool.is_active:
+                if pool.is_active:
+                    self.stats['active_pools'] += 1
+                else:
+                    self.stats['active_pools'] -= 1
+        
+        # Handle pool_type statistics
+        if is_new_pool:
+            # New pool: increment count for its type
+            if pool.pool_type not in self.stats['pools_by_type']:
+                self.stats['pools_by_type'][pool.pool_type] = 0
+            self.stats['pools_by_type'][pool.pool_type] += 1
+        else:
+            # Existing pool: handle potential type change
+            if existing_pool.pool_type != pool.pool_type:
+                # Decrement old type count
+                if existing_pool.pool_type in self.stats['pools_by_type']:
+                    self.stats['pools_by_type'][existing_pool.pool_type] -= 1
+                    if self.stats['pools_by_type'][existing_pool.pool_type] <= 0:
+                        del self.stats['pools_by_type'][existing_pool.pool_type]
+                
+                # Increment new type count
+                if pool.pool_type not in self.stats['pools_by_type']:
+                    self.stats['pools_by_type'][pool.pool_type] = 0
+                self.stats['pools_by_type'][pool.pool_type] += 1
     
     def get_pool(self, chain: str, dex: str, address: str) -> Optional[PoolInfo]:
         """Get a specific pool"""
@@ -130,7 +161,7 @@ class PoolRegistry:
     ) -> List[PoolInfo]:
         """Find all pools for a token pair with optional filters"""
         pair_key = self._get_token_pair_key(token0, token1)
-        pool_keys = self.pools_by_token_pair.get(pair_key, [])
+        pool_keys = self.pools_by_token_pair.get(pair_key, set())
         
         pools = [self.pools[key] for key in pool_keys if key in self.pools]
         
