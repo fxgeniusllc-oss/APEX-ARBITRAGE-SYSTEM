@@ -2,7 +2,7 @@
   "name": "apex-arbitrage-system",
   "version": "2.0.0",
   "description": "Production-ready multi-DEX flash loan arbitrage system with Rust engine, AI/ML models, and multi-chain support",
-  "main": "src/apex-production-runner.js",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
     "setup": "yarn install --network-timeout 600000 && echo ✅ Dependencies installed successfully.",
@@ -12,7 +12,7 @@
     "start": "yarn start:all",
     "start:all": "concurrently \"yarn start:node\" \"yarn start:python\"",
     "start:node": "node src/dex_pool_fetcher.js",
-    "start:python": "bash -c 'source .venv/bin/activate 2>/dev/null || true && python src/main_deploy_launcher.py'",
+    "start:python": "bash -c 'source .venv/bin/activate 2>/dev/null || true && python src/python/integrated_orchestrator.py'",
     "start:telemetry": "bash -c 'source .venv/bin/activate 2>/dev/null || true && python src/cross_chain_telemetry.py'",
     "start:executor": "bash -c 'source .venv/bin/activate 2>/dev/null || true && python src/executor_raptor_4x4x4x4.py'",
     "dryrun": "bash -c 'source .venv/bin/activate 2>/dev/null || true && python scripts/test_dryrun.py'",

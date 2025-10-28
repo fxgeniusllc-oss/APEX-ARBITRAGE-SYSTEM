@@ -1,0 +1,10 @@
+{
+  "pools": [],
+  "timestamp": 1761352441313,
+  "stats": {
+    "totalPools": 0,
+    "lastFetchTime": 1758,
+    "fetchCount": 1,
+    "errors": 5
+  }
+}

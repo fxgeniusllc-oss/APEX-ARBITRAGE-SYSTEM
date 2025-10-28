@@ -188,9 +188,8 @@ async function auditCodeQuality() {
   
   // Check critical source files
   const criticalFiles = [
-    'src/apex-production-runner.js',
     'src/dex_pool_fetcher.js',
-    'src/main_deploy_launcher.py',
+    'src/python/integrated_orchestrator.py',
     'scripts/comprehensive-validation.js',
     'scripts/pre-operation-checklist.js'
   ];

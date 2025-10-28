@@ -9,7 +9,12 @@ import fs from 'fs/promises';
 import path from 'path';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
 import { loadPoolsFromSDK } from './sdk_pool_loader.js';
+
+// ES module equivalents of __dirname and __filename
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -536,8 +541,8 @@ class DexPoolFetcher {
     }
 }
 
-// Run if executed directly
-if (require.main === module) {
+// Run if executed directly (ES module compatible check)
+if (import.meta.url === `file://${process.argv[1]}`) {
     const fetcher = new DexPoolFetcher();
     
     // Handle shutdown signals
