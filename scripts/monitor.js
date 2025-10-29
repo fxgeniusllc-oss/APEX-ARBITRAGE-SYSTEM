@@ -88,9 +88,9 @@ class SystemMonitor {
     }
 
     checkComponent(component) {
-        // Simple heuristic: check if relevant processes might be running
-        // In a real system, this would check actual process status
-        // For now, return true to show potential activity
+        // TODO: Implement actual component health checks
+        // This is a placeholder that assumes components are running
+        // In production, this should check actual process status, health endpoints, etc.
         return true;
     }
 
@@ -197,6 +197,8 @@ class SystemMonitor {
 
     updateChainStatus() {
         // Update multi-chain status
+        // NOTE: Using simulated data when real chain data is not available
+        // In production, this should connect to actual RPC endpoints
         const chains = [
             { name: 'polygon', blockNumber: 45123456 + Math.floor(Math.random() * 100), opportunities: 8 + Math.floor(Math.random() * 10) },
             { name: 'ethereum', blockNumber: 18234567 + Math.floor(Math.random() * 10), opportunities: 4 + Math.floor(Math.random() * 8) },
@@ -213,6 +215,8 @@ class SystemMonitor {
     }
 
     updateMarketConditions() {
+        // NOTE: Using simulated market data when real-time feeds are not available
+        // In production, this should connect to actual price oracles and gas price APIs
         this.display.updateMarketConditions({
             gasPrice: 35 + Math.random() * 40,
             maxGasPrice: 100,
@@ -227,6 +231,8 @@ class SystemMonitor {
     }
 
     updateMLEngineStatus() {
+        // NOTE: Using simulated ML metrics when actual ML engine is not connected
+        // In production, this should query actual ML engine status via API
         this.display.updateMLEngineStatus({
             active: true,
             inferenceTime: 10 + Math.random() * 10,
