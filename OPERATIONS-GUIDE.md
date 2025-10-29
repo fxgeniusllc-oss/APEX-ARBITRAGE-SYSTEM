@@ -1454,7 +1454,7 @@ You know the system is working correctly when:
 
 ---
 
-**Document Version:** 1.0.0  
+**Document Version:** 2.0.0  
 **Last Updated:** 2025-10-29  
 **Next Review:** 2025-11-29
 
