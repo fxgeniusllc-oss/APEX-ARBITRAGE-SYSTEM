@@ -5,6 +5,14 @@
 
 ---
 
+> 🎯 **Looking for the Complete Operations Guide?**
+> 
+> For a comprehensive **Download → Install → Run** guide with full live data operations, see **[OPERATIONS-GUIDE.md](OPERATIONS-GUIDE.md)**.
+> 
+> This document contains technical reference material. The Operations Guide provides step-by-step procedures for end-to-end deployment and operations.
+
+---
+
 ## Table of Contents
 
 1. [Overview](#overview)
