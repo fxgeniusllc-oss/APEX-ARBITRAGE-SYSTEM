@@ -1,5 +1,4 @@
 use dashmap::DashMap;
-use parking_lot::RwLock;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -31,7 +30,6 @@ pub struct PoolState {
 
 pub struct RustEngine {
     pools: Arc<DashMap<String, PoolState>>,
-    opportunities: Arc<RwLock<Vec<ArbitrageOpportunity>>>,
     cpu_cores: usize,
 }
 
@@ -39,7 +37,6 @@ impl RustEngine {
     pub fn new() -> Self {
         Self {
             pools: Arc::new(DashMap::new()),
-            opportunities: Arc::new(RwLock::new(Vec::new())),
             cpu_cores: num_cpus::get(),
         }
     }
