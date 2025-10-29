@@ -4,7 +4,7 @@
  * Runs all tests and generates comprehensive regression metrics report
  */
 
-import { spawn } from 'child_process';
+import { spawn, execSync } from 'child_process';
 import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -72,7 +72,8 @@ async function runTestSuite(suite) {
         const proc = spawn(suite.command, suite.args, {
             cwd: ROOT_DIR,
             stdio: 'pipe',
-            shell: true
+            shell: true,
+            timeout: 300000 // 5 minutes timeout (300 seconds)
         });
         
         let stdout = '';
@@ -324,6 +325,24 @@ function printSummary() {
 }
 
 /**
+ * Setup git environment before running tests
+ */
+function setupGitEnvironment() {
+    console.log('\n' + '='.repeat(70));
+    console.log('Setting up Git environment...');
+    console.log('='.repeat(70));
+    
+    try {
+        execSync('node scripts/setup-git-environment.js', {
+            cwd: ROOT_DIR,
+            stdio: 'inherit'
+        });
+    } catch (error) {
+        console.log('Note: Git environment setup encountered issues (non-fatal)');
+    }
+}
+
+/**
  * Main execution
  */
 async function main() {
@@ -334,6 +353,9 @@ async function main() {
     console.log(`Node Version: ${process.version}`);
     console.log(`Start Time: ${new Date().toISOString()}`);
     console.log('='.repeat(70));
+    
+    // Setup git environment
+    setupGitEnvironment();
     
     // Run all test suites
     for (const suite of testSuites) {

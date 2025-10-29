@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "setup": "yarn install --network-timeout 600000 && echo ✅ Dependencies installed successfully.",
+    "setup:git": "node scripts/setup-git-environment.js",
     "build": "yarn run format && yarn run lint",
     "format": "prettier --write \"src/**/*.js\"",
     "lint": "eslint \"src/**/*.js\" --fix",
