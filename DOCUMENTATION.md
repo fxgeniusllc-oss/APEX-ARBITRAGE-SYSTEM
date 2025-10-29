@@ -1509,7 +1509,7 @@ REM Recreate it
 python -m venv .venv
 
 REM Install dependencies
-.venv\Scripts\activate
+.venv\Scripts\activate.bat
 pip install -r requirements.txt
 deactivate
 ```
