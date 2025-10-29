@@ -1107,6 +1107,7 @@ The script can run completely unattended if you skip optional prompts:
 Works on:
 - ✅ Linux (Ubuntu, Debian, CentOS, etc.)
 - ✅ macOS (with Homebrew)
+- ✅ Windows (native support via cross-platform Python runner)
 - ✅ WSL2 (Windows Subsystem for Linux)
 
 ### **Comprehensive Validation**
@@ -1444,14 +1445,20 @@ deactivate
 
 ## Yarn Scripts
 
-All yarn scripts that run Python code automatically activate the virtual environment. No manual activation needed:
+All yarn scripts that run Python code automatically activate the virtual environment using a cross-platform Node.js runner. This works seamlessly on Windows, macOS, and Linux without any manual activation:
 
 ```bash
-yarn start:python      # Automatically activates venv
-yarn ai:start         # Automatically activates venv
-yarn dryrun           # Automatically activates venv
-yarn health           # Automatically activates venv
+yarn start:python      # Runs Python with venv (cross-platform)
+yarn ai:start         # Runs AI engine with venv (cross-platform)
+yarn dryrun           # Runs dry-run tests with venv (cross-platform)
+yarn health           # Runs health monitor with venv (cross-platform)
 ```
+
+The system automatically:
+- Detects your operating system (Windows, macOS, or Linux)
+- Locates the Python executable in the virtual environment
+- Falls back to system Python if venv is not found
+- Works with both script execution and module execution (`-m` flag)
 
 ## Testing the Virtual Environment
 
@@ -1471,16 +1478,38 @@ This will check:
 
 ## Troubleshooting
 
+### Windows: Command Not Recognized Errors
+
+If you're on Windows and see errors like `'true' is not recognized` or `'source' is not recognized`, this has been fixed in the latest version. Make sure you have:
+
+1. Updated to the latest version of the repository
+2. The `scripts/run-python.js` file exists
+3. Run `yarn install` to ensure all dependencies are installed
+
+The system now uses a cross-platform Node.js runner that works natively on Windows without requiring bash or WSL2.
+
 ### Virtual Environment Not Found
 
 If you get an error about the virtual environment not existing:
 
+**On Unix/Linux/macOS:**
 ```bash
 # Recreate it
 python3 -m venv .venv
 
 # Install dependencies
 source .venv/bin/activate
+pip install -r requirements.txt
+deactivate
+```
+
+**On Windows:**
+```cmd
+REM Recreate it
+python -m venv .venv
+
+REM Install dependencies
+.venv\Scripts\activate
 pip install -r requirements.txt
 deactivate
 ```
