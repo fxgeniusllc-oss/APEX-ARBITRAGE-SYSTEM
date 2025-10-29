@@ -75,3 +75,21 @@ temp/
 EMERGENCY_STOP
 private_keys.txt
 secrets.json
+
+# Quantum Agent Generated Files
+reports/*.json
+reports/*.md
+reports/logs.txt
+reports/lint.txt
+models/model_metadata_*.json
+models/latest_model.json
+data/simulation_results_*.json
+
+# Dashboard node_modules
+dash/node_modules/
+dash/package-lock.json
+dash/yarn.lock
+
+# Contract compilation artifacts
+contracts/cache/
+contracts/artifacts/

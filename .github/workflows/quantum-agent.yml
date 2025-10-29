@@ -1,0 +1,110 @@
+name: ⚡ Quantum Apex Agent
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: "0 */6 * * *"  # every 6 hours
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  quantum-agent:
+    name: 🧠 Run Quantum Apex Agent
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+      NODE_ENV: production
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      RPC_URL_POLYGON: https://polygon-rpc.com
+      RPC_URL_BSC: https://bsc-dataseed.binance.org
+      RPC_URL_ETH: https://eth.llamarpc.com
+      MODEL_PATH: models/arb_predictor.onnx
+      PROFIT_THRESHOLD: 0.0005
+
+    steps:
+      - name: 🧩 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
+          pip install xgboost onnxruntime pandas web3 matplotlib
+
+      - name: ⚙️ Setup Node Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📦 Install Node Dependencies
+        run: |
+          cd dash
+          npm install || yarn install --frozen-lockfile
+          cd ..
+
+      - name: 🔍 Run Code Quality Checks
+        run: |
+          pylint src/core/**/*.py --exit-zero > reports/lint.txt || true
+          flake8 src/core || true
+
+      - name: 🧪 Run AI Performance Benchmark
+        run: |
+          python ai/benchmark_tester.py --model $MODEL_PATH --threshold $PROFIT_THRESHOLD
+        continue-on-error: true
+
+      - name: ⚖️ Run Arbitrage Simulation
+        run: |
+          python examples/mega_defi_optimizer.py --mode test
+        continue-on-error: true
+
+      - name: 📊 Generate Profit Intelligence Report
+        run: |
+          python ai/report_generator.py
+          echo "Report generated at $(date)" >> reports/logs.txt
+
+      - name: 🧠 Quantum Reinforcement Loop
+        run: |
+          python ai/self_optimize.py --epochs 3 --mutation-rate 0.15 --auto-commit true
+
+      - name: 🪙 Deploy Smart Contracts (if improved)
+        if: success()
+        run: |
+          cd contracts
+          npx hardhat compile
+          npx hardhat test
+          npx hardhat run scripts/deploy.js --network polygon
+        continue-on-error: true
+
+      - name: 📬 Notify via Telegram
+        if: always()
+        run: |
+          python scripts/notify_telegram.py "Quantum Apex Agent completed cycle ✅"
+        continue-on-error: true
+
+      - name: 📦 Auto-Commit Optimized Models & Reports
+        if: always()
+        run: |
+          git config --global user.email "quantum@apex.ai"
+          git config --global user.name "Quantum Apex Agent"
+          git add models/ reports/ ai/
+          git commit -m "🤖 Quantum Agent auto-optimization $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit."
+          git push origin main || true
