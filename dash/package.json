@@ -1,0 +1,26 @@
+{
+  "name": "apex-arbitrage-dashboard",
+  "version": "1.0.0",
+  "description": "React + Tailwind Analytics Dashboard for APEX Arbitrage System",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "echo 'Dashboard placeholder - React app would start here'",
+    "build": "echo 'Building dashboard...'",
+    "test": "echo 'Testing dashboard...'"
+  },
+  "keywords": [
+    "dashboard",
+    "react",
+    "tailwind",
+    "analytics"
+  ],
+  "author": "APEX Team",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.0"
+  }
+}
