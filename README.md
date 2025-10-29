@@ -1,5 +1,7 @@
 # 🚀 APEX ARBITRAGE SYSTEM
 
+> 🎯 **NEW! Complete Operations Guide**: Professional **Download → Install → Run** guide for full live operations. See [OPERATIONS-GUIDE.md](OPERATIONS-GUIDE.md) for end-to-end procedures.
+> 
 > 📚 **Complete Documentation**: For comprehensive documentation including installation guides, configuration, API reference, troubleshooting, and more, see [DOCUMENTATION.md](DOCUMENTATION.md)
 
 ## Production-Ready Multi-DEX Flash Loan Arbitrage Bot for Polygon
@@ -97,13 +99,26 @@ $28.50/trade → $34.20/trade → $38.90/trade → $46.33/trade (+62%)
 
 ---
 
-> 💡 **NEW!** True one-click installation! Get started in 15 minutes:
+> 💡 **NEW!** Complete end-to-end operations guide available!
+> 
+> 📖 **[OPERATIONS-GUIDE.md](OPERATIONS-GUIDE.md)** - Professional Download → Install → Run Guide
+> - ✅ Prerequisites and system requirements
+> - ✅ Step-by-step installation (3 methods)
+> - ✅ Complete system architecture & module integration
+> - ✅ Full configuration guide
+> - ✅ Running and monitoring procedures
+> - ✅ Daily/weekly/monthly operations workflows
+> - ✅ Troubleshooting and emergency procedures
+> - ✅ Production deployment and optimization
+>
+> **Quick Start (15 minutes):**
 > ```bash
 > git clone https://github.com/fxgeniusllc-oss/APEX-ARBITRAGE-SYSTEM.git
 > cd APEX-ARBITRAGE-SYSTEM
 > ./install-and-run.sh
 > ```
-> See [DOCUMENTATION.md](DOCUMENTATION.md) for complete installation and setup details.
+> 
+> See [OPERATIONS-GUIDE.md](OPERATIONS-GUIDE.md) for complete details.
 
 ---
 
@@ -305,7 +320,19 @@ python scripts/train_ml_models.py      # Train ML models
 
 ### Documentation
 
-📚 **[Complete Documentation](DOCUMENTATION.md)** - Comprehensive guide covering:
+📚 **Essential Guides:**
+
+**[OPERATIONS-GUIDE.md](OPERATIONS-GUIDE.md)** - 🆕 **START HERE!** Complete end-to-end guide:
+- Download & Installation (3 methods)
+- System Architecture & Module Integration
+- Configuration (all environment variables)
+- Running the System (DEV/SIM/LIVE modes)
+- Daily/Weekly/Monthly Operations
+- Monitoring & Maintenance
+- Troubleshooting & Emergency Procedures
+- Advanced Operations & Production Deployment
+
+**[DOCUMENTATION.md](DOCUMENTATION.md)** - Complete technical documentation:
 - Installation & Quick Start
 - System Architecture & Configuration
 - Features & ML/AI Integration
