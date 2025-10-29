@@ -37,6 +37,7 @@
     "build:rust": "cd src/rust && cargo build --release",
     "test": "node --test tests/*.test.js",
     "test:regression": "node scripts/run-regression-tests.js",
+    "test:performance-regression": "node scripts/performance-regression-analysis.js",
     "validate:performance": "node scripts/validate-performance.js",
     "ai:start": "node scripts/run-python.js src/python/omni_mev_ai_engine.py",
     "ai:dev": "node scripts/run-python.js -m uvicorn src.python.omni_mev_ai_engine:app --reload --port 8001",

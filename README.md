@@ -444,6 +444,9 @@ For complete system readiness, validation and MEV strategies documentation, see 
 # Run comprehensive regression tests (JavaScript + Python)
 yarn run test:regression
 
+# Run performance regression analysis (NEW!)
+yarn run test:performance-regression
+
 # Run JavaScript tests only
 yarn test
 
@@ -451,6 +454,25 @@ yarn test
 python tests/test_ml_enhancements.py
 python tests/test_enhanced_ml.py
 ```
+
+### Performance Regression Testing (NEW!)
+
+The system now includes **automated performance regression detection** to determine if recent additions have increased or decreased performance:
+
+```bash
+# Analyze performance changes over time
+yarn test:performance-regression
+```
+
+**What It Tests:**
+- ✅ Success rate trends (target: 95%+)
+- ✅ Execution time changes (target: <300ms)
+- ✅ Profitability per trade
+- ✅ System resource utilization
+- ✅ Automatic regression detection
+- ✅ Historical trend analysis
+
+**See [PERFORMANCE_REGRESSION_TESTING.md](PERFORMANCE_REGRESSION_TESTING.md) for complete documentation**
 
 ### Test Results
 

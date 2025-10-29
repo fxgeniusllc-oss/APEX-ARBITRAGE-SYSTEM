@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-10-29T07:57:47.962Z",
+  "analysis_period": {
+    "baseline": "2025-10-22T00:59:42.720Z",
+    "current": "2025-10-22T01:04:53.775Z",
+    "runs_analyzed": 6
+  },
+  "current_metrics": {
+    "total_opportunities": 50000,
+    "execution_rate": 0.0812,
+    "success_rate": 0.8056650246305419,
+    "avg_profit_per_trade": 40.93570522399024,
+    "avg_execution_time_ms": 201.22411977477495,
+    "avg_opportunity_score": 76.28135905789244,
+    "avg_confidence": 0.7148348518930607
+  },
+  "trends": {
+    "success_rate": "stable",
+    "execution_time": "stable",
+    "profitability": "stable"
+  },
+  "regressions": [],
+  "improvements": [],
+  "verdict": "STABLE",
+  "test_suite": {
+    "total": 87,
+    "passed": 87,
+    "failed": 0
+  }
+}
