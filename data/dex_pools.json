@@ -1,9 +1,9 @@
 {
   "pools": [],
-  "timestamp": 1761612789331,
+  "timestamp": 1761722927048,
   "stats": {
     "totalPools": 0,
-    "lastFetchTime": 1609,
+    "lastFetchTime": 1538,
     "fetchCount": 1,
     "errors": 5
   }

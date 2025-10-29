@@ -14,7 +14,7 @@
     "start:node": "node src/dex_pool_fetcher.js",
     "start:python": "node scripts/run-python.js src/python/integrated_orchestrator.py",
     "start:telemetry": "node scripts/run-python.js src/cross_chain_telemetry.py",
-    "start:executor": "node scripts/run-python.js src/executor_raptor_4x4x4x4.py",
+    "start:executor": "node scripts/run-python.js src/python/executor_raptor_4x4x4x4.py",
     "dryrun": "node scripts/run-python.js scripts/test_dryrun.py",
     "health": "node scripts/run-python.js src/health_monitor.py",
     "verify": "node scripts/verify-installer.js",

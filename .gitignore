@@ -22,6 +22,9 @@ data/*.db-journal
 data/*.db-shm
 data/*.db-wal
 
+# Data files (generated at runtime)
+data/dex_pools.json
+
 # Rust
 target/
 Cargo.lock
