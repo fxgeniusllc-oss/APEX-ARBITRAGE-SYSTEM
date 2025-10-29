@@ -45,7 +45,7 @@ class CrossChainTelemetry:
             # Keep running until interrupted
             while True:
                 await asyncio.sleep(10)
-                # In a real implementation, this would continuously update metrics
+                # TODO: Implement continuous metric collection and updates
                 
         except KeyboardInterrupt:
             print("\n\nTelemetry monitoring stopped by user")

@@ -71,8 +71,14 @@ class DryRunTester:
         results = await asyncio.gather(*tests, return_exceptions=True)
         
         print("\n" + "=" * 60)
+        # Count successful tests (True) vs exceptions/failures
         passed = sum(1 for r in results if r is True)
         total = len(results)
+        
+        # Log any exceptions that occurred
+        for i, result in enumerate(results):
+            if isinstance(result, Exception):
+                print(f"Test {i+1} failed with exception: {result}")
         
         if passed == total:
             print(f"✅ All {total} tests passed")

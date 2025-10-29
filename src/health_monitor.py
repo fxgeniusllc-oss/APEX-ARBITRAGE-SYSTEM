@@ -18,6 +18,8 @@ async def check_system_health():
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] APEX Health Monitor Starting...")
     print("=" * 60)
     
+    # TODO: Implement actual health checks
+    # Current implementation returns basic status only
     checks = {
         "Python Environment": True,
         "Configuration": True,

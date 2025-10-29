@@ -72,7 +72,8 @@ class DeployLauncher:
         
         # This is intentionally limited for safety
         print("❌ Direct production launch disabled for safety")
-        print("   Please use the integrated_orchestrator.py with MODE=PROD")
+        print("   Please use the integrated_orchestrator.py with environment variable MODE=PROD")
+        print("   Example: MODE=PROD python src/python/integrated_orchestrator.py")
         return 1
     
     async def launch_testing_mode(self):
