@@ -1,0 +1,63 @@
+{
+  "title": "Just Us Two",
+  "genre": "R&B / Soul",
+  "subgenre": "Contemporary R&B",
+  "mood": ["intimate", "peaceful", "romantic", "soulful"],
+  "tempo": 75,
+  "key": "D♭ Major",
+  "timeSignature": "4/4",
+  "duration": "3:45",
+  "theme": "Intimacy, peace, and partnership in love",
+  "description": "A smooth, soulful R&B groove about intimacy, peace, and partnership. It celebrates quiet love — no crowd, no noise, just two hearts aligned, finding joy and safety in each other's presence. Simple. Honest. Unshakable.",
+  "structure": {
+    "intro": "0:00-0:15",
+    "verse1": "0:15-0:45",
+    "preChorus1": "0:45-1:00",
+    "chorus1": "1:00-1:30",
+    "verse2": "1:30-2:00",
+    "preChorus2": "2:00-2:15",
+    "chorus2": "2:15-2:45",
+    "bridge": "2:45-3:10",
+    "finalChorus": "3:10-3:40",
+    "outro": "3:40-3:45"
+  },
+  "instrumentation": {
+    "primary": [
+      "Fender Rhodes Electric Piano",
+      "Smooth Bass Guitar",
+      "Soft Drum Kit with brush technique",
+      "Lead Vocals (smooth R&B style)"
+    ],
+    "supporting": [
+      "Background Vocals (harmonies)",
+      "Subtle String Pad",
+      "Light Percussion"
+    ]
+  },
+  "production": {
+    "style": "Modern R&B with classic soul influences",
+    "vibe": "Late night, intimate, warm",
+    "influences": ["Marvin Gaye", "SZA", "Daniel Caesar", "H.E.R."]
+  },
+  "lyrics": {
+    "language": "English",
+    "themes": [
+      "Intimate partnership",
+      "Finding peace in love",
+      "Choosing simplicity over chaos",
+      "Authentic connection",
+      "Safe space in relationship"
+    ],
+    "keyLines": [
+      "Just us two, nothing else matters",
+      "In your eyes, I found my shelter",
+      "Simple. Honest. Unshakable truth"
+    ]
+  },
+  "metadata": {
+    "created": "2025-11-01",
+    "version": "1.0",
+    "format": "markdown",
+    "license": "Creative Commons BY-NC-SA 4.0"
+  }
+}

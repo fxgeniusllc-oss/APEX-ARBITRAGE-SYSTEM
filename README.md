@@ -1484,4 +1484,13 @@ This repository is optimized for GitHub Copilot coding agent. If you see warning
 
 ---
 
+## 🎵 Creative Content
+
+Beyond the technical excellence of APEX, we recognize the human element in great engineering. Check out our [Creative Content](creative/README.md) section featuring:
+- **"Just Us Two"** - A smooth R&B track celebrating intimacy and partnership
+
+*Because great systems are built by whole people with diverse passions.*
+
+---
+
 Happy Trading! 🚀💰
